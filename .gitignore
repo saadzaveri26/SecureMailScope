@@ -10,3 +10,8 @@ production_artifacts/analyses/*
 production_artifacts/baselines/*
 production_artifacts/models/*
 !production_artifacts/**/.gitkeep
+
+# Node / Frontend
+node_modules/
+.next/
+!.env.example
