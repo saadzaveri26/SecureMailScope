@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+.venv/
+env1/
+.env1/
+production_artifacts/uploads/*
+production_artifacts/analyses/*
+production_artifacts/baselines/*
+production_artifacts/models/*
+!production_artifacts/**/.gitkeep
