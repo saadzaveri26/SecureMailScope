@@ -142,7 +142,7 @@ export const captures: Capture[] = [
     },
   },
   {
-    id: "cap-005",
+    id: "cap-006",
     filename: "internal_tls_keyassisted.pcap",
     sha256: "b4c5d6e7f8a9b4c5d6e7f8a9b4c5d6e7f8a9b4c5d6e7f8a9b4c5d6e7f8a9b4c5",
     size_bytes: 4194304,
