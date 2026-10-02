@@ -14,7 +14,16 @@ export function CaptureStrip() {
   const [caps, setCaps] = useState<Capture[]>([]);
   const [copied, setCopied] = useState(false);
 
-  const show = ["/overview", "/sessions", "/findings", "/drift", "/reports"].some((p) => path.startsWith(p));
+  const show = [
+    "/overview",
+    "/sessions",
+    "/findings",
+    "/incidents",
+    "/assets",
+    "/evidence",
+    "/drift",
+    "/reports",
+  ].some((p) => path.startsWith(p));
 
   useEffect(() => {
     if (!show) return;

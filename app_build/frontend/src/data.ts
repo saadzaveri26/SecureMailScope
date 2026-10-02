@@ -59,7 +59,13 @@ async function mutate<T>(method: string, path: string, body?: FormData | object)
 let fixtureCaps: Capture[] = [...capFixtures];
 
 export async function getCaptures(): Promise<Capture[]> {
-  return get("/api/captures", fixtureCaps);
+  const list = await get<Capture[]>("/api/captures", fixtureCaps);
+  const seen = new Set<string>();
+  return list.filter((c) => {
+    if (!c?.id || seen.has(c.id)) return false;
+    seen.add(c.id);
+    return true;
+  });
 }
 
 export async function getCapture(id: string): Promise<Capture> {
