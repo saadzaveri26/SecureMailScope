@@ -26,7 +26,7 @@ export function ScoreGauge({ score, grade }: { score: number; grade: Grade }) {
     <div className="flex flex-col items-center">
       <div className="relative w-32 h-32">
         <svg viewBox="0 0 120 120" className="w-full h-full -rotate-90">
-          <circle cx="60" cy="60" r={r} fill="none" stroke="#e2e2df" strokeWidth="8" />
+          <circle cx="60" cy="60" r={r} fill="none" stroke="#e2e4e8" strokeWidth="8" />
           <circle
             cx="60" cy="60" r={r} fill="none"
             stroke={strokeColors[grade]}

@@ -3,6 +3,8 @@ import { Suspense } from "react";
 import { IBM_Plex_Sans, IBM_Plex_Mono, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/nav";
+import { AuthProvider } from "@/components/auth-context";
+import { AuthGate } from "@/components/auth-gate";
 
 const plexSans = IBM_Plex_Sans({
   variable: "--font-plex-sans",
@@ -34,10 +36,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${plexSans.variable} ${plexMono.variable} ${sourceSerif.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <Suspense>
-          <Nav />
-        </Suspense>
-        <main className="flex-1">{children}</main>
+        <AuthProvider>
+          <AuthGate>
+            <Suspense>
+              <Nav />
+            </Suspense>
+            <main className="flex-1">{children}</main>
+          </AuthGate>
+        </AuthProvider>
       </body>
     </html>
   );

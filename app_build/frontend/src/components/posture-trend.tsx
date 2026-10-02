@@ -27,14 +27,14 @@ export function PostureTrend({ captures }: { captures: Capture[] }) {
     <div className="h-48">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data} margin={{ top: 4, right: 12, bottom: 4, left: 12 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e2e2df" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#e2e4e8" />
           <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#6b7280" }} />
           <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: "#6b7280" }} width={32} />
           <Tooltip
             contentStyle={{
               fontSize: 12,
               borderRadius: 6,
-              border: "1px solid #e2e2df",
+              border: "1px solid #e2e4e8",
               boxShadow: "none",
             }}
             formatter={(v: unknown, _n: unknown, p: unknown) => {
@@ -45,9 +45,9 @@ export function PostureTrend({ captures }: { captures: Capture[] }) {
           <Line
             type="monotone"
             dataKey="score"
-            stroke="#0d7377"
+            stroke="#1974B9"
             strokeWidth={2}
-            dot={{ r: 4, fill: "#0d7377" }}
+            dot={{ r: 4, fill: "#1974B9" }}
             activeDot={{ r: 6 }}
           />
         </LineChart>

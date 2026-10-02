@@ -7,7 +7,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from . import config
-from .api import analyses, baselines, dashboard, meta, reports
+from .api import analyses, baselines, dashboard, meta, reports, contract_02
+from .api.deps import require_token
 from .core.cert_analyzer import get_trust_store
 
 warnings.filterwarnings("ignore")
@@ -25,6 +26,9 @@ app = FastAPI(title="SecureMailScope API", version=config.APP_VERSION, lifespan=
 app.add_middleware(CORSMiddleware, allow_origins=config.CORS_ORIGINS, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 for r in (analyses.router, baselines.router, dashboard.router, reports.router, meta.router):
     app.include_router(r, prefix="/api/v1")
+
+app.include_router(contract_02.router, prefix="/api")
+app.include_router(contract_02.router, prefix="/api/v1")
 
 
 @app.get("/health", tags=["meta"])

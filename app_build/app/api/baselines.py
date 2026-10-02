@@ -4,9 +4,9 @@ from pydantic import BaseModel
 
 from .. import storage
 from ..analysis import baseline as bl
-from .deps import require_key
+from .deps import require_token
 
-router = APIRouter(prefix="/baselines", tags=["baselines & drift"], dependencies=[Depends(require_key)])
+router = APIRouter(prefix="/baselines", tags=["baselines & drift"], dependencies=[Depends(require_token)])
 
 
 class BaselineIn(BaseModel):

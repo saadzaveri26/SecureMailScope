@@ -2,10 +2,12 @@
 
 import { useState, useEffect, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import type { Capture, Summary, Finding } from "@/types";
-import { getCaptures, getSummary, getFindings } from "@/data";
+import type { Capture, Summary, Finding, CustodyEvent } from "@/types";
+import { getCaptures, getSummary, getFindings, getCustody } from "@/data";
 import { SeverityBadge } from "@/components/severity";
 import { PostureTrend } from "@/components/posture-trend";
+import { VisibilityPanel } from "@/components/visibility-panel";
+import { CustodyTimeline } from "@/components/custody-timeline";
 import Link from "next/link";
 
 export default function OverviewPage() {
@@ -53,19 +55,22 @@ function OverviewContent() {
   const [caps, setCaps] = useState<Capture[]>([]);
   const [summary, setSummary] = useState<Summary | null>(null);
   const [findings, setFindings] = useState<Finding[]>([]);
+  const [custody, setCustody] = useState<CustodyEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     try {
-      const [c, s, f] = await Promise.all([
+      const [c, s, f, cu] = await Promise.all([
         getCaptures(),
         getSummary(captureId),
         getFindings(captureId),
+        getCustody(captureId),
       ]);
       setCaps(c);
       setSummary(s);
       setFindings(f);
+      setCustody(cu);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Failed to load overview");
     } finally {
@@ -79,12 +84,14 @@ function OverviewContent() {
       getCaptures(),
       getSummary(captureId),
       getFindings(captureId),
+      getCustody(captureId),
     ])
-      .then(([c, s, f]) => {
+      .then(([c, s, f, cu]) => {
         if (active) {
           setCaps(c);
           setSummary(s);
           setFindings(f);
+          setCustody(cu);
           setLoading(false);
         }
       })
@@ -320,6 +327,18 @@ function OverviewContent() {
             </div>
           )}
 
+          {summary.visibility && (
+            <div className="bg-surface-0 rounded-lg border border-border-subtle p-5">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-medium text-foreground">What this capture could and could not see</h3>
+                <Link href={`/evidence?capture=${captureId}`} className="text-xs text-brand hover:underline">
+                  Evidence chain
+                </Link>
+              </div>
+              <VisibilityPanel v={summary.visibility} />
+            </div>
+          )}
+
           <div className="bg-surface-0 rounded-lg border border-border-subtle p-5">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-medium text-foreground">Top findings</h3>
@@ -355,6 +374,18 @@ function OverviewContent() {
         <div className="bg-surface-0 rounded-lg border border-border-subtle p-5">
           <h3 className="text-sm font-medium text-foreground mb-4">Posture trend</h3>
           <PostureTrend captures={completeCaps} />
+        </div>
+      )}
+
+      {custody.length > 0 && (
+        <div className="bg-surface-0 rounded-lg border border-border-subtle p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-medium text-foreground">Integrity record and audit trail</h3>
+            <Link href={`/evidence?capture=${captureId}`} className="text-xs text-brand hover:underline">
+              Full evidence chain
+            </Link>
+          </div>
+          <CustodyTimeline events={custody} />
         </div>
       )}
     </div>

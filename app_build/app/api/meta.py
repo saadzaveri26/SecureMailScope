@@ -5,9 +5,9 @@ from .. import config
 from ..analysis.rule_catalog import RULES
 from ..core.cert_analyzer import get_trust_store, reload_trust_store
 from ..core.cipher_db import IANA_SUITES, describe
-from .deps import require_key
+from .deps import require_token
 
-router = APIRouter(prefix="/meta", tags=["meta"], dependencies=[Depends(require_key)])
+router = APIRouter(prefix="/meta", tags=["meta"], dependencies=[Depends(require_token)])
 
 
 @router.get("/rules", summary="Detection rule catalogue")

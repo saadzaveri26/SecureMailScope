@@ -8,8 +8,17 @@ export type FindingCategory = "transport" | "certificate" | "protocol" | "messag
 export type MessageLayerState = "encrypted" | "signed" | "none_observed" | "not_observable";
 export type BaselineStatus = "ok" | "insufficient" | "not_configured";
 export type DriftDirection = "improved" | "degraded" | "changed" | "appeared" | "disappeared";
-export type DriftKind = "tls_version" | "cipher_suite" | "key_exchange" | "certificate" | "starttls" | "auth_before_tls" | "endpoint";
+export type DriftKind = "tls_version" | "cipher_suite" | "key_exchange" | "certificate" | "starttls" | "auth_before_tls" | "endpoint" | "issuer" | "key_size";
 export type ReportFormat = "json" | "html" | "pdf";
+export type Confidence = "high" | "medium" | "low";
+export type HandshakeVisibility = "complete" | "partial" | "none";
+export type CertificateVisibility = "observable" | "hidden_tls13" | "resumed" | "not_seen";
+export type MessageLayerVisibility = "observable" | "hidden_by_tls" | "not_applicable";
+export type CustodyAction = "uploaded" | "analysis_started" | "analysis_completed" | "report_exported" | "triage_changed" | "payload_deleted" | "keylog_attached" | "artifact_attached";
+export type EvidenceType = "session" | "starttls_exchange" | "handshake" | "certificate" | "cleartext_auth" | "message_marker" | "baseline_deviation";
+export type IncidentState = "open" | "under_investigation" | "confirmed" | "false_positive" | "accepted_risk" | "remediated";
+export type ForwardSecrecyState = "all" | "some" | "none" | "unknown";
+export type StarttlsSupport = "always" | "sometimes" | "never" | "not_applicable";
 
 export interface Capture {
   id: string;
@@ -23,6 +32,68 @@ export interface Capture {
   created_at: string;
   posture_score: number | null;
   grade: Grade | null;
+  custody: CustodyInfo | null;
+  analysis: AnalysisInfo | null;
+}
+
+export interface CustodyInfo {
+  sha256: string;
+  original_filename: string;
+  size_bytes: number;
+  received_at: string;
+  uploaded_by: string;
+  payload_retained: boolean;
+  payload_deleted_at: string | null;
+}
+
+export interface AnalysisInfo {
+  tool_version: string;
+  ruleset_version: string;
+  ruleset_sha256: string;
+  modes: string[];
+  started_at: string;
+  completed_at: string;
+}
+
+export interface CustodyEvent {
+  id: string;
+  ts: string;
+  actor: string;
+  action: CustodyAction;
+  detail: string;
+}
+
+export interface Evidence {
+  id: string;
+  capture_id: string;
+  type: EvidenceType;
+  session_id: string | null;
+  frames: number[];
+  summary: string;
+  wireshark_filter: string;
+  certificate_sha256: string | null;
+}
+
+export interface PolicyRef {
+  document: string;
+  section: string;
+  verified_on: string;
+}
+
+export interface Rule {
+  id: string;
+  version: string;
+  title: string;
+  description: string;
+  severity: Severity;
+  category: FindingCategory;
+  enabled: boolean;
+  policy_refs: PolicyRef[];
+}
+
+export interface RulesetVersion {
+  ruleset_version: string;
+  sha256: string;
 }
 
 export interface PostureFactor {
@@ -33,10 +104,18 @@ export interface PostureFactor {
   finding_ids: string[];
 }
 
+export interface TriageAdjustment {
+  incident_id: string;
+  state: IncidentState;
+  effect: string;
+}
+
 export interface Posture {
   score: number;
   grade: Grade;
   factors: PostureFactor[];
+  triaged_score?: number;
+  triage_adjustments?: TriageAdjustment[];
 }
 
 export interface SeverityCounts {
@@ -60,6 +139,24 @@ export interface TransportCounts {
   plaintext: number;
 }
 
+export interface CheckNotPerformed {
+  check: string;
+  reason: string;
+  sessions: number;
+}
+
+export interface VisibilitySummary {
+  sessions_total: number;
+  handshake_complete: number;
+  handshake_partial: number;
+  certificate_observable: number;
+  certificate_hidden_tls13: number;
+  certificate_resumed: number;
+  message_layer_observable: number;
+  plaintext_sessions: number;
+  checks_not_performed: CheckNotPerformed[];
+}
+
 export interface Summary {
   posture: Posture;
   severity_counts: SeverityCounts;
@@ -67,6 +164,7 @@ export interface Summary {
   transport_counts: TransportCounts;
   limitations: string[];
   baseline_status: BaselineStatus;
+  visibility: VisibilitySummary | null;
 }
 
 export interface StarttlsInfo {
@@ -115,6 +213,14 @@ export interface Certificate {
   validation_notes: string[];
 }
 
+export interface SessionVisibility {
+  handshake: HandshakeVisibility;
+  certificate: CertificateVisibility;
+  message_layer: MessageLayerVisibility;
+  partial_capture: boolean;
+  reasons: string[];
+}
+
 export interface Session {
   id: string;
   protocol: Protocol;
@@ -134,6 +240,7 @@ export interface Session {
   last_frame: number;
   wireshark_filter: string;
   findings_count: number;
+  visibility: SessionVisibility | null;
 }
 
 export interface FindingEvidence {
@@ -170,17 +277,23 @@ export interface Finding {
   id: string;
   session_id: string | null;
   rule_id: string;
+  rule_version: string | null;
   title: string;
   severity: Severity;
   category: FindingCategory;
   description: string;
   evidence: FindingEvidence;
+  evidence_ids: string[];
   wireshark_filter: string;
   score_impact: number;
   priority_rank: number;
+  confidence: Confidence;
+  confidence_basis: string[];
   context: FindingContext;
   anomaly: FindingAnomaly | null;
   remediation: Remediation;
+  policy_refs: PolicyRef[];
+  incident_id: string | null;
 }
 
 export interface DriftChange {
@@ -203,4 +316,91 @@ export interface PaginatedSessions {
   total: number;
   page: number;
   page_size: number;
+}
+
+export interface EvalPerRule {
+  rule_id: string;
+  expected: number;
+  detected: number;
+  tp: number;
+  fp: number;
+  fn: number;
+  precision: number | null;
+  recall: number | null;
+}
+
+export interface Evaluation {
+  corpus_version: string;
+  ruleset_version: string;
+  run_at: string;
+  captures: number;
+  per_rule: EvalPerRule[];
+  overall: { precision: number; recall: number };
+  clean_capture_false_alarms: number;
+  label: string;
+}
+
+export interface AssetCertificate {
+  sha256: string;
+  subject: string;
+  issuer: string;
+  not_after: string;
+  key_algorithm: string;
+  key_bits: number;
+  signature_algorithm: string;
+}
+
+export interface AssetPqc {
+  hybrid_groups_offered_by_clients: boolean | null;
+  hybrid_group_negotiated: boolean | null;
+  groups_seen: string[];
+  classical_public_key_in_chain: boolean | null;
+  note: string;
+}
+
+export interface Asset {
+  id: string;
+  server: string;
+  port: number;
+  protocols: Protocol[];
+  server_role: string;
+  tls_versions_observed: string[];
+  cipher_suites_observed: string[];
+  key_exchange_groups_observed: string[];
+  forward_secrecy: ForwardSecrecyState;
+  starttls_support: StarttlsSupport;
+  certificates: AssetCertificate[];
+  sessions_observed: number;
+  clients_observed: number;
+  first_seen: string;
+  last_seen: string;
+  pqc: AssetPqc | null;
+}
+
+export interface Incident {
+  id: string;
+  rule_id: string;
+  title: string;
+  server: string;
+  server_role: string;
+  severity: Severity;
+  confidence: Confidence;
+  sessions_affected: number;
+  clients_affected: number;
+  first_seen: string;
+  last_seen: string;
+  finding_ids: string[];
+  evidence_ids: string[];
+  state: IncidentState;
+  priority_rank: number;
+  remediation: Remediation;
+}
+
+export interface TriageEvent {
+  id: string;
+  ts: string;
+  actor: string;
+  from_state: IncidentState;
+  to_state: IncidentState;
+  note: string;
 }

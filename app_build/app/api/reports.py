@@ -5,9 +5,9 @@ from fastapi.responses import FileResponse
 
 from .. import config, storage
 from ..reports import html_report, json_report, pdf_report
-from .deps import require_key
+from .deps import require_token
 
-router = APIRouter(tags=["reports"], dependencies=[Depends(require_key)])
+router = APIRouter(tags=["reports"], dependencies=[Depends(require_token)])
 MEDIA = {"json": "application/json", "html": "text/html", "pdf": "application/pdf"}
 
 

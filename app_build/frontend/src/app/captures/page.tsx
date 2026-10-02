@@ -88,20 +88,26 @@ export default function CapturesPage() {
     if (!polling) return;
     let delay = 1000;
     let cancelled = false;
+    let attempts = 0;
 
     async function poll() {
       if (cancelled) return;
+      attempts += 1;
       try {
         const c = await getCapture(polling!);
-        if (c.status === "complete" || c.status === "failed") {
+        if (c.status === "complete" || c.status === "failed" || attempts >= 10) {
           setPolling(null);
           load();
           return;
         }
       } catch {
-        // continue polling on error
+        if (attempts >= 10) {
+          setPolling(null);
+          load();
+          return;
+        }
       }
-      delay = Math.min(delay * 1.5, 8000);
+      delay = Math.min(delay * 1.5, 5000);
       pollRef.current = setTimeout(poll, delay);
     }
 
@@ -179,9 +185,17 @@ export default function CapturesPage() {
       </div>
 
       {polling && (
-        <div className="flex items-center gap-2 text-xs text-brand bg-brand-light px-4 py-2 rounded-md mb-4 border border-brand/20">
-          <Spinner size={14} className="animate-spin" />
-          Processing capture... polling for status
+        <div className="flex items-center justify-between text-xs text-brand bg-brand-light px-4 py-2 rounded-md mb-4 border border-brand/20">
+          <div className="flex items-center gap-2">
+            <Spinner size={14} className="animate-spin" />
+            <span>Processing capture... polling for status</span>
+          </div>
+          <button
+            onClick={() => { setPolling(null); load(); }}
+            className="text-xs text-muted hover:text-foreground underline ml-4 cursor-pointer"
+          >
+            Dismiss
+          </button>
         </div>
       )}
 

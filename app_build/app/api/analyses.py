@@ -12,9 +12,9 @@ from ..analysis.common import inflate_certs
 from ..analysis.risk_engine import explain_session
 from ..analysis.rule_catalog import SEV_RANK
 from ..core.pcap_reader import InvalidCapture, PCAP_MAGICS, PCAPNG_MAGIC
-from .deps import require_key
+from .deps import require_token, require_actor
 
-router = APIRouter(prefix="/analyses", tags=["analyses"], dependencies=[Depends(require_key)])
+router = APIRouter(prefix="/analyses", tags=["analyses"], dependencies=[Depends(require_token)])
 
 
 async def _save_upload(f: UploadFile) -> tuple[Path, str, int]:

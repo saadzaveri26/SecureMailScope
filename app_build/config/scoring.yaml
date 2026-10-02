@@ -1,0 +1,10 @@
+# SecureMailScope Scoring Configuration
+# Contract 0.2 §5: Severity and confidence weights
+
+confidence_weight:
+  # High confidence (1.0): Full handshake or full application-layer exchange observed directly on the wire with complete cryptographic parameters. Full penalty applied.
+  high: 1.0
+  # Medium confidence (0.75): Partial capture, mid-stream capture, or inference from a consistent observed subset. Slight attenuation of penalty due to potential incomplete visibility.
+  medium: 0.75
+  # Low confidence (0.5): Indirect or heuristic observations, such as suspected STARTTLS stripping inferred across sessions, and all baseline-deviation findings. Half penalty applied to avoid disproportionate impact from heuristics.
+  low: 0.5

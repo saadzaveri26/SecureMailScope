@@ -1,5 +1,7 @@
 import type {
   Capture, Summary, Session, Finding, Drift, PaginatedSessions,
+  CustodyEvent, Evidence, Rule, RulesetVersion, Evaluation,
+  Asset, Incident, TriageEvent, IncidentState,
 } from "@/types";
 import {
   captures as capFixtures,
@@ -8,40 +10,106 @@ import {
   findingsForCap001,
   driftFixture,
   paginatedSessionsForCap001,
+  custodyEventsForCap001,
+  evidenceForCap001,
+  rulesFixture,
+  rulesetVersionFixture,
+  evaluationFixture,
+  assetsForCap001,
+  incidentsForCap001,
+  triageHistoryForInc001,
 } from "@/fixtures/data";
 
 const USE_FIXTURES = process.env.NEXT_PUBLIC_USE_FIXTURES === "1";
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
+function authHeaders(): Record<string, string> {
+  if (typeof window === "undefined") return {};
+  const t = sessionStorage.getItem("sms_access_token");
+  const a = sessionStorage.getItem("sms_actor");
+  const h: Record<string, string> = {};
+  if (t) h["X-Access-Token"] = t;
+  if (a) h["X-Actor"] = a;
+  return h;
+}
+
 async function get<T>(path: string, fixture: T): Promise<T> {
   if (USE_FIXTURES) return fixture;
-  const r = await fetch(`${API}${path}`);
+  const r = await fetch(`${API}${path}`, { headers: authHeaders() });
+  if (r.status === 401) throw new Error("Unauthorized — check your access token");
   if (!r.ok) throw new Error(await r.text());
   return r.json();
 }
 
+async function mutate<T>(method: string, path: string, body?: FormData | object): Promise<T> {
+  const h: Record<string, string> = { ...authHeaders() };
+  let b: BodyInit | undefined;
+  if (body instanceof FormData) {
+    b = body;
+  } else if (body) {
+    h["Content-Type"] = "application/json";
+    b = JSON.stringify(body);
+  }
+  const r = await fetch(`${API}${path}`, { method, headers: h, body: b });
+  if (r.status === 401) throw new Error("Unauthorized — check your access token");
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+let fixtureCaps: Capture[] = [...capFixtures];
+
 export async function getCaptures(): Promise<Capture[]> {
-  return get("/api/captures", capFixtures);
+  return get("/api/captures", fixtureCaps);
 }
 
 export async function getCapture(id: string): Promise<Capture> {
-  const c = capFixtures.find((c) => c.id === id);
-  return get(`/api/captures/${id}`, c ?? capFixtures[0]);
+  const c = fixtureCaps.find((c) => c.id === id);
+  if (USE_FIXTURES && c && c.status === "processing") {
+    setTimeout(() => {
+      c.status = "complete";
+      c.posture_score = c.posture_score ?? 78;
+      c.grade = c.grade ?? "C";
+      c.packet_count = c.packet_count || 14200;
+    }, 2000);
+  }
+  return get(`/api/captures/${id}`, c ?? fixtureCaps[0]);
 }
 
 export async function uploadCapture(file: File): Promise<{ capture_id: string; status: string }> {
-  if (USE_FIXTURES) return { capture_id: "cap-003", status: "queued" };
+  if (USE_FIXTURES) {
+    const newId = `cap-${Date.now()}`;
+    const newCap: Capture = {
+      id: newId,
+      filename: file.name,
+      sha256: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      size_bytes: file.size || 1048576,
+      packet_count: 0,
+      duration_s: 120.0,
+      status: "processing",
+      error: null,
+      created_at: new Date().toISOString(),
+      posture_score: null,
+      grade: null,
+      custody: null,
+      analysis: null,
+    };
+    fixtureCaps = [newCap, ...fixtureCaps];
+    setTimeout(() => {
+      newCap.status = "complete";
+      newCap.posture_score = 78;
+      newCap.grade = "C";
+      newCap.packet_count = 14200;
+    }, 2500);
+    return { capture_id: newId, status: "queued" };
+  }
   const fd = new FormData();
   fd.append("file", file);
-  const r = await fetch(`${API}/api/captures`, { method: "POST", body: fd });
-  if (!r.ok) throw new Error(await r.text());
-  return r.json();
+  return mutate("POST", "/api/captures", fd);
 }
 
 export async function deleteCapture(id: string): Promise<void> {
   if (USE_FIXTURES) return;
-  const r = await fetch(`${API}/api/captures/${id}`, { method: "DELETE" });
-  if (!r.ok) throw new Error(await r.text());
+  await mutate("DELETE", `/api/captures/${id}`);
 }
 
 export async function getSummary(captureId: string): Promise<Summary> {
@@ -99,7 +167,104 @@ export async function getDrift(baselineId: string, currentId: string): Promise<D
   return get(`/api/drift?baseline=${baselineId}&current=${currentId}`, driftFixture);
 }
 
+export async function getCustody(captureId: string): Promise<CustodyEvent[]> {
+  return get(`/api/captures/${captureId}/custody`, custodyEventsForCap001);
+}
+
+export async function getEvidence(captureId: string): Promise<Evidence[]> {
+  return get(`/api/captures/${captureId}/evidence`, evidenceForCap001);
+}
+
+export async function getEvidenceById(captureId: string, eid: string): Promise<Evidence> {
+  const ev = evidenceForCap001.find((e) => e.id === eid);
+  return get(`/api/captures/${captureId}/evidence/${eid}`, ev ?? evidenceForCap001[0]);
+}
+
+export async function getRules(): Promise<Rule[]> {
+  return get("/api/rules", rulesFixture);
+}
+
+export async function getRulesetVersion(): Promise<RulesetVersion> {
+  return get("/api/rules/version", rulesetVersionFixture);
+}
+
+export async function getEvaluation(): Promise<Evaluation> {
+  return get("/api/evaluation", evaluationFixture);
+}
+
+export async function downloadReport(captureId: string, format: "json" | "html" | "pdf"): Promise<void> {
+  if (USE_FIXTURES) return;
+  const r = await fetch(`${API}/api/captures/${captureId}/report?format=${format}`, {
+    headers: authHeaders(),
+  });
+  if (!r.ok) throw new Error(await r.text());
+  const blob = await r.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `SecureMailScope_${captureId}.${format}`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
 export function getReportUrl(captureId: string, format: "json" | "html" | "pdf"): string {
   if (USE_FIXTURES) return "#";
   return `${API}/api/captures/${captureId}/report?format=${format}`;
 }
+
+let fixtureIncidents: Incident[] = [...incidentsForCap001];
+
+export async function getAssets(captureId: string): Promise<Asset[]> {
+  return get(`/api/captures/${captureId}/assets`, assetsForCap001);
+}
+
+export async function getIncidents(
+  captureId: string,
+  params?: { state?: string; severity?: string }
+): Promise<Incident[]> {
+  const sp = new URLSearchParams();
+  if (params?.state) sp.set("state", params.state);
+  if (params?.severity) sp.set("severity", params.severity);
+  const qs = sp.toString() ? `?${sp}` : "";
+
+  if (USE_FIXTURES) {
+    let items = fixtureIncidents;
+    if (params?.state) items = items.filter((i) => i.state === params.state);
+    if (params?.severity) items = items.filter((i) => i.severity === params.severity);
+    return items;
+  }
+  return get(`/api/captures/${captureId}/incidents${qs}`, fixtureIncidents);
+}
+
+export async function patchIncidentState(
+  incidentId: string,
+  state: IncidentState,
+  note?: string
+): Promise<Incident> {
+  if (USE_FIXTURES) {
+    const inc = fixtureIncidents.find((i) => i.id === incidentId);
+    if (!inc) throw new Error("Incident not found");
+    inc.state = state;
+    return { ...inc };
+  }
+  return mutate("PATCH", `/api/incidents/${incidentId}/state`, { state, note });
+}
+
+export async function getIncidentHistory(incidentId: string): Promise<TriageEvent[]> {
+  return get(`/api/incidents/${incidentId}/history`, triageHistoryForInc001);
+}
+
+export async function pinBaseline(captureId: string): Promise<{ baseline_capture_id: string }> {
+  return mutate("PUT", "/api/baseline", { capture_id: captureId });
+}
+
+export async function getBaseline(): Promise<{ baseline_capture_id: string | null }> {
+  return get("/api/baseline", { baseline_capture_id: "cap-002" });
+}
+
+export async function getFeatures(): Promise<{ key_assisted: boolean; artifact_assisted: boolean }> {
+  return get("/api/features", { key_assisted: true, artifact_assisted: true });
+}
+
