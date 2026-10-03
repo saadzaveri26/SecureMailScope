@@ -1,0 +1,128 @@
+{
+  "baseline_capture_id": "cap-002",
+  "current_capture_id": "cap-001",
+  "changes": [
+    {
+      "server": "mail.company.com",
+      "kind": "starttls",
+      "before": "STARTTLS offered in 100% of negotiating sessions",
+      "after": "3 session(s) without a successful STARTTLS upgrade",
+      "direction": "degraded",
+      "severity": "critical",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "server": "mail.company.com",
+      "kind": "tls_version",
+      "before": "TLS_AES_128_GCM_SHA256, TLS_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+      "after": "TLS_AES_128_GCM_SHA256, TLS_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_RC4_128_SHA, TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+      "direction": "degraded",
+      "severity": "critical",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "server": "mail.company.com",
+      "kind": "starttls",
+      "before": "STARTTLS offered in 100% of negotiating sessions",
+      "after": "2 session(s) without a successful STARTTLS upgrade",
+      "direction": "degraded",
+      "severity": "critical",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "server": "mail.company.com",
+      "kind": "starttls",
+      "before": "STARTTLS offered in 100% of negotiating sessions",
+      "after": "7 session(s) without a successful STARTTLS upgrade",
+      "direction": "degraded",
+      "severity": "critical",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "server": "mail.company.com",
+      "kind": "tls_version",
+      "before": "TLS 1.2 / TLS 1.3 only",
+      "after": "TLS 1.0 / TLS 1.1 / TLS 1.2 / TLS 1.3",
+      "direction": "degraded",
+      "severity": "high",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "server": "mail.company.com",
+      "kind": "tls_version",
+      "before": "TLS 1.2 / TLS 1.3 only",
+      "after": "TLS 1.0 / TLS 1.1 / TLS 1.2 / TLS 1.3",
+      "direction": "degraded",
+      "severity": "high",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "server": "mail.company.com",
+      "kind": "tls_version",
+      "before": "TLS_AES_128_GCM_SHA256, TLS_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+      "after": "TLS_AES_128_GCM_SHA256, TLS_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_RC4_128_SHA, TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+      "direction": "degraded",
+      "severity": "high",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "server": "mail.company.com",
+      "kind": "endpoint",
+      "before": "100% PFS",
+      "after": "79% PFS",
+      "direction": "degraded",
+      "severity": "high",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "server": "mail.company.com",
+      "kind": "certificate",
+      "before": "26:A1:8E:25:2F:05:11:5C... (Synthetic Corp Issuing CA, RSA-2048, valid 2026-01-10 -> 2027-01-10)",
+      "after": "58:10:87:BE:96:87:7F:7A... (Unknown Trust Services CA, RSA-2048, valid 2026-09-20 -> 2027-09-20)",
+      "direction": "degraded",
+      "severity": "high",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "server": "mail.company.com",
+      "kind": "certificate",
+      "before": "26:A1:8E:25:2F:05:11:5C... (Synthetic Corp Issuing CA, RSA-2048, valid 2026-01-10 -> 2027-01-10)",
+      "after": "0C:B1:EB:62:30:C6:C4:F3... (Synthetic Corp Issuing CA, RSA-2048, valid 2025-10-05 -> 2026-10-10)",
+      "direction": "changed",
+      "severity": "medium",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "server": "mail.company.com",
+      "kind": "key_exchange",
+      "before": "ECDHE",
+      "after": "DHE, ECDHE",
+      "direction": "changed",
+      "severity": "low",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "server": "mail.company.com",
+      "kind": "tls_version",
+      "before": "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+      "after": "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+      "direction": "changed",
+      "severity": "info",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    }
+  ],
+  "ruleset_version": "2025.03.1",
+  "run_at": "2026-10-03T09:37:12.495945+00:00"
+}

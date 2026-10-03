@@ -1,16 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { SeverityBadge } from "@/components/severity";
 import { summaryForCap001, findingsForCap001 } from "@/fixtures/data";
-import { Copy, Check } from "@phosphor-icons/react";
+import { getEvaluation } from "@/data";
+import type { Evaluation } from "@/types";
+import { Copy, Check, ArrowRight } from "@phosphor-icons/react";
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
+  const [ev, setEv] = useState<Evaluation | null>(null);
+
+  const isDemo = process.env.NEXT_PUBLIC_DEMO_MODE === "1" || process.env.NEXT_PUBLIC_DEMO_MODE === "true";
   const sample = findingsForCap001[0];
   const topFindings = findingsForCap001.slice(0, 5);
   const factors = summaryForCap001.posture.factors;
+
+  useEffect(() => {
+    getEvaluation().then(setEv).catch(() => {});
+  }, []);
 
   function copyFilter() {
     navigator.clipboard.writeText(sample.wireshark_filter);
@@ -23,25 +32,44 @@ export default function Home() {
       <div className="flex-1 max-w-[1400px] w-full mx-auto px-4 py-8 lg:py-12 space-y-16">
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           <div className="lg:col-span-7 space-y-6">
-            <h1 className="font-serif text-3xl sm:text-4xl lg:text-[40px] font-bold text-foreground leading-[1.15] tracking-tight">
+            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full border border-border bg-surface-1 text-xs text-muted">
+              <span>Ground-truth validation</span>
+              <span className="text-border">|</span>
+              <Link href="/evaluation" className="text-brand hover:underline font-medium inline-flex items-center gap-1">
+                Evaluation results <ArrowRight size={12} />
+              </Link>
+            </div>
+
+            <h1 className="text-3xl sm:text-4xl lg:text-[40px] font-bold text-foreground leading-[1.15] tracking-tight">
               See what your mail servers actually negotiated.
             </h1>
             <p className="text-sm sm:text-base text-muted leading-relaxed max-w-xl">
-              Upload a packet capture. SecureMailScope rebuilds each SMTP, IMAP and POP3 session, reads the TLS and STARTTLS exchange, and ties every weakness to the frames that prove it. It works from the handshake, not from message content.
+              Inspect mail cryptography in captured packet traces. SecureMailScope rebuilds each SMTP, IMAP and POP3 session, analyzes the TLS and STARTTLS exchange, and ties every weakness to the network frames that prove it.
             </p>
             <div className="flex items-center gap-6 pt-2">
-              <Link
-                href="/captures"
-                className="px-4 py-2 rounded-md bg-brand hover:bg-brand-hover text-white text-xs font-semibold transition-colors"
-              >
-                Upload a capture
-              </Link>
-              <Link
-                href="/overview?capture=cap-001"
-                className="text-xs font-medium text-foreground hover:text-brand underline underline-offset-4 transition-colors"
-              >
-                Open the sample analysis
-              </Link>
+              {isDemo ? (
+                <Link
+                  href="/overview?capture=cap-001"
+                  className="px-4 py-2 rounded-md bg-brand hover:bg-brand-hover text-white text-xs font-semibold transition-colors"
+                >
+                  Open the sample analysis
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    href="/captures"
+                    className="px-4 py-2 rounded-md bg-brand hover:bg-brand-hover text-white text-xs font-semibold transition-colors"
+                  >
+                    Upload a capture
+                  </Link>
+                  <Link
+                    href="/overview?capture=cap-001"
+                    className="text-xs font-medium text-foreground hover:text-brand underline underline-offset-4 transition-colors"
+                  >
+                    Open the sample analysis
+                  </Link>
+                </>
+              )}
             </div>
           </div>
 
@@ -85,10 +113,54 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="space-y-4 pt-6 border-t border-border-subtle">
+        <section className="bg-surface-0 rounded-lg border border-border p-6 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border-subtle pb-3">
+            <div>
+              <h2 className="text-base font-semibold text-foreground">Measured, not claimed</h2>
+              <p className="text-xs text-muted mt-0.5">
+                {ev?.label ?? "Measured against the synthetic lab corpus. Not a claim about real-world accuracy."}
+              </p>
+            </div>
+            <Link
+              href="/evaluation"
+              className="text-xs font-medium text-brand hover:underline inline-flex items-center gap-1 shrink-0"
+            >
+              Full evaluation results <ArrowRight size={12} />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-1">
+            <div className="p-3 bg-surface-1 rounded-md border border-border-subtle">
+              <span className="text-[11px] text-muted block">Overall precision</span>
+              <span className="text-2xl font-bold font-mono text-foreground tabular-nums">
+                {ev ? `${(ev.overall.precision * 100).toFixed(1)}%` : "—"}
+              </span>
+            </div>
+            <div className="p-3 bg-surface-1 rounded-md border border-border-subtle">
+              <span className="text-[11px] text-muted block">Overall recall</span>
+              <span className="text-2xl font-bold font-mono text-foreground tabular-nums">
+                {ev ? `${(ev.overall.recall * 100).toFixed(1)}%` : "—"}
+              </span>
+            </div>
+            <div className="p-3 bg-surface-1 rounded-md border border-border-subtle">
+              <span className="text-[11px] text-muted block">Captures tested</span>
+              <span className="text-2xl font-bold font-mono text-foreground tabular-nums">
+                {ev ? ev.captures : "—"}
+              </span>
+            </div>
+            <div className="p-3 bg-surface-1 rounded-md border border-border-subtle">
+              <span className="text-[11px] text-muted block">Clean false alarms</span>
+              <span className="text-2xl font-bold font-mono text-foreground tabular-nums">
+                {ev ? ev.clean_capture_false_alarms : "—"}
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <section className="space-y-4 pt-2">
           <div>
             <h2 className="text-base font-semibold text-foreground">
-              Sample analysis: corporate_mail_audit.pcap, sample data
+              Sample analysis: corporate_mail_audit.pcap
             </h2>
             <p className="text-xs text-muted mt-0.5">
               Summary posture score and key vulnerability detections from the evaluation fixture

@@ -8,6 +8,7 @@ import { SeverityBadge } from "@/components/severity";
 import { PostureTrend } from "@/components/posture-trend";
 import { VisibilityPanel } from "@/components/visibility-panel";
 import { CustodyTimeline } from "@/components/custody-timeline";
+import { Copy, Check } from "@phosphor-icons/react";
 import Link from "next/link";
 
 export default function OverviewPage() {
@@ -58,6 +59,13 @@ function OverviewContent() {
   const [custody, setCustody] = useState<CustodyEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  function copyText(txt: string) {
+    navigator.clipboard.writeText(txt);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
 
   const load = useCallback(async () => {
     try {
@@ -331,9 +339,6 @@ function OverviewContent() {
             <div className="bg-surface-0 rounded-lg border border-border-subtle p-5">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-sm font-medium text-foreground">What this capture could and could not see</h3>
-                <Link href={`/evidence?capture=${captureId}`} className="text-xs text-brand hover:underline">
-                  Evidence chain
-                </Link>
               </div>
               <VisibilityPanel v={summary.visibility} />
             </div>
@@ -379,13 +384,25 @@ function OverviewContent() {
 
       {custody.length > 0 && (
         <div className="bg-surface-0 rounded-lg border border-border-subtle p-5">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-border-subtle">
             <h3 className="text-sm font-medium text-foreground">Integrity record and audit trail</h3>
-            <Link href={`/evidence?capture=${captureId}`} className="text-xs text-brand hover:underline">
-              Full evidence chain
-            </Link>
+            {caps.find((c) => c.id === captureId)?.sha256 && (
+              <div className="flex items-center gap-2 bg-surface-1 border border-border rounded px-2.5 py-1 text-xs">
+                <span className="text-muted text-[11px]">SHA-256:</span>
+                <code className="font-mono text-[11px] text-foreground truncate max-w-xs">
+                  {caps.find((c) => c.id === captureId)?.sha256}
+                </code>
+                <button
+                  onClick={() => copyText(caps.find((c) => c.id === captureId)?.sha256 ?? "")}
+                  className="text-muted hover:text-foreground p-0.5 transition-colors"
+                  title="Copy SHA-256"
+                >
+                  {copied ? <Check size={12} className="text-brand" /> : <Copy size={12} />}
+                </button>
+              </div>
+            )}
           </div>
-          <CustodyTimeline events={custody} />
+          <CustodyTimeline events={custody.slice(0, 6)} />
         </div>
       )}
     </div>

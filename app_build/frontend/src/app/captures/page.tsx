@@ -44,6 +44,7 @@ function formatDate(iso: string) {
 }
 
 export default function CapturesPage() {
+  const isDemo = process.env.NEXT_PUBLIC_DEMO_MODE === "1" || process.env.NEXT_PUBLIC_DEMO_MODE === "true";
   const [caps, setCaps] = useState<Capture[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -152,37 +153,43 @@ export default function CapturesPage() {
     <div className="max-w-[1400px] mx-auto px-4 py-8">
       <h1 className="text-xl font-semibold mb-6">Captures</h1>
 
-      <div
-        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-        onDragLeave={() => setDragOver(false)}
-        onDrop={onDrop}
-        className={[
-          "border-2 border-dashed rounded-lg p-8 text-center transition-colors mb-8",
-          dragOver ? "border-brand bg-brand-light" : "border-border-subtle bg-surface-1",
-          uploading ? "opacity-60 pointer-events-none" : "",
-        ].join(" ")}
-      >
-        {uploading ? (
-          <div className="flex flex-col items-center gap-2">
-            <Spinner size={28} className="text-brand animate-spin" />
-            <p className="text-sm text-muted">Uploading capture...</p>
-          </div>
-        ) : (
-          <label className="cursor-pointer flex flex-col items-center gap-2">
-            <UploadSimple size={24} className="text-muted" />
-            <p className="text-sm text-foreground font-medium">
-              Drop a PCAP file here or click to browse
-            </p>
-            <p className="text-xs text-muted">
-              Accepts .pcap and .pcapng files
-            </p>
-            <input type="file" accept=".pcap,.pcapng" className="hidden" onChange={onFileInput} />
-          </label>
-        )}
-        {uploadErr && (
-          <p className="text-xs text-sev-critical mt-3">{uploadErr}</p>
-        )}
-      </div>
+      {isDemo ? (
+        <div className="rounded-lg border border-border bg-surface-1 p-6 text-center text-xs text-muted mb-8">
+          Uploads are disabled in the public demo
+        </div>
+      ) : (
+        <div
+          onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={onDrop}
+          className={[
+            "border-2 border-dashed rounded-lg p-8 text-center transition-colors mb-8",
+            dragOver ? "border-brand bg-brand-light" : "border-border-subtle bg-surface-1",
+            uploading ? "opacity-60 pointer-events-none" : "",
+          ].join(" ")}
+        >
+          {uploading ? (
+            <div className="flex flex-col items-center gap-2">
+              <Spinner size={28} className="text-brand animate-spin" />
+              <p className="text-sm text-muted">Uploading capture...</p>
+            </div>
+          ) : (
+            <label className="cursor-pointer flex flex-col items-center gap-2">
+              <UploadSimple size={24} className="text-muted" />
+              <p className="text-sm text-foreground font-medium">
+                Drop a PCAP file here or click to browse
+              </p>
+              <p className="text-xs text-muted">
+                Accepts .pcap and .pcapng files
+              </p>
+              <input type="file" accept=".pcap,.pcapng" className="hidden" onChange={onFileInput} />
+            </label>
+          )}
+          {uploadErr && (
+            <p className="text-xs text-sev-critical mt-3">{uploadErr}</p>
+          )}
+        </div>
+      )}
 
       {polling && (
         <div className="flex items-center justify-between text-xs text-brand bg-brand-light px-4 py-2 rounded-md mb-4 border border-brand/20">
@@ -247,7 +254,7 @@ export default function CapturesPage() {
               </tr>
             </thead>
             <tbody>
-              {caps.map((c) => (
+              {(isDemo ? caps.filter((c) => c.id.startsWith("cap-00")) : caps).map((c) => (
                 <tr key={c.id} className="border-b border-border-subtle last:border-0 hover:bg-surface-1 transition-colors h-10">
                   <td className="px-4 py-2">{statusIcon(c.status)}</td>
                   <td className="px-4 py-2">

@@ -19,8 +19,10 @@ import {
   incidentsForCap001,
   triageHistoryForInc001,
 } from "@/fixtures/data";
+import evaluationSnapshot from "../demo-data/evaluation.json";
 
 const USE_FIXTURES = process.env.NEXT_PUBLIC_USE_FIXTURES === "1";
+const IS_DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "1" || process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
 function authHeaders(): Record<string, string> {
@@ -34,7 +36,7 @@ function authHeaders(): Record<string, string> {
 }
 
 async function get<T>(path: string, fixture: T): Promise<T> {
-  if (USE_FIXTURES) return fixture;
+  if (IS_DEMO || USE_FIXTURES) return fixture;
   const r = await fetch(`${API}${path}`, { headers: authHeaders() });
   if (r.status === 401) throw new Error("Unauthorized — check your access token");
   if (!r.ok) throw new Error(await r.text());
@@ -82,6 +84,7 @@ export async function getCapture(id: string): Promise<Capture> {
 }
 
 export async function uploadCapture(file: File): Promise<{ capture_id: string; status: string }> {
+  if (IS_DEMO) throw new Error("Uploads disabled in demo mode");
   if (USE_FIXTURES) {
     const newId = `cap-${Date.now()}`;
     const newCap: Capture = {
@@ -195,7 +198,7 @@ export async function getRulesetVersion(): Promise<RulesetVersion> {
 }
 
 export async function getEvaluation(): Promise<Evaluation> {
-  return get("/api/evaluation", evaluationFixture);
+  return get("/api/evaluation", (IS_DEMO ? evaluationSnapshot : evaluationFixture) as Evaluation);
 }
 
 export async function downloadReport(captureId: string, format: "json" | "html" | "pdf"): Promise<void> {
@@ -220,7 +223,7 @@ export function getReportUrl(captureId: string, format: "json" | "html" | "pdf")
   return `${API}/api/captures/${captureId}/report?format=${format}`;
 }
 
-let fixtureIncidents: Incident[] = [...incidentsForCap001];
+const fixtureIncidents: Incident[] = [...incidentsForCap001];
 
 export async function getAssets(captureId: string): Promise<Asset[]> {
   return get(`/api/captures/${captureId}/assets`, assetsForCap001);

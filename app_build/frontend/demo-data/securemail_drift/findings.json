@@ -1,0 +1,5924 @@
+{
+  "ruleset_version": "2025.03.1",
+  "run_at": "2026-10-03T09:37:12.495945+00:00",
+  "capture_id": "cap-001",
+  "total": 59,
+  "items": [
+    {
+      "id": "F-001",
+      "session_id": "S-10",
+      "rule_id": "TR-001",
+      "rule_version": "1.0",
+      "title": "Credentials exchanged in cleartext",
+      "severity": "critical",
+      "category": "transport",
+      "description": "Mailbox credentials (AUTH PLAIN/LOGIN, IMAP LOGIN, POP3 USER/PASS) were sent over an unencrypted session.",
+      "evidence": {
+        "frames": [
+          10
+        ],
+        "client": "10.0.1.89:44289",
+        "server": "10.0.0.7",
+        "server_port": 110,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-36ba924d",
+        "EV-3941fa3e",
+        "EV-dfc458b9"
+      ],
+      "wireshark_filter": "tcp.port == 110",
+      "score_impact": 148,
+      "priority_rank": 1,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 3,
+        "clients_affected": 3
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Require TLS before authentication (disable plaintext auth).",
+        "steps": [
+          "Require TLS before authentication (disable plaintext auth).",
+          "Force password resets for the exposed accounts.",
+          "Block cleartext ports (110/143/25 auth) at the firewall for client access."
+        ],
+        "references": [
+          "RFC 8314 (Cleartext considered obsolete)"
+        ]
+      },
+      "policy_refs": [
+        {
+          "document": "RFC 8314",
+          "section": "3.1",
+          "verified_on": "2025-01-15"
+        }
+      ],
+      "incident_id": "INC-b83cf397",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-002",
+      "session_id": "S-67",
+      "rule_id": "TR-001",
+      "rule_version": "1.0",
+      "title": "Credentials exchanged in cleartext",
+      "severity": "critical",
+      "category": "transport",
+      "description": "Mailbox credentials (AUTH PLAIN/LOGIN, IMAP LOGIN, POP3 USER/PASS) were sent over an unencrypted session.",
+      "evidence": {
+        "frames": [
+          67
+        ],
+        "client": "10.0.1.139:49831",
+        "server": "10.0.0.5",
+        "server_port": 143,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-5d55f4d2",
+        "EV-abb88ba1"
+      ],
+      "wireshark_filter": "tcp.port == 143",
+      "score_impact": 123,
+      "priority_rank": 2,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Require TLS before authentication (disable plaintext auth).",
+        "steps": [
+          "Require TLS before authentication (disable plaintext auth).",
+          "Force password resets for the exposed accounts.",
+          "Block cleartext ports (110/143/25 auth) at the firewall for client access."
+        ],
+        "references": [
+          "RFC 8314 (Cleartext considered obsolete)"
+        ]
+      },
+      "policy_refs": [
+        {
+          "document": "RFC 8314",
+          "section": "3.1",
+          "verified_on": "2025-01-15"
+        }
+      ],
+      "incident_id": "INC-43c8b12e",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-003",
+      "session_id": "S-0",
+      "rule_id": "TR-001",
+      "rule_version": "1.0",
+      "title": "Credentials exchanged in cleartext",
+      "severity": "critical",
+      "category": "transport",
+      "description": "Mailbox credentials (AUTH PLAIN/LOGIN, IMAP LOGIN, POP3 USER/PASS) were sent over an unencrypted session.",
+      "evidence": {
+        "frames": [
+          0
+        ],
+        "client": "10.0.1.67:43062",
+        "server": "10.0.0.6",
+        "server_port": 587,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-793697ec",
+        "EV-8416f312",
+        "EV-5e5a9309"
+      ],
+      "wireshark_filter": "tcp.port == 587",
+      "score_impact": 120,
+      "priority_rank": 3,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 3,
+        "clients_affected": 3
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Require TLS before authentication (disable plaintext auth).",
+        "steps": [
+          "Require TLS before authentication (disable plaintext auth).",
+          "Force password resets for the exposed accounts.",
+          "Block cleartext ports (110/143/25 auth) at the firewall for client access."
+        ],
+        "references": [
+          "RFC 8314 (Cleartext considered obsolete)"
+        ]
+      },
+      "policy_refs": [
+        {
+          "document": "RFC 8314",
+          "section": "3.1",
+          "verified_on": "2025-01-15"
+        }
+      ],
+      "incident_id": "INC-632a66ff",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-004",
+      "session_id": "S-48",
+      "rule_id": "DR-TRANSPORT",
+      "rule_version": "1.0",
+      "title": "Drift: STARTTLS no longer offered / honoured - possible stripping",
+      "severity": "critical",
+      "category": "drift",
+      "description": "STARTTLS no longer offered / honoured - possible stripping",
+      "evidence": {
+        "frames": [
+          48
+        ],
+        "client": "10.0.1.120:54597",
+        "server": "10.0.0.6",
+        "server_port": 25,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-944c64d2",
+        "EV-719aad90",
+        "EV-109d9761"
+      ],
+      "wireshark_filter": "tcp.port == 25",
+      "score_impact": 119,
+      "priority_rank": 4,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "inbound_relay",
+        "sessions_affected": 7,
+        "clients_affected": 7
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Check for on-path devices altering SMTP/IMAP/POP3 capabilities, verify server TLS config, and enforce MTA-STS/DANE.",
+        "steps": [
+          "Check for on-path devices altering SMTP/IMAP/POP3 capabilities, verify server TLS config, and enforce MTA-STS/DANE."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-fb4acffb",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-005",
+      "session_id": "S-0",
+      "rule_id": "TR-003",
+      "rule_version": "1.0",
+      "title": "STARTTLS upgrade refused - possible stripping / downgrade",
+      "severity": "critical",
+      "category": "transport",
+      "description": "The client requested STARTTLS/STLS but the server (or an on-path device) answered with an error and the session continued in cleartext.",
+      "evidence": {
+        "frames": [
+          0
+        ],
+        "client": "10.0.1.67:43062",
+        "server": "10.0.0.6",
+        "server_port": 587,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-cf6cf306",
+        "EV-8eccb266",
+        "EV-82fc09d0"
+      ],
+      "wireshark_filter": "tcp.port == 587",
+      "score_impact": 117,
+      "priority_rank": 5,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 3,
+        "clients_affected": 3
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Investigate middleboxes/proxies on the path that may rewrite STARTTLS responses.",
+        "steps": [
+          "Investigate middleboxes/proxies on the path that may rewrite STARTTLS responses.",
+          "Configure clients to require TLS (never fall back to plaintext).",
+          "Check server logs for TLS initialisation failures."
+        ],
+        "references": [
+          "CVE-2011-0411",
+          "RFC 7817"
+        ]
+      },
+      "policy_refs": [
+        {
+          "document": "RFC 3207",
+          "section": "4",
+          "verified_on": "2025-01-15"
+        }
+      ],
+      "incident_id": "INC-ea1012b3",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-006",
+      "session_id": "S-67",
+      "rule_id": "DR-TRANSPORT",
+      "rule_version": "1.0",
+      "title": "Drift: STARTTLS no longer offered / honoured - possible stripping",
+      "severity": "critical",
+      "category": "drift",
+      "description": "STARTTLS no longer offered / honoured - possible stripping",
+      "evidence": {
+        "frames": [
+          67
+        ],
+        "client": "10.0.1.139:49831",
+        "server": "10.0.0.5",
+        "server_port": 143,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-e837870d",
+        "EV-b9235954"
+      ],
+      "wireshark_filter": "tcp.port == 143",
+      "score_impact": 115,
+      "priority_rank": 6,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Check for on-path devices altering SMTP/IMAP/POP3 capabilities, verify server TLS config, and enforce MTA-STS/DANE.",
+        "steps": [
+          "Check for on-path devices altering SMTP/IMAP/POP3 capabilities, verify server TLS config, and enforce MTA-STS/DANE."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-d4be0484",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-007",
+      "session_id": "S-0",
+      "rule_id": "DR-TRANSPORT",
+      "rule_version": "1.0",
+      "title": "Drift: STARTTLS no longer offered / honoured - possible stripping",
+      "severity": "critical",
+      "category": "drift",
+      "description": "STARTTLS no longer offered / honoured - possible stripping",
+      "evidence": {
+        "frames": [
+          0
+        ],
+        "client": "10.0.1.67:43062",
+        "server": "10.0.0.6",
+        "server_port": 587,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-43f1dfec",
+        "EV-7c66fadc",
+        "EV-46bf537e"
+      ],
+      "wireshark_filter": "tcp.port == 587",
+      "score_impact": 112,
+      "priority_rank": 7,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 3,
+        "clients_affected": 3
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Check for on-path devices altering SMTP/IMAP/POP3 capabilities, verify server TLS config, and enforce MTA-STS/DANE.",
+        "steps": [
+          "Check for on-path devices altering SMTP/IMAP/POP3 capabilities, verify server TLS config, and enforce MTA-STS/DANE."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-248eb5d1",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-008",
+      "session_id": "S-97",
+      "rule_id": "DR-CIPHER",
+      "rule_version": "1.0",
+      "title": "Drift: Insecure cipher suite(s) newly negotiated: TLS_ECDHE_RSA_WITH_RC4_128_SHA",
+      "severity": "critical",
+      "category": "drift",
+      "description": "Insecure cipher suite(s) newly negotiated: TLS_ECDHE_RSA_WITH_RC4_128_SHA",
+      "evidence": {
+        "frames": [
+          97
+        ],
+        "client": "10.0.1.84:58194",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-72bba311",
+        "EV-2c687d68",
+        "EV-54ebd3e5",
+        "EV-8f04cf1e",
+        "EV-4fabb39c"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 110,
+      "priority_rank": 8,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Restrict the server cipher list to AEAD+ECDHE suites and identify the client that selected this suite.",
+        "steps": [
+          "Restrict the server cipher list to AEAD+ECDHE suites and identify the client that selected this suite."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-b31c4236",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-009",
+      "session_id": "S-97",
+      "rule_id": "CS-001",
+      "rule_version": "1.0",
+      "title": "Insecure cipher suite negotiated",
+      "severity": "critical",
+      "category": "cipher",
+      "description": "A NULL / EXPORT / anonymous / RC4 / DES / MD5-based suite was negotiated.",
+      "evidence": {
+        "frames": [
+          97
+        ],
+        "client": "10.0.1.84:58194",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-72bba311",
+        "EV-2c687d68"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 103,
+      "priority_rank": 9,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Remove insecure suites from the server cipher list immediately.",
+        "steps": [
+          "Remove insecure suites from the server cipher list immediately."
+        ],
+        "references": [
+          "RFC 7465",
+          "FREAK/Logjam"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-aa9f25bc",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-010",
+      "session_id": "S-43",
+      "rule_id": "TLS-001",
+      "rule_version": "1.0",
+      "title": "Deprecated protocol version negotiated - TLS 1.0",
+      "severity": "high",
+      "category": "protocol",
+      "description": "The session negotiated SSLv3 / TLS 1.0 / TLS 1.1.",
+      "evidence": {
+        "frames": [
+          43
+        ],
+        "client": "10.0.1.198:55896",
+        "server": "10.0.0.8",
+        "server_port": 465,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d601c8ee",
+        "EV-2ee1299f",
+        "EV-5e0250b7"
+      ],
+      "wireshark_filter": "tcp.port == 465",
+      "score_impact": 103,
+      "priority_rank": 10,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 4,
+        "clients_affected": 4
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Disable TLS < 1.2 on the server.",
+        "steps": [
+          "Disable TLS < 1.2 on the server.",
+          "Identify and upgrade/replace the client that only supports legacy TLS."
+        ],
+        "references": [
+          "RFC 8996 (Deprecating TLS 1.0/1.1)"
+        ]
+      },
+      "policy_refs": [
+        {
+          "document": "RFC 8996",
+          "section": "1",
+          "verified_on": "2025-01-15"
+        }
+      ],
+      "incident_id": "INC-4a3e8474",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-011",
+      "session_id": "S-43",
+      "rule_id": "CE-001",
+      "rule_version": "1.0",
+      "title": "Server certificate expired",
+      "severity": "high",
+      "category": "certificate",
+      "description": "Certificate validity ended before the capture.",
+      "evidence": {
+        "frames": [
+          43
+        ],
+        "client": "10.0.1.198:55896",
+        "server": "10.0.0.8",
+        "server_port": 465,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-ab44786b",
+        "EV-20e084c3",
+        "EV-25bec94e"
+      ],
+      "wireshark_filter": "tcp.port == 465",
+      "score_impact": 103,
+      "priority_rank": 11,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 4,
+        "clients_affected": 4
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Renew and deploy a new certificate.",
+        "steps": [
+          "Renew and deploy a new certificate.",
+          "Automate renewal (ACME)."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-31db10fe",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-012",
+      "session_id": "S-43",
+      "rule_id": "CE-008",
+      "rule_version": "1.0",
+      "title": "Weak RSA key length - RSA-1024",
+      "severity": "high",
+      "category": "certificate",
+      "description": "RSA key is shorter than 2048 bits.",
+      "evidence": {
+        "frames": [
+          43
+        ],
+        "client": "10.0.1.198:55896",
+        "server": "10.0.0.8",
+        "server_port": 465,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-ab44786b",
+        "EV-20e084c3",
+        "EV-25bec94e"
+      ],
+      "wireshark_filter": "tcp.port == 465",
+      "score_impact": 100,
+      "priority_rank": 12,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 4,
+        "clients_affected": 4
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Re-issue with RSA >=2048 (3072 recommended) or ECDSA P-256.",
+        "steps": [
+          "Re-issue with RSA >=2048 (3072 recommended) or ECDSA P-256."
+        ],
+        "references": [
+          "NIST SP 800-57"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-ccfda090",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-013",
+      "session_id": "S-2",
+      "rule_id": "DR-CERT",
+      "rule_version": "1.0",
+      "title": "Drift: Certificate change detected",
+      "severity": "high",
+      "category": "drift",
+      "description": "Issuer changed: Synthetic Corp Issuing CA -> Unknown Trust Services CA; New certificate does not chain to a trusted root (previous one did)",
+      "evidence": {
+        "frames": [
+          2
+        ],
+        "client": "10.0.1.170:52423",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-0ecbdc63",
+        "EV-973c892b",
+        "EV-4792a7ab"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 96,
+      "priority_rank": 13,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 38,
+        "clients_affected": 38
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Investigate certificate replacement: confirm the change ticket, issuer authorisation and that no interception device is in path.",
+        "steps": [
+          "Investigate certificate replacement: confirm the change ticket, issuer authorisation and that no interception device is in path."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-523711e8",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-014",
+      "session_id": "S-2",
+      "rule_id": "CE-005",
+      "rule_version": "1.0",
+      "title": "Certificate chain not trusted",
+      "severity": "high",
+      "category": "certificate",
+      "description": "Chain does not anchor to a trusted root.",
+      "evidence": {
+        "frames": [
+          2
+        ],
+        "client": "10.0.1.170:52423",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-0ecbdc63",
+        "EV-973c892b",
+        "EV-4792a7ab"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 86,
+      "priority_rank": 14,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 38,
+        "clients_affected": 38
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Install a certificate from a trusted CA and serve the full chain.",
+        "steps": [
+          "Install a certificate from a trusted CA and serve the full chain.",
+          "Add your enterprise CA to production_artifacts/trust_store/ if private."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-5bdd79c5",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-015",
+      "session_id": "S-3",
+      "rule_id": "DR-PFS",
+      "rule_version": "1.0",
+      "title": "Drift: Forward-secrecy coverage dropped 100% -> 79%",
+      "severity": "high",
+      "category": "drift",
+      "description": "Forward-secrecy coverage dropped 100% -> 79%",
+      "evidence": {
+        "frames": [
+          3
+        ],
+        "client": "10.0.1.183:46493",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-54ebd3e5",
+        "EV-8f04cf1e",
+        "EV-4fabb39c"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 85,
+      "priority_rank": 15,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 14,
+        "clients_affected": 14
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Remove static RSA key-exchange suites; require ECDHE/DHE.",
+        "steps": [
+          "Remove static RSA key-exchange suites; require ECDHE/DHE."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-c32a24bf",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-016",
+      "session_id": "S-3",
+      "rule_id": "DR-TLS",
+      "rule_version": "1.0",
+      "title": "Drift: TLS 1.1 traffic detected",
+      "severity": "high",
+      "category": "drift",
+      "description": "TLS 1.1 newly negotiated",
+      "evidence": {
+        "frames": [
+          3
+        ],
+        "client": "10.0.1.183:46493",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-54ebd3e5",
+        "EV-8f04cf1e",
+        "EV-4fabb39c",
+        "EV-72bba311",
+        "EV-2c687d68"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 85,
+      "priority_rank": 16,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 14,
+        "clients_affected": 14
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Investigate the server/client configuration responsible for negotiating TLS 1.1; disable it on the server and upgrade the legacy client.",
+        "steps": [
+          "Investigate the server/client configuration responsible for negotiating TLS 1.1; disable it on the server and upgrade the legacy client."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-605bf1a7",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-017",
+      "session_id": "S-3",
+      "rule_id": "DR-CIPHER",
+      "rule_version": "1.0",
+      "title": "Drift: Weak cipher suite(s) newly negotiated: TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+      "severity": "high",
+      "category": "drift",
+      "description": "Weak cipher suite(s) newly negotiated: TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+      "evidence": {
+        "frames": [
+          3
+        ],
+        "client": "10.0.1.183:46493",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-54ebd3e5",
+        "EV-8f04cf1e",
+        "EV-4fabb39c"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 85,
+      "priority_rank": 17,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 14,
+        "clients_affected": 14
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Restrict the server cipher list to AEAD+ECDHE suites and identify the client that selected this suite.",
+        "steps": [
+          "Restrict the server cipher list to AEAD+ECDHE suites and identify the client that selected this suite."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-b31c4236",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-018",
+      "session_id": "S-97",
+      "rule_id": "DR-TLS",
+      "rule_version": "1.0",
+      "title": "Drift: TLS 1.0 traffic detected",
+      "severity": "high",
+      "category": "drift",
+      "description": "TLS 1.0 newly negotiated",
+      "evidence": {
+        "frames": [
+          97
+        ],
+        "client": "10.0.1.84:58194",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-72bba311",
+        "EV-2c687d68"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 80,
+      "priority_rank": 18,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Investigate the server/client configuration responsible for negotiating TLS 1.0; disable it on the server and upgrade the legacy client.",
+        "steps": [
+          "Investigate the server/client configuration responsible for negotiating TLS 1.0; disable it on the server and upgrade the legacy client."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-605bf1a7",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-019",
+      "session_id": "S-4",
+      "rule_id": "DR-CERT",
+      "rule_version": "1.0",
+      "title": "Drift: Certificate change detected",
+      "severity": "medium",
+      "category": "drift",
+      "description": "Same issuer, key and subject; only the fingerprint/validity window changed; Previous certificate still had >30 days validity: unscheduled replacement",
+      "evidence": {
+        "frames": [
+          4
+        ],
+        "client": "10.0.1.62:41228",
+        "server": "10.0.0.7",
+        "server_port": 995,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-51fdcb76",
+        "EV-9d273e3b",
+        "EV-672b29a0"
+      ],
+      "wireshark_filter": "tcp.port == 995",
+      "score_impact": 80,
+      "priority_rank": 19,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 12,
+        "clients_affected": 12
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Investigate certificate replacement: confirm the change ticket, issuer authorisation and that no interception device is in path.",
+        "steps": [
+          "Investigate certificate replacement: confirm the change ticket, issuer authorisation and that no interception device is in path."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-1a3f939a",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-020",
+      "session_id": "S-134",
+      "rule_id": "ML-001",
+      "rule_version": "1.0",
+      "title": "Anomalous TLS session behaviour (ML)",
+      "severity": "high",
+      "category": "anomaly",
+      "description": "Isolation Forest flagged sessions whose cryptographic/handshake behaviour deviates from the reference profile.",
+      "evidence": {
+        "frames": [
+          134
+        ],
+        "client": "10.0.1.180:40340",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-c345ee7c",
+        "EV-308ebc1f",
+        "EV-98ebaa51"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 78,
+      "priority_rank": 20,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 21,
+        "clients_affected": 21
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Review the listed sessions and the deviating features.",
+        "steps": [
+          "Review the listed sessions and the deviating features.",
+          "Compare with server change records for the period."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-67693db9",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-021",
+      "session_id": "S-3",
+      "rule_id": "TLS-001",
+      "rule_version": "1.0",
+      "title": "Deprecated protocol version negotiated - TLS 1.1",
+      "severity": "high",
+      "category": "protocol",
+      "description": "The session negotiated SSLv3 / TLS 1.0 / TLS 1.1.",
+      "evidence": {
+        "frames": [
+          3
+        ],
+        "client": "10.0.1.183:46493",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-54ebd3e5",
+        "EV-8f04cf1e",
+        "EV-4fabb39c",
+        "EV-72bba311",
+        "EV-2c687d68"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 78,
+      "priority_rank": 21,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 14,
+        "clients_affected": 14
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Disable TLS < 1.2 on the server.",
+        "steps": [
+          "Disable TLS < 1.2 on the server.",
+          "Identify and upgrade/replace the client that only supports legacy TLS."
+        ],
+        "references": [
+          "RFC 8996 (Deprecating TLS 1.0/1.1)"
+        ]
+      },
+      "policy_refs": [
+        {
+          "document": "RFC 8996",
+          "section": "1",
+          "verified_on": "2025-01-15"
+        }
+      ],
+      "incident_id": "INC-bc40385e",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-022",
+      "session_id": "S-3",
+      "rule_id": "CS-002",
+      "rule_version": "1.0",
+      "title": "Weak cipher suite negotiated (3DES)",
+      "severity": "high",
+      "category": "cipher",
+      "description": "3DES was negotiated.",
+      "evidence": {
+        "frames": [
+          3
+        ],
+        "client": "10.0.1.183:46493",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-54ebd3e5",
+        "EV-8f04cf1e",
+        "EV-4fabb39c"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 78,
+      "priority_rank": 22,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 14,
+        "clients_affected": 14
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Disable 3DES suites.",
+        "steps": [
+          "Disable 3DES suites."
+        ],
+        "references": [
+          "CVE-2016-2183"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-7cf3de50",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-023",
+      "session_id": "S-4",
+      "rule_id": "CS-006",
+      "rule_version": "1.0",
+      "title": "Weak Diffie-Hellman parameters",
+      "severity": "high",
+      "category": "cipher",
+      "description": "DHE prime is shorter than 2048 bits.",
+      "evidence": {
+        "frames": [
+          4
+        ],
+        "client": "10.0.1.62:41228",
+        "server": "10.0.0.7",
+        "server_port": 995,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d4a8960d",
+        "EV-c93f22e2"
+      ],
+      "wireshark_filter": "tcp.port == 995",
+      "score_impact": 78,
+      "priority_rank": 23,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Generate/use >=2048-bit (ideally ffdhe3072) DH groups or prefer ECDHE.",
+        "steps": [
+          "Generate/use >=2048-bit (ideally ffdhe3072) DH groups or prefer ECDHE."
+        ],
+        "references": [
+          "Logjam (CVE-2015-4000)"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-910d6d2a",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-024",
+      "session_id": "S-97",
+      "rule_id": "TLS-001",
+      "rule_version": "1.0",
+      "title": "Deprecated protocol version negotiated - TLS 1.0",
+      "severity": "high",
+      "category": "protocol",
+      "description": "The session negotiated SSLv3 / TLS 1.0 / TLS 1.1.",
+      "evidence": {
+        "frames": [
+          97
+        ],
+        "client": "10.0.1.84:58194",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-72bba311",
+        "EV-2c687d68"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 73,
+      "priority_rank": 24,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Disable TLS < 1.2 on the server.",
+        "steps": [
+          "Disable TLS < 1.2 on the server.",
+          "Identify and upgrade/replace the client that only supports legacy TLS."
+        ],
+        "references": [
+          "RFC 8996 (Deprecating TLS 1.0/1.1)"
+        ]
+      },
+      "policy_refs": [
+        {
+          "document": "RFC 8996",
+          "section": "1",
+          "verified_on": "2025-01-15"
+        }
+      ],
+      "incident_id": "INC-bc40385e",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-025",
+      "session_id": "S-10",
+      "rule_id": "TR-005",
+      "rule_version": "1.0",
+      "title": "Authentication mechanisms offered before TLS",
+      "severity": "medium",
+      "category": "transport",
+      "description": "Server advertised cleartext-capable authentication (PLAIN/LOGIN/USER-PASS) in the unencrypted phase.",
+      "evidence": {
+        "frames": [
+          10
+        ],
+        "client": "10.0.1.89:44289",
+        "server": "10.0.0.7",
+        "server_port": 110,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d9b8e2a0",
+        "EV-6f7ad8ba",
+        "EV-707cc8cf"
+      ],
+      "wireshark_filter": "tcp.port == 110",
+      "score_impact": 73,
+      "priority_rank": 25,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 3,
+        "clients_affected": 3
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Only advertise AUTH after TLS is established.",
+        "steps": [
+          "Only advertise AUTH after TLS is established.",
+          "IMAP: enable LOGINDISABLED until STARTTLS."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-eb109c34",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-026",
+      "session_id": "S-43",
+      "rule_id": "CS-005",
+      "rule_version": "1.0",
+      "title": "Client offers insecure or weak cipher suites - insecure suites offered",
+      "severity": "medium",
+      "category": "cipher",
+      "description": "ClientHello lists NULL/EXPORT/RC4/DES/3DES suites.",
+      "evidence": {
+        "frames": [
+          43
+        ],
+        "client": "10.0.1.198:55896",
+        "server": "10.0.0.8",
+        "server_port": 465,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d601c8ee",
+        "EV-2ee1299f",
+        "EV-5e0250b7"
+      ],
+      "wireshark_filter": "tcp.port == 465",
+      "score_impact": 73,
+      "priority_rank": 26,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 4,
+        "clients_affected": 4
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Reconfigure the client crypto policy.",
+        "steps": [
+          "Reconfigure the client crypto policy."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-d7020c39",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-027",
+      "session_id": "S-43",
+      "rule_id": "CS-004",
+      "rule_version": "1.0",
+      "title": "No forward secrecy",
+      "severity": "medium",
+      "category": "cipher",
+      "description": "The key exchange was static RSA/DH (no ephemeral keys).",
+      "evidence": {
+        "frames": [
+          43
+        ],
+        "client": "10.0.1.198:55896",
+        "server": "10.0.0.8",
+        "server_port": 465,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d601c8ee",
+        "EV-2ee1299f",
+        "EV-5e0250b7"
+      ],
+      "wireshark_filter": "tcp.port == 465",
+      "score_impact": 73,
+      "priority_rank": 27,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 4,
+        "clients_affected": 4
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Prioritise ECDHE/DHE suites; drop static RSA key exchange.",
+        "steps": [
+          "Prioritise ECDHE/DHE suites; drop static RSA key exchange."
+        ],
+        "references": [
+          "RFC 9325 / BCP 195 (TLS recommendations)"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-aa87dab7",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-028",
+      "session_id": "S-4",
+      "rule_id": "CE-003",
+      "rule_version": "1.0",
+      "title": "Server certificate expiring soon",
+      "severity": "medium",
+      "category": "certificate",
+      "description": "Certificate expires within 30 days of capture.",
+      "evidence": {
+        "frames": [
+          4
+        ],
+        "client": "10.0.1.62:41228",
+        "server": "10.0.0.7",
+        "server_port": 995,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-51fdcb76",
+        "EV-9d273e3b",
+        "EV-672b29a0"
+      ],
+      "wireshark_filter": "tcp.port == 995",
+      "score_impact": 73,
+      "priority_rank": 28,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 12,
+        "clients_affected": 12
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Renew the certificate now.",
+        "steps": [
+          "Renew the certificate now.",
+          "Add expiry monitoring/alerts."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-8706877c",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-029",
+      "session_id": "S-76",
+      "rule_id": "TLS-003",
+      "rule_version": "1.0",
+      "title": "TLS downgrade sentinel present in ServerHello",
+      "severity": "high",
+      "category": "protocol",
+      "description": "Server random carries the TLS 1.3 downgrade sentinel: the server supports TLS 1.3 but a lower version was negotiated.",
+      "evidence": {
+        "frames": [
+          76
+        ],
+        "client": "10.0.1.138:58328",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-9128306a",
+        "EV-cc06931c"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 70,
+      "priority_rank": 29,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Investigate the client and path for interception.",
+        "steps": [
+          "Investigate the client and path for interception.",
+          "Ensure clients enable TLS 1.3."
+        ],
+        "references": [
+          "RFC 8446 section 4.1.3"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-f960e858",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-030",
+      "session_id": "S-43",
+      "rule_id": "TLS-007",
+      "rule_version": "1.0",
+      "title": "Secure renegotiation not supported",
+      "severity": "medium",
+      "category": "protocol",
+      "description": "Server did not include renegotiation_info (RFC 5746).",
+      "evidence": {
+        "frames": [
+          43
+        ],
+        "client": "10.0.1.198:55896",
+        "server": "10.0.0.8",
+        "server_port": 465,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d601c8ee",
+        "EV-2ee1299f",
+        "EV-5e0250b7"
+      ],
+      "wireshark_filter": "tcp.port == 465",
+      "score_impact": 70,
+      "priority_rank": 30,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 4,
+        "clients_affected": 4
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Upgrade the TLS library / mail server.",
+        "steps": [
+          "Upgrade the TLS library / mail server.",
+          "Disable insecure renegotiation."
+        ],
+        "references": [
+          "CVE-2009-3555",
+          "RFC 5746"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-27ba3486",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-031",
+      "session_id": "S-43",
+      "rule_id": "CE-004",
+      "rule_version": "1.0",
+      "title": "Self-signed server certificate",
+      "severity": "medium",
+      "category": "certificate",
+      "description": "Leaf certificate is self-signed and not in the trust store.",
+      "evidence": {
+        "frames": [
+          43
+        ],
+        "client": "10.0.1.198:55896",
+        "server": "10.0.0.8",
+        "server_port": 465,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-ab44786b",
+        "EV-20e084c3",
+        "EV-25bec94e"
+      ],
+      "wireshark_filter": "tcp.port == 465",
+      "score_impact": 70,
+      "priority_rank": 31,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 4,
+        "clients_affected": 4
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Issue a certificate from a trusted or enterprise CA.",
+        "steps": [
+          "Issue a certificate from a trusted or enterprise CA."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-0a962454",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-032",
+      "session_id": "S-48",
+      "rule_id": "TR-002",
+      "rule_version": "1.0",
+      "title": "Email session without transport encryption - STARTTLS not offered",
+      "severity": "medium",
+      "category": "transport",
+      "description": "The session carried mail traffic without any TLS.",
+      "evidence": {
+        "frames": [
+          48
+        ],
+        "client": "10.0.1.120:54597",
+        "server": "10.0.0.6",
+        "server_port": 25,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-944c64d2",
+        "EV-719aad90",
+        "EV-109d9761"
+      ],
+      "wireshark_filter": "tcp.port == 25",
+      "score_impact": 52,
+      "priority_rank": 32,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "inbound_relay",
+        "sessions_affected": 7,
+        "clients_affected": 7
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Enable STARTTLS or implicit TLS on this service.",
+        "steps": [
+          "Enable STARTTLS or implicit TLS on this service.",
+          "Enforce encryption for submission/IMAP/POP3; use MTA-STS/DANE for MX traffic."
+        ],
+        "references": [
+          "RFC 3207",
+          "RFC 8461 (MTA-STS)"
+        ]
+      },
+      "policy_refs": [
+        {
+          "document": "RFC 8314",
+          "section": "3.2",
+          "verified_on": "2025-01-15"
+        }
+      ],
+      "incident_id": "INC-122c9353",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-033",
+      "session_id": "S-3",
+      "rule_id": "CS-005",
+      "rule_version": "1.0",
+      "title": "Client offers insecure or weak cipher suites - insecure suites offered",
+      "severity": "medium",
+      "category": "cipher",
+      "description": "ClientHello lists NULL/EXPORT/RC4/DES/3DES suites.",
+      "evidence": {
+        "frames": [
+          3
+        ],
+        "client": "10.0.1.183:46493",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-54ebd3e5",
+        "EV-3b77fd8f",
+        "EV-4d74f719"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 51,
+      "priority_rank": 33,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 19,
+        "clients_affected": 19
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Reconfigure the client crypto policy.",
+        "steps": [
+          "Reconfigure the client crypto policy."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-ce50b5e0",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-034",
+      "session_id": "S-55",
+      "rule_id": "ML-001",
+      "rule_version": "1.0",
+      "title": "Anomalous TLS session behaviour (ML)",
+      "severity": "medium",
+      "category": "anomaly",
+      "description": "Isolation Forest flagged sessions whose cryptographic/handshake behaviour deviates from the reference profile.",
+      "evidence": {
+        "frames": [
+          55
+        ],
+        "client": "10.0.1.70:58068",
+        "server": "10.0.0.6",
+        "server_port": 25,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-3e11ffb2",
+        "EV-683c9956",
+        "EV-7f984cbc"
+      ],
+      "wireshark_filter": "tcp.port == 25",
+      "score_impact": 49,
+      "priority_rank": 34,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "inbound_relay",
+        "sessions_affected": 7,
+        "clients_affected": 7
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Review the listed sessions and the deviating features.",
+        "steps": [
+          "Review the listed sessions and the deviating features.",
+          "Compare with server change records for the period."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-0d2e29ef",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-035",
+      "session_id": "S-3",
+      "rule_id": "CS-004",
+      "rule_version": "1.0",
+      "title": "No forward secrecy",
+      "severity": "medium",
+      "category": "cipher",
+      "description": "The key exchange was static RSA/DH (no ephemeral keys).",
+      "evidence": {
+        "frames": [
+          3
+        ],
+        "client": "10.0.1.183:46493",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-54ebd3e5",
+        "EV-8f04cf1e",
+        "EV-4fabb39c"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 48,
+      "priority_rank": 35,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 14,
+        "clients_affected": 14
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Prioritise ECDHE/DHE suites; drop static RSA key exchange.",
+        "steps": [
+          "Prioritise ECDHE/DHE suites; drop static RSA key exchange."
+        ],
+        "references": [
+          "RFC 9325 / BCP 195 (TLS recommendations)"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-08df2b12",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-036",
+      "session_id": "S-67",
+      "rule_id": "TR-005",
+      "rule_version": "1.0",
+      "title": "Authentication mechanisms offered before TLS",
+      "severity": "medium",
+      "category": "transport",
+      "description": "Server advertised cleartext-capable authentication (PLAIN/LOGIN/USER-PASS) in the unencrypted phase.",
+      "evidence": {
+        "frames": [
+          67
+        ],
+        "client": "10.0.1.139:49831",
+        "server": "10.0.0.5",
+        "server_port": 143,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-e837870d",
+        "EV-b9235954"
+      ],
+      "wireshark_filter": "tcp.port == 143",
+      "score_impact": 48,
+      "priority_rank": 36,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Only advertise AUTH after TLS is established.",
+        "steps": [
+          "Only advertise AUTH after TLS is established.",
+          "IMAP: enable LOGINDISABLED until STARTTLS."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-ef4e1661",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-037",
+      "session_id": "S-43",
+      "rule_id": "CS-003",
+      "rule_version": "1.0",
+      "title": "CBC-mode cipher suite negotiated",
+      "severity": "low",
+      "category": "cipher",
+      "description": "A CBC suite was negotiated.",
+      "evidence": {
+        "frames": [
+          43
+        ],
+        "client": "10.0.1.198:55896",
+        "server": "10.0.0.8",
+        "server_port": 465,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d601c8ee",
+        "EV-2ee1299f",
+        "EV-5e0250b7"
+      ],
+      "wireshark_filter": "tcp.port == 465",
+      "score_impact": 48,
+      "priority_rank": 37,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 4,
+        "clients_affected": 4
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Prefer AEAD suites (AES-GCM / ChaCha20-Poly1305).",
+        "steps": [
+          "Prefer AEAD suites (AES-GCM / ChaCha20-Poly1305)."
+        ],
+        "references": [
+          "RFC 9325 / BCP 195 (TLS recommendations)"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-aa4befc2",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-038",
+      "session_id": "S-43",
+      "rule_id": "CE-013",
+      "rule_version": "1.0",
+      "title": "Certificate lacks Subject Alternative Name",
+      "severity": "low",
+      "category": "certificate",
+      "description": "Only CN is present.",
+      "evidence": {
+        "frames": [
+          43
+        ],
+        "client": "10.0.1.198:55896",
+        "server": "10.0.0.8",
+        "server_port": 465,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-ab44786b",
+        "EV-20e084c3",
+        "EV-25bec94e"
+      ],
+      "wireshark_filter": "tcp.port == 465",
+      "score_impact": 48,
+      "priority_rank": 38,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 4,
+        "clients_affected": 4
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Re-issue with SAN entries.",
+        "steps": [
+          "Re-issue with SAN entries."
+        ],
+        "references": [
+          "RFC 2818"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-0738ca85",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-039",
+      "session_id": "S-43",
+      "rule_id": "TLS-004",
+      "rule_version": "1.0",
+      "title": "Client offers deprecated protocol versions",
+      "severity": "low",
+      "category": "protocol",
+      "description": "The ClientHello advertises SSLv3 / TLS 1.0 / TLS 1.1.",
+      "evidence": {
+        "frames": [
+          43
+        ],
+        "client": "10.0.1.198:55896",
+        "server": "10.0.0.8",
+        "server_port": 465,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d601c8ee",
+        "EV-2ee1299f",
+        "EV-5e0250b7"
+      ],
+      "wireshark_filter": "tcp.port == 465",
+      "score_impact": 48,
+      "priority_rank": 39,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 4,
+        "clients_affected": 4
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Update client TLS settings to TLS 1.2+.",
+        "steps": [
+          "Update client TLS settings to TLS 1.2+."
+        ],
+        "references": [
+          "RFC 8996 (Deprecating TLS 1.0/1.1)"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-34741397",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-040",
+      "session_id": "S-3",
+      "rule_id": "TLS-007",
+      "rule_version": "1.0",
+      "title": "Secure renegotiation not supported",
+      "severity": "medium",
+      "category": "protocol",
+      "description": "Server did not include renegotiation_info (RFC 5746).",
+      "evidence": {
+        "frames": [
+          3
+        ],
+        "client": "10.0.1.183:46493",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-54ebd3e5",
+        "EV-8f04cf1e",
+        "EV-4fabb39c"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 46,
+      "priority_rank": 40,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 16,
+        "clients_affected": 16
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Upgrade the TLS library / mail server.",
+        "steps": [
+          "Upgrade the TLS library / mail server.",
+          "Disable insecure renegotiation."
+        ],
+        "references": [
+          "CVE-2009-3555",
+          "RFC 5746"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-40aa868c",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-041",
+      "session_id": "S-48",
+      "rule_id": "MS-002",
+      "rule_version": "1.0",
+      "title": "Message-level protection over plaintext transport",
+      "severity": "medium",
+      "category": "message",
+      "description": "PGP/S-MIME content travels over an unencrypted channel.",
+      "evidence": {
+        "frames": [
+          48
+        ],
+        "client": "10.0.1.120:54597",
+        "server": "10.0.0.6",
+        "server_port": 25,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-944c64d2",
+        "EV-ce8ebced"
+      ],
+      "wireshark_filter": "tcp.port == 25",
+      "score_impact": 45,
+      "priority_rank": 41,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "inbound_relay",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Enable TLS in addition to message-level encryption.",
+        "steps": [
+          "Enable TLS in addition to message-level encryption."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-b89b1372",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-042",
+      "session_id": "S-0",
+      "rule_id": "ML-001",
+      "rule_version": "1.0",
+      "title": "Anomalous TLS session behaviour (ML)",
+      "severity": "medium",
+      "category": "anomaly",
+      "description": "Isolation Forest flagged sessions whose cryptographic/handshake behaviour deviates from the reference profile.",
+      "evidence": {
+        "frames": [
+          0
+        ],
+        "client": "10.0.1.67:43062",
+        "server": "10.0.0.6",
+        "server_port": 587,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-43f1dfec",
+        "EV-7c66fadc"
+      ],
+      "wireshark_filter": "tcp.port == 587",
+      "score_impact": 41,
+      "priority_rank": 42,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Review the listed sessions and the deviating features.",
+        "steps": [
+          "Review the listed sessions and the deviating features.",
+          "Compare with server change records for the period."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-fc87f7b3",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-043",
+      "session_id": "S-138",
+      "rule_id": "MS-004",
+      "rule_version": "1.0",
+      "title": "OpenPGP message without integrity protection",
+      "severity": "medium",
+      "category": "message",
+      "description": "Symmetrically-encrypted data packet without MDC (tag 9).",
+      "evidence": {
+        "frames": [
+          138
+        ],
+        "client": "10.0.1.117:59617",
+        "server": "10.0.0.6",
+        "server_port": 25,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d65c6e40"
+      ],
+      "wireshark_filter": "tcp.port == 25",
+      "score_impact": 41,
+      "priority_rank": 43,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "inbound_relay",
+        "sessions_affected": 1,
+        "clients_affected": 1
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Use AEAD/SEIPD packets; update PGP clients.",
+        "steps": [
+          "Use AEAD/SEIPD packets; update PGP clients."
+        ],
+        "references": [
+          "EFAIL (CVE-2017-17688)"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-cf122f46",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-044",
+      "session_id": "S-76",
+      "rule_id": "TLS-005",
+      "rule_version": "1.0",
+      "title": "Client protocol fallback (TLS_FALLBACK_SCSV)",
+      "severity": "medium",
+      "category": "protocol",
+      "description": "Client signalled a fallback retry with a lower protocol version.",
+      "evidence": {
+        "frames": [
+          76
+        ],
+        "client": "10.0.1.138:58328",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-9128306a",
+        "EV-cc06931c"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 40,
+      "priority_rank": 44,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Investigate why the higher-version handshake failed.",
+        "steps": [
+          "Investigate why the higher-version handshake failed."
+        ],
+        "references": [
+          "RFC 7507"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-d04cd07b",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-045",
+      "session_id": "S-4",
+      "rule_id": "DR-KEX",
+      "rule_version": "1.0",
+      "title": "Drift: New key-exchange mechanism(s): DHE",
+      "severity": "low",
+      "category": "drift",
+      "description": "New key-exchange mechanism(s): DHE",
+      "evidence": {
+        "frames": [
+          4
+        ],
+        "client": "10.0.1.62:41228",
+        "server": "10.0.0.7",
+        "server_port": 995,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d4a8960d",
+        "EV-c93f22e2"
+      ],
+      "wireshark_filter": "tcp.port == 995",
+      "score_impact": 30,
+      "priority_rank": 45,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Confirm the change is intentional.",
+        "steps": [
+          "Confirm the change is intentional."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-d0f2e551",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-046",
+      "session_id": "S-4",
+      "rule_id": "CS-009",
+      "rule_version": "1.0",
+      "title": "No post-quantum hybrid key exchange",
+      "severity": "info",
+      "category": "cipher",
+      "description": "Session key exchange is classical only.",
+      "evidence": {
+        "frames": [
+          4
+        ],
+        "client": "10.0.1.62:41228",
+        "server": "10.0.0.7",
+        "server_port": 995,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d4a8960d",
+        "EV-c93f22e2",
+        "EV-aee7f076"
+      ],
+      "wireshark_filter": "tcp.port == 995",
+      "score_impact": 30,
+      "priority_rank": 46,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 12,
+        "clients_affected": 12
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-808db400",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-047",
+      "session_id": "S-43",
+      "rule_id": "CS-009",
+      "rule_version": "1.0",
+      "title": "No post-quantum hybrid key exchange",
+      "severity": "info",
+      "category": "cipher",
+      "description": "Session key exchange is classical only.",
+      "evidence": {
+        "frames": [
+          43
+        ],
+        "client": "10.0.1.198:55896",
+        "server": "10.0.0.8",
+        "server_port": 465,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d601c8ee",
+        "EV-2ee1299f",
+        "EV-5e0250b7"
+      ],
+      "wireshark_filter": "tcp.port == 465",
+      "score_impact": 30,
+      "priority_rank": 47,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 4,
+        "clients_affected": 4
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-ddd2d788",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-048",
+      "session_id": "S-2",
+      "rule_id": "CS-009",
+      "rule_version": "1.0",
+      "title": "No post-quantum hybrid key exchange",
+      "severity": "info",
+      "category": "cipher",
+      "description": "Session key exchange is classical only.",
+      "evidence": {
+        "frames": [
+          2
+        ],
+        "client": "10.0.1.170:52423",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-ad789859",
+        "EV-2d26d930",
+        "EV-1e59e6ea"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 28,
+      "priority_rank": 48,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 68,
+        "clients_affected": 68
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-aa179797",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-049",
+      "session_id": "S-1",
+      "rule_id": "CS-009",
+      "rule_version": "1.0",
+      "title": "No post-quantum hybrid key exchange",
+      "severity": "info",
+      "category": "cipher",
+      "description": "Session key exchange is classical only.",
+      "evidence": {
+        "frames": [
+          1
+        ],
+        "client": "10.0.1.126:47590",
+        "server": "10.0.0.6",
+        "server_port": 587,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-920af4e8",
+        "EV-fd528f03",
+        "EV-e1621df4"
+      ],
+      "wireshark_filter": "tcp.port == 587",
+      "score_impact": 27,
+      "priority_rank": 49,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 40,
+        "clients_affected": 40
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-72ba16ad",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-050",
+      "session_id": "S-12",
+      "rule_id": "CS-009",
+      "rule_version": "1.0",
+      "title": "No post-quantum hybrid key exchange",
+      "severity": "info",
+      "category": "cipher",
+      "description": "Session key exchange is classical only.",
+      "evidence": {
+        "frames": [
+          12
+        ],
+        "client": "10.0.1.183:46831",
+        "server": "10.0.0.5",
+        "server_port": 143,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-aee620a7",
+        "EV-5b35e518",
+        "EV-9fd2a142"
+      ],
+      "wireshark_filter": "tcp.port == 143",
+      "score_impact": 25,
+      "priority_rank": 50,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 10,
+        "clients_affected": 10
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-c9024fd1",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-051",
+      "session_id": "S-12",
+      "rule_id": "CE-016",
+      "rule_version": "1.0",
+      "title": "Server certificate not observable (TLS 1.3)",
+      "severity": "info",
+      "category": "certificate",
+      "description": "TLS 1.3 encrypts the Certificate message; passive chain validation is impossible.",
+      "evidence": {
+        "frames": [
+          12
+        ],
+        "client": "10.0.1.183:46831",
+        "server": "10.0.0.5",
+        "server_port": 143,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-5a42da79",
+        "EV-eddde6e6",
+        "EV-a2fed6d0"
+      ],
+      "wireshark_filter": "tcp.port == 143",
+      "score_impact": 25,
+      "priority_rank": 51,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 10,
+        "clients_affected": 10
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint.",
+        "steps": [
+          "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-9b3cdea6",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-052",
+      "session_id": "S-3",
+      "rule_id": "TLS-004",
+      "rule_version": "1.0",
+      "title": "Client offers deprecated protocol versions",
+      "severity": "low",
+      "category": "protocol",
+      "description": "The ClientHello advertises SSLv3 / TLS 1.0 / TLS 1.1.",
+      "evidence": {
+        "frames": [
+          3
+        ],
+        "client": "10.0.1.183:46493",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-54ebd3e5",
+        "EV-8f04cf1e",
+        "EV-4fabb39c"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 24,
+      "priority_rank": 52,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 16,
+        "clients_affected": 16
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Update client TLS settings to TLS 1.2+.",
+        "steps": [
+          "Update client TLS settings to TLS 1.2+."
+        ],
+        "references": [
+          "RFC 8996 (Deprecating TLS 1.0/1.1)"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-50893c30",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-053",
+      "session_id": "S-20",
+      "rule_id": "CS-009",
+      "rule_version": "1.0",
+      "title": "No post-quantum hybrid key exchange",
+      "severity": "info",
+      "category": "cipher",
+      "description": "Session key exchange is classical only.",
+      "evidence": {
+        "frames": [
+          20
+        ],
+        "client": "10.0.1.69:54923",
+        "server": "10.0.0.6",
+        "server_port": 25,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-882e3aa8",
+        "EV-c7d8d8b0",
+        "EV-69189531"
+      ],
+      "wireshark_filter": "tcp.port == 25",
+      "score_impact": 20,
+      "priority_rank": 53,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "inbound_relay",
+        "sessions_affected": 15,
+        "clients_affected": 15
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-e888173c",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-054",
+      "session_id": "S-20",
+      "rule_id": "CE-016",
+      "rule_version": "1.0",
+      "title": "Server certificate not observable (TLS 1.3)",
+      "severity": "info",
+      "category": "certificate",
+      "description": "TLS 1.3 encrypts the Certificate message; passive chain validation is impossible.",
+      "evidence": {
+        "frames": [
+          20
+        ],
+        "client": "10.0.1.69:54923",
+        "server": "10.0.0.6",
+        "server_port": 25,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-4fde1d6d",
+        "EV-77bdf336",
+        "EV-deb74651"
+      ],
+      "wireshark_filter": "tcp.port == 25",
+      "score_impact": 20,
+      "priority_rank": 54,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "inbound_relay",
+        "sessions_affected": 15,
+        "clients_affected": 15
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint.",
+        "steps": [
+          "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-36ca3672",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-055",
+      "session_id": "S-11",
+      "rule_id": "TLS-002",
+      "rule_version": "1.0",
+      "title": "TLS handshake failed or fatal alert observed",
+      "severity": "low",
+      "category": "protocol",
+      "description": "A fatal alert or an incomplete handshake was seen.",
+      "evidence": {
+        "frames": [
+          11
+        ],
+        "client": "10.0.1.131:41673",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-f5514aac",
+        "EV-df352e71",
+        "EV-e459fe42"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 19,
+      "priority_rank": 55,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 3,
+        "clients_affected": 3
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Review server TLS logs for the client.",
+        "steps": [
+          "Review server TLS logs for the client.",
+          "Check protocol/cipher overlap between client and server."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-f026f350",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-056",
+      "session_id": "S-4",
+      "rule_id": "DR-CIPHER",
+      "rule_version": "1.0",
+      "title": "Drift: New strong cipher suite(s) observed: TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",
+      "severity": "info",
+      "category": "drift",
+      "description": "New strong cipher suite(s) observed: TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",
+      "evidence": {
+        "frames": [
+          4
+        ],
+        "client": "10.0.1.62:41228",
+        "server": "10.0.0.7",
+        "server_port": 995,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d4a8960d",
+        "EV-c93f22e2"
+      ],
+      "wireshark_filter": "tcp.port == 995",
+      "score_impact": 15,
+      "priority_rank": 56,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Update baseline if intended.",
+        "steps": [
+          "Update baseline if intended."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-147400b8",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-057",
+      "session_id": "S-1",
+      "rule_id": "CE-016",
+      "rule_version": "1.0",
+      "title": "Server certificate not observable (TLS 1.3)",
+      "severity": "info",
+      "category": "certificate",
+      "description": "TLS 1.3 encrypts the Certificate message; passive chain validation is impossible.",
+      "evidence": {
+        "frames": [
+          1
+        ],
+        "client": "10.0.1.126:47590",
+        "server": "10.0.0.6",
+        "server_port": 587,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-102f34c6",
+        "EV-a54b96e0",
+        "EV-c76b0e4c"
+      ],
+      "wireshark_filter": "tcp.port == 587",
+      "score_impact": 14,
+      "priority_rank": 57,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 20,
+        "clients_affected": 20
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint.",
+        "steps": [
+          "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-029060f3",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-058",
+      "session_id": "S-6",
+      "rule_id": "CE-016",
+      "rule_version": "1.0",
+      "title": "Server certificate not observable (TLS 1.3)",
+      "severity": "info",
+      "category": "certificate",
+      "description": "TLS 1.3 encrypts the Certificate message; passive chain validation is impossible.",
+      "evidence": {
+        "frames": [
+          6
+        ],
+        "client": "10.0.1.172:55382",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-0f0e4e0e",
+        "EV-6097a054",
+        "EV-3f9f950e"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 12,
+      "priority_rank": 58,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 30,
+        "clients_affected": 30
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint.",
+        "steps": [
+          "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-02da0d4e",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-059",
+      "session_id": "S-48",
+      "rule_id": "MS-001",
+      "rule_version": "1.0",
+      "title": "Message-level encryption/signing observed (PGP / S-MIME)",
+      "severity": "info",
+      "category": "message",
+      "description": "OpenPGP or S/MIME protected content was detected.",
+      "evidence": {
+        "frames": [
+          48
+        ],
+        "client": "10.0.1.120:54597",
+        "server": "10.0.0.6",
+        "server_port": 25,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-944c64d2",
+        "EV-ce8ebced"
+      ],
+      "wireshark_filter": "tcp.port == 25",
+      "score_impact": 2,
+      "priority_rank": 59,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "inbound_relay",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Keep key hygiene policies; combine with TLS.",
+        "steps": [
+          "Keep key hygiene policies; combine with TLS."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-9d1c8428",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    }
+  ],
+  "findings": [
+    {
+      "id": "F-001",
+      "session_id": "S-10",
+      "rule_id": "TR-001",
+      "rule_version": "1.0",
+      "title": "Credentials exchanged in cleartext",
+      "severity": "critical",
+      "category": "transport",
+      "description": "Mailbox credentials (AUTH PLAIN/LOGIN, IMAP LOGIN, POP3 USER/PASS) were sent over an unencrypted session.",
+      "evidence": {
+        "frames": [
+          10
+        ],
+        "client": "10.0.1.89:44289",
+        "server": "10.0.0.7",
+        "server_port": 110,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-36ba924d",
+        "EV-3941fa3e",
+        "EV-dfc458b9"
+      ],
+      "wireshark_filter": "tcp.port == 110",
+      "score_impact": 148,
+      "priority_rank": 1,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 3,
+        "clients_affected": 3
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Require TLS before authentication (disable plaintext auth).",
+        "steps": [
+          "Require TLS before authentication (disable plaintext auth).",
+          "Force password resets for the exposed accounts.",
+          "Block cleartext ports (110/143/25 auth) at the firewall for client access."
+        ],
+        "references": [
+          "RFC 8314 (Cleartext considered obsolete)"
+        ]
+      },
+      "policy_refs": [
+        {
+          "document": "RFC 8314",
+          "section": "3.1",
+          "verified_on": "2025-01-15"
+        }
+      ],
+      "incident_id": "INC-b83cf397",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-002",
+      "session_id": "S-67",
+      "rule_id": "TR-001",
+      "rule_version": "1.0",
+      "title": "Credentials exchanged in cleartext",
+      "severity": "critical",
+      "category": "transport",
+      "description": "Mailbox credentials (AUTH PLAIN/LOGIN, IMAP LOGIN, POP3 USER/PASS) were sent over an unencrypted session.",
+      "evidence": {
+        "frames": [
+          67
+        ],
+        "client": "10.0.1.139:49831",
+        "server": "10.0.0.5",
+        "server_port": 143,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-5d55f4d2",
+        "EV-abb88ba1"
+      ],
+      "wireshark_filter": "tcp.port == 143",
+      "score_impact": 123,
+      "priority_rank": 2,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Require TLS before authentication (disable plaintext auth).",
+        "steps": [
+          "Require TLS before authentication (disable plaintext auth).",
+          "Force password resets for the exposed accounts.",
+          "Block cleartext ports (110/143/25 auth) at the firewall for client access."
+        ],
+        "references": [
+          "RFC 8314 (Cleartext considered obsolete)"
+        ]
+      },
+      "policy_refs": [
+        {
+          "document": "RFC 8314",
+          "section": "3.1",
+          "verified_on": "2025-01-15"
+        }
+      ],
+      "incident_id": "INC-43c8b12e",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-003",
+      "session_id": "S-0",
+      "rule_id": "TR-001",
+      "rule_version": "1.0",
+      "title": "Credentials exchanged in cleartext",
+      "severity": "critical",
+      "category": "transport",
+      "description": "Mailbox credentials (AUTH PLAIN/LOGIN, IMAP LOGIN, POP3 USER/PASS) were sent over an unencrypted session.",
+      "evidence": {
+        "frames": [
+          0
+        ],
+        "client": "10.0.1.67:43062",
+        "server": "10.0.0.6",
+        "server_port": 587,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-793697ec",
+        "EV-8416f312",
+        "EV-5e5a9309"
+      ],
+      "wireshark_filter": "tcp.port == 587",
+      "score_impact": 120,
+      "priority_rank": 3,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 3,
+        "clients_affected": 3
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Require TLS before authentication (disable plaintext auth).",
+        "steps": [
+          "Require TLS before authentication (disable plaintext auth).",
+          "Force password resets for the exposed accounts.",
+          "Block cleartext ports (110/143/25 auth) at the firewall for client access."
+        ],
+        "references": [
+          "RFC 8314 (Cleartext considered obsolete)"
+        ]
+      },
+      "policy_refs": [
+        {
+          "document": "RFC 8314",
+          "section": "3.1",
+          "verified_on": "2025-01-15"
+        }
+      ],
+      "incident_id": "INC-632a66ff",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-004",
+      "session_id": "S-48",
+      "rule_id": "DR-TRANSPORT",
+      "rule_version": "1.0",
+      "title": "Drift: STARTTLS no longer offered / honoured - possible stripping",
+      "severity": "critical",
+      "category": "drift",
+      "description": "STARTTLS no longer offered / honoured - possible stripping",
+      "evidence": {
+        "frames": [
+          48
+        ],
+        "client": "10.0.1.120:54597",
+        "server": "10.0.0.6",
+        "server_port": 25,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-944c64d2",
+        "EV-719aad90",
+        "EV-109d9761"
+      ],
+      "wireshark_filter": "tcp.port == 25",
+      "score_impact": 119,
+      "priority_rank": 4,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "inbound_relay",
+        "sessions_affected": 7,
+        "clients_affected": 7
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Check for on-path devices altering SMTP/IMAP/POP3 capabilities, verify server TLS config, and enforce MTA-STS/DANE.",
+        "steps": [
+          "Check for on-path devices altering SMTP/IMAP/POP3 capabilities, verify server TLS config, and enforce MTA-STS/DANE."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-fb4acffb",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-005",
+      "session_id": "S-0",
+      "rule_id": "TR-003",
+      "rule_version": "1.0",
+      "title": "STARTTLS upgrade refused - possible stripping / downgrade",
+      "severity": "critical",
+      "category": "transport",
+      "description": "The client requested STARTTLS/STLS but the server (or an on-path device) answered with an error and the session continued in cleartext.",
+      "evidence": {
+        "frames": [
+          0
+        ],
+        "client": "10.0.1.67:43062",
+        "server": "10.0.0.6",
+        "server_port": 587,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-cf6cf306",
+        "EV-8eccb266",
+        "EV-82fc09d0"
+      ],
+      "wireshark_filter": "tcp.port == 587",
+      "score_impact": 117,
+      "priority_rank": 5,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 3,
+        "clients_affected": 3
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Investigate middleboxes/proxies on the path that may rewrite STARTTLS responses.",
+        "steps": [
+          "Investigate middleboxes/proxies on the path that may rewrite STARTTLS responses.",
+          "Configure clients to require TLS (never fall back to plaintext).",
+          "Check server logs for TLS initialisation failures."
+        ],
+        "references": [
+          "CVE-2011-0411",
+          "RFC 7817"
+        ]
+      },
+      "policy_refs": [
+        {
+          "document": "RFC 3207",
+          "section": "4",
+          "verified_on": "2025-01-15"
+        }
+      ],
+      "incident_id": "INC-ea1012b3",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-006",
+      "session_id": "S-67",
+      "rule_id": "DR-TRANSPORT",
+      "rule_version": "1.0",
+      "title": "Drift: STARTTLS no longer offered / honoured - possible stripping",
+      "severity": "critical",
+      "category": "drift",
+      "description": "STARTTLS no longer offered / honoured - possible stripping",
+      "evidence": {
+        "frames": [
+          67
+        ],
+        "client": "10.0.1.139:49831",
+        "server": "10.0.0.5",
+        "server_port": 143,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-e837870d",
+        "EV-b9235954"
+      ],
+      "wireshark_filter": "tcp.port == 143",
+      "score_impact": 115,
+      "priority_rank": 6,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Check for on-path devices altering SMTP/IMAP/POP3 capabilities, verify server TLS config, and enforce MTA-STS/DANE.",
+        "steps": [
+          "Check for on-path devices altering SMTP/IMAP/POP3 capabilities, verify server TLS config, and enforce MTA-STS/DANE."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-d4be0484",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-007",
+      "session_id": "S-0",
+      "rule_id": "DR-TRANSPORT",
+      "rule_version": "1.0",
+      "title": "Drift: STARTTLS no longer offered / honoured - possible stripping",
+      "severity": "critical",
+      "category": "drift",
+      "description": "STARTTLS no longer offered / honoured - possible stripping",
+      "evidence": {
+        "frames": [
+          0
+        ],
+        "client": "10.0.1.67:43062",
+        "server": "10.0.0.6",
+        "server_port": 587,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-43f1dfec",
+        "EV-7c66fadc",
+        "EV-46bf537e"
+      ],
+      "wireshark_filter": "tcp.port == 587",
+      "score_impact": 112,
+      "priority_rank": 7,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 3,
+        "clients_affected": 3
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Check for on-path devices altering SMTP/IMAP/POP3 capabilities, verify server TLS config, and enforce MTA-STS/DANE.",
+        "steps": [
+          "Check for on-path devices altering SMTP/IMAP/POP3 capabilities, verify server TLS config, and enforce MTA-STS/DANE."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-248eb5d1",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-008",
+      "session_id": "S-97",
+      "rule_id": "DR-CIPHER",
+      "rule_version": "1.0",
+      "title": "Drift: Insecure cipher suite(s) newly negotiated: TLS_ECDHE_RSA_WITH_RC4_128_SHA",
+      "severity": "critical",
+      "category": "drift",
+      "description": "Insecure cipher suite(s) newly negotiated: TLS_ECDHE_RSA_WITH_RC4_128_SHA",
+      "evidence": {
+        "frames": [
+          97
+        ],
+        "client": "10.0.1.84:58194",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-72bba311",
+        "EV-2c687d68",
+        "EV-54ebd3e5",
+        "EV-8f04cf1e",
+        "EV-4fabb39c"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 110,
+      "priority_rank": 8,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Restrict the server cipher list to AEAD+ECDHE suites and identify the client that selected this suite.",
+        "steps": [
+          "Restrict the server cipher list to AEAD+ECDHE suites and identify the client that selected this suite."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-b31c4236",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-009",
+      "session_id": "S-97",
+      "rule_id": "CS-001",
+      "rule_version": "1.0",
+      "title": "Insecure cipher suite negotiated",
+      "severity": "critical",
+      "category": "cipher",
+      "description": "A NULL / EXPORT / anonymous / RC4 / DES / MD5-based suite was negotiated.",
+      "evidence": {
+        "frames": [
+          97
+        ],
+        "client": "10.0.1.84:58194",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-72bba311",
+        "EV-2c687d68"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 103,
+      "priority_rank": 9,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Remove insecure suites from the server cipher list immediately.",
+        "steps": [
+          "Remove insecure suites from the server cipher list immediately."
+        ],
+        "references": [
+          "RFC 7465",
+          "FREAK/Logjam"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-aa9f25bc",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-010",
+      "session_id": "S-43",
+      "rule_id": "TLS-001",
+      "rule_version": "1.0",
+      "title": "Deprecated protocol version negotiated - TLS 1.0",
+      "severity": "high",
+      "category": "protocol",
+      "description": "The session negotiated SSLv3 / TLS 1.0 / TLS 1.1.",
+      "evidence": {
+        "frames": [
+          43
+        ],
+        "client": "10.0.1.198:55896",
+        "server": "10.0.0.8",
+        "server_port": 465,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d601c8ee",
+        "EV-2ee1299f",
+        "EV-5e0250b7"
+      ],
+      "wireshark_filter": "tcp.port == 465",
+      "score_impact": 103,
+      "priority_rank": 10,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 4,
+        "clients_affected": 4
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Disable TLS < 1.2 on the server.",
+        "steps": [
+          "Disable TLS < 1.2 on the server.",
+          "Identify and upgrade/replace the client that only supports legacy TLS."
+        ],
+        "references": [
+          "RFC 8996 (Deprecating TLS 1.0/1.1)"
+        ]
+      },
+      "policy_refs": [
+        {
+          "document": "RFC 8996",
+          "section": "1",
+          "verified_on": "2025-01-15"
+        }
+      ],
+      "incident_id": "INC-4a3e8474",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-011",
+      "session_id": "S-43",
+      "rule_id": "CE-001",
+      "rule_version": "1.0",
+      "title": "Server certificate expired",
+      "severity": "high",
+      "category": "certificate",
+      "description": "Certificate validity ended before the capture.",
+      "evidence": {
+        "frames": [
+          43
+        ],
+        "client": "10.0.1.198:55896",
+        "server": "10.0.0.8",
+        "server_port": 465,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-ab44786b",
+        "EV-20e084c3",
+        "EV-25bec94e"
+      ],
+      "wireshark_filter": "tcp.port == 465",
+      "score_impact": 103,
+      "priority_rank": 11,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 4,
+        "clients_affected": 4
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Renew and deploy a new certificate.",
+        "steps": [
+          "Renew and deploy a new certificate.",
+          "Automate renewal (ACME)."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-31db10fe",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-012",
+      "session_id": "S-43",
+      "rule_id": "CE-008",
+      "rule_version": "1.0",
+      "title": "Weak RSA key length - RSA-1024",
+      "severity": "high",
+      "category": "certificate",
+      "description": "RSA key is shorter than 2048 bits.",
+      "evidence": {
+        "frames": [
+          43
+        ],
+        "client": "10.0.1.198:55896",
+        "server": "10.0.0.8",
+        "server_port": 465,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-ab44786b",
+        "EV-20e084c3",
+        "EV-25bec94e"
+      ],
+      "wireshark_filter": "tcp.port == 465",
+      "score_impact": 100,
+      "priority_rank": 12,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 4,
+        "clients_affected": 4
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Re-issue with RSA >=2048 (3072 recommended) or ECDSA P-256.",
+        "steps": [
+          "Re-issue with RSA >=2048 (3072 recommended) or ECDSA P-256."
+        ],
+        "references": [
+          "NIST SP 800-57"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-ccfda090",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-013",
+      "session_id": "S-2",
+      "rule_id": "DR-CERT",
+      "rule_version": "1.0",
+      "title": "Drift: Certificate change detected",
+      "severity": "high",
+      "category": "drift",
+      "description": "Issuer changed: Synthetic Corp Issuing CA -> Unknown Trust Services CA; New certificate does not chain to a trusted root (previous one did)",
+      "evidence": {
+        "frames": [
+          2
+        ],
+        "client": "10.0.1.170:52423",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-0ecbdc63",
+        "EV-973c892b",
+        "EV-4792a7ab"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 96,
+      "priority_rank": 13,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 38,
+        "clients_affected": 38
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Investigate certificate replacement: confirm the change ticket, issuer authorisation and that no interception device is in path.",
+        "steps": [
+          "Investigate certificate replacement: confirm the change ticket, issuer authorisation and that no interception device is in path."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-523711e8",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-014",
+      "session_id": "S-2",
+      "rule_id": "CE-005",
+      "rule_version": "1.0",
+      "title": "Certificate chain not trusted",
+      "severity": "high",
+      "category": "certificate",
+      "description": "Chain does not anchor to a trusted root.",
+      "evidence": {
+        "frames": [
+          2
+        ],
+        "client": "10.0.1.170:52423",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-0ecbdc63",
+        "EV-973c892b",
+        "EV-4792a7ab"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 86,
+      "priority_rank": 14,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 38,
+        "clients_affected": 38
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Install a certificate from a trusted CA and serve the full chain.",
+        "steps": [
+          "Install a certificate from a trusted CA and serve the full chain.",
+          "Add your enterprise CA to production_artifacts/trust_store/ if private."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-5bdd79c5",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-015",
+      "session_id": "S-3",
+      "rule_id": "DR-PFS",
+      "rule_version": "1.0",
+      "title": "Drift: Forward-secrecy coverage dropped 100% -> 79%",
+      "severity": "high",
+      "category": "drift",
+      "description": "Forward-secrecy coverage dropped 100% -> 79%",
+      "evidence": {
+        "frames": [
+          3
+        ],
+        "client": "10.0.1.183:46493",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-54ebd3e5",
+        "EV-8f04cf1e",
+        "EV-4fabb39c"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 85,
+      "priority_rank": 15,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 14,
+        "clients_affected": 14
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Remove static RSA key-exchange suites; require ECDHE/DHE.",
+        "steps": [
+          "Remove static RSA key-exchange suites; require ECDHE/DHE."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-c32a24bf",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-016",
+      "session_id": "S-3",
+      "rule_id": "DR-TLS",
+      "rule_version": "1.0",
+      "title": "Drift: TLS 1.1 traffic detected",
+      "severity": "high",
+      "category": "drift",
+      "description": "TLS 1.1 newly negotiated",
+      "evidence": {
+        "frames": [
+          3
+        ],
+        "client": "10.0.1.183:46493",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-54ebd3e5",
+        "EV-8f04cf1e",
+        "EV-4fabb39c",
+        "EV-72bba311",
+        "EV-2c687d68"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 85,
+      "priority_rank": 16,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 14,
+        "clients_affected": 14
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Investigate the server/client configuration responsible for negotiating TLS 1.1; disable it on the server and upgrade the legacy client.",
+        "steps": [
+          "Investigate the server/client configuration responsible for negotiating TLS 1.1; disable it on the server and upgrade the legacy client."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-605bf1a7",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-017",
+      "session_id": "S-3",
+      "rule_id": "DR-CIPHER",
+      "rule_version": "1.0",
+      "title": "Drift: Weak cipher suite(s) newly negotiated: TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+      "severity": "high",
+      "category": "drift",
+      "description": "Weak cipher suite(s) newly negotiated: TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+      "evidence": {
+        "frames": [
+          3
+        ],
+        "client": "10.0.1.183:46493",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-54ebd3e5",
+        "EV-8f04cf1e",
+        "EV-4fabb39c"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 85,
+      "priority_rank": 17,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 14,
+        "clients_affected": 14
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Restrict the server cipher list to AEAD+ECDHE suites and identify the client that selected this suite.",
+        "steps": [
+          "Restrict the server cipher list to AEAD+ECDHE suites and identify the client that selected this suite."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-b31c4236",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-018",
+      "session_id": "S-97",
+      "rule_id": "DR-TLS",
+      "rule_version": "1.0",
+      "title": "Drift: TLS 1.0 traffic detected",
+      "severity": "high",
+      "category": "drift",
+      "description": "TLS 1.0 newly negotiated",
+      "evidence": {
+        "frames": [
+          97
+        ],
+        "client": "10.0.1.84:58194",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-72bba311",
+        "EV-2c687d68"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 80,
+      "priority_rank": 18,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Investigate the server/client configuration responsible for negotiating TLS 1.0; disable it on the server and upgrade the legacy client.",
+        "steps": [
+          "Investigate the server/client configuration responsible for negotiating TLS 1.0; disable it on the server and upgrade the legacy client."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-605bf1a7",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-019",
+      "session_id": "S-4",
+      "rule_id": "DR-CERT",
+      "rule_version": "1.0",
+      "title": "Drift: Certificate change detected",
+      "severity": "medium",
+      "category": "drift",
+      "description": "Same issuer, key and subject; only the fingerprint/validity window changed; Previous certificate still had >30 days validity: unscheduled replacement",
+      "evidence": {
+        "frames": [
+          4
+        ],
+        "client": "10.0.1.62:41228",
+        "server": "10.0.0.7",
+        "server_port": 995,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-51fdcb76",
+        "EV-9d273e3b",
+        "EV-672b29a0"
+      ],
+      "wireshark_filter": "tcp.port == 995",
+      "score_impact": 80,
+      "priority_rank": 19,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 12,
+        "clients_affected": 12
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Investigate certificate replacement: confirm the change ticket, issuer authorisation and that no interception device is in path.",
+        "steps": [
+          "Investigate certificate replacement: confirm the change ticket, issuer authorisation and that no interception device is in path."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-1a3f939a",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-020",
+      "session_id": "S-134",
+      "rule_id": "ML-001",
+      "rule_version": "1.0",
+      "title": "Anomalous TLS session behaviour (ML)",
+      "severity": "high",
+      "category": "anomaly",
+      "description": "Isolation Forest flagged sessions whose cryptographic/handshake behaviour deviates from the reference profile.",
+      "evidence": {
+        "frames": [
+          134
+        ],
+        "client": "10.0.1.180:40340",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-c345ee7c",
+        "EV-308ebc1f",
+        "EV-98ebaa51"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 78,
+      "priority_rank": 20,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 21,
+        "clients_affected": 21
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Review the listed sessions and the deviating features.",
+        "steps": [
+          "Review the listed sessions and the deviating features.",
+          "Compare with server change records for the period."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-67693db9",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-021",
+      "session_id": "S-3",
+      "rule_id": "TLS-001",
+      "rule_version": "1.0",
+      "title": "Deprecated protocol version negotiated - TLS 1.1",
+      "severity": "high",
+      "category": "protocol",
+      "description": "The session negotiated SSLv3 / TLS 1.0 / TLS 1.1.",
+      "evidence": {
+        "frames": [
+          3
+        ],
+        "client": "10.0.1.183:46493",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-54ebd3e5",
+        "EV-8f04cf1e",
+        "EV-4fabb39c",
+        "EV-72bba311",
+        "EV-2c687d68"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 78,
+      "priority_rank": 21,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 14,
+        "clients_affected": 14
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Disable TLS < 1.2 on the server.",
+        "steps": [
+          "Disable TLS < 1.2 on the server.",
+          "Identify and upgrade/replace the client that only supports legacy TLS."
+        ],
+        "references": [
+          "RFC 8996 (Deprecating TLS 1.0/1.1)"
+        ]
+      },
+      "policy_refs": [
+        {
+          "document": "RFC 8996",
+          "section": "1",
+          "verified_on": "2025-01-15"
+        }
+      ],
+      "incident_id": "INC-bc40385e",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-022",
+      "session_id": "S-3",
+      "rule_id": "CS-002",
+      "rule_version": "1.0",
+      "title": "Weak cipher suite negotiated (3DES)",
+      "severity": "high",
+      "category": "cipher",
+      "description": "3DES was negotiated.",
+      "evidence": {
+        "frames": [
+          3
+        ],
+        "client": "10.0.1.183:46493",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-54ebd3e5",
+        "EV-8f04cf1e",
+        "EV-4fabb39c"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 78,
+      "priority_rank": 22,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 14,
+        "clients_affected": 14
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Disable 3DES suites.",
+        "steps": [
+          "Disable 3DES suites."
+        ],
+        "references": [
+          "CVE-2016-2183"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-7cf3de50",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-023",
+      "session_id": "S-4",
+      "rule_id": "CS-006",
+      "rule_version": "1.0",
+      "title": "Weak Diffie-Hellman parameters",
+      "severity": "high",
+      "category": "cipher",
+      "description": "DHE prime is shorter than 2048 bits.",
+      "evidence": {
+        "frames": [
+          4
+        ],
+        "client": "10.0.1.62:41228",
+        "server": "10.0.0.7",
+        "server_port": 995,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d4a8960d",
+        "EV-c93f22e2"
+      ],
+      "wireshark_filter": "tcp.port == 995",
+      "score_impact": 78,
+      "priority_rank": 23,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Generate/use >=2048-bit (ideally ffdhe3072) DH groups or prefer ECDHE.",
+        "steps": [
+          "Generate/use >=2048-bit (ideally ffdhe3072) DH groups or prefer ECDHE."
+        ],
+        "references": [
+          "Logjam (CVE-2015-4000)"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-910d6d2a",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-024",
+      "session_id": "S-97",
+      "rule_id": "TLS-001",
+      "rule_version": "1.0",
+      "title": "Deprecated protocol version negotiated - TLS 1.0",
+      "severity": "high",
+      "category": "protocol",
+      "description": "The session negotiated SSLv3 / TLS 1.0 / TLS 1.1.",
+      "evidence": {
+        "frames": [
+          97
+        ],
+        "client": "10.0.1.84:58194",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-72bba311",
+        "EV-2c687d68"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 73,
+      "priority_rank": 24,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Disable TLS < 1.2 on the server.",
+        "steps": [
+          "Disable TLS < 1.2 on the server.",
+          "Identify and upgrade/replace the client that only supports legacy TLS."
+        ],
+        "references": [
+          "RFC 8996 (Deprecating TLS 1.0/1.1)"
+        ]
+      },
+      "policy_refs": [
+        {
+          "document": "RFC 8996",
+          "section": "1",
+          "verified_on": "2025-01-15"
+        }
+      ],
+      "incident_id": "INC-bc40385e",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-025",
+      "session_id": "S-10",
+      "rule_id": "TR-005",
+      "rule_version": "1.0",
+      "title": "Authentication mechanisms offered before TLS",
+      "severity": "medium",
+      "category": "transport",
+      "description": "Server advertised cleartext-capable authentication (PLAIN/LOGIN/USER-PASS) in the unencrypted phase.",
+      "evidence": {
+        "frames": [
+          10
+        ],
+        "client": "10.0.1.89:44289",
+        "server": "10.0.0.7",
+        "server_port": 110,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d9b8e2a0",
+        "EV-6f7ad8ba",
+        "EV-707cc8cf"
+      ],
+      "wireshark_filter": "tcp.port == 110",
+      "score_impact": 73,
+      "priority_rank": 25,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 3,
+        "clients_affected": 3
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Only advertise AUTH after TLS is established.",
+        "steps": [
+          "Only advertise AUTH after TLS is established.",
+          "IMAP: enable LOGINDISABLED until STARTTLS."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-eb109c34",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-026",
+      "session_id": "S-43",
+      "rule_id": "CS-005",
+      "rule_version": "1.0",
+      "title": "Client offers insecure or weak cipher suites - insecure suites offered",
+      "severity": "medium",
+      "category": "cipher",
+      "description": "ClientHello lists NULL/EXPORT/RC4/DES/3DES suites.",
+      "evidence": {
+        "frames": [
+          43
+        ],
+        "client": "10.0.1.198:55896",
+        "server": "10.0.0.8",
+        "server_port": 465,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d601c8ee",
+        "EV-2ee1299f",
+        "EV-5e0250b7"
+      ],
+      "wireshark_filter": "tcp.port == 465",
+      "score_impact": 73,
+      "priority_rank": 26,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 4,
+        "clients_affected": 4
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Reconfigure the client crypto policy.",
+        "steps": [
+          "Reconfigure the client crypto policy."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-d7020c39",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-027",
+      "session_id": "S-43",
+      "rule_id": "CS-004",
+      "rule_version": "1.0",
+      "title": "No forward secrecy",
+      "severity": "medium",
+      "category": "cipher",
+      "description": "The key exchange was static RSA/DH (no ephemeral keys).",
+      "evidence": {
+        "frames": [
+          43
+        ],
+        "client": "10.0.1.198:55896",
+        "server": "10.0.0.8",
+        "server_port": 465,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d601c8ee",
+        "EV-2ee1299f",
+        "EV-5e0250b7"
+      ],
+      "wireshark_filter": "tcp.port == 465",
+      "score_impact": 73,
+      "priority_rank": 27,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 4,
+        "clients_affected": 4
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Prioritise ECDHE/DHE suites; drop static RSA key exchange.",
+        "steps": [
+          "Prioritise ECDHE/DHE suites; drop static RSA key exchange."
+        ],
+        "references": [
+          "RFC 9325 / BCP 195 (TLS recommendations)"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-aa87dab7",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-028",
+      "session_id": "S-4",
+      "rule_id": "CE-003",
+      "rule_version": "1.0",
+      "title": "Server certificate expiring soon",
+      "severity": "medium",
+      "category": "certificate",
+      "description": "Certificate expires within 30 days of capture.",
+      "evidence": {
+        "frames": [
+          4
+        ],
+        "client": "10.0.1.62:41228",
+        "server": "10.0.0.7",
+        "server_port": 995,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-51fdcb76",
+        "EV-9d273e3b",
+        "EV-672b29a0"
+      ],
+      "wireshark_filter": "tcp.port == 995",
+      "score_impact": 73,
+      "priority_rank": 28,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 12,
+        "clients_affected": 12
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Renew the certificate now.",
+        "steps": [
+          "Renew the certificate now.",
+          "Add expiry monitoring/alerts."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-8706877c",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-029",
+      "session_id": "S-76",
+      "rule_id": "TLS-003",
+      "rule_version": "1.0",
+      "title": "TLS downgrade sentinel present in ServerHello",
+      "severity": "high",
+      "category": "protocol",
+      "description": "Server random carries the TLS 1.3 downgrade sentinel: the server supports TLS 1.3 but a lower version was negotiated.",
+      "evidence": {
+        "frames": [
+          76
+        ],
+        "client": "10.0.1.138:58328",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-9128306a",
+        "EV-cc06931c"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 70,
+      "priority_rank": 29,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Investigate the client and path for interception.",
+        "steps": [
+          "Investigate the client and path for interception.",
+          "Ensure clients enable TLS 1.3."
+        ],
+        "references": [
+          "RFC 8446 section 4.1.3"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-f960e858",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-030",
+      "session_id": "S-43",
+      "rule_id": "TLS-007",
+      "rule_version": "1.0",
+      "title": "Secure renegotiation not supported",
+      "severity": "medium",
+      "category": "protocol",
+      "description": "Server did not include renegotiation_info (RFC 5746).",
+      "evidence": {
+        "frames": [
+          43
+        ],
+        "client": "10.0.1.198:55896",
+        "server": "10.0.0.8",
+        "server_port": 465,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d601c8ee",
+        "EV-2ee1299f",
+        "EV-5e0250b7"
+      ],
+      "wireshark_filter": "tcp.port == 465",
+      "score_impact": 70,
+      "priority_rank": 30,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 4,
+        "clients_affected": 4
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Upgrade the TLS library / mail server.",
+        "steps": [
+          "Upgrade the TLS library / mail server.",
+          "Disable insecure renegotiation."
+        ],
+        "references": [
+          "CVE-2009-3555",
+          "RFC 5746"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-27ba3486",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-031",
+      "session_id": "S-43",
+      "rule_id": "CE-004",
+      "rule_version": "1.0",
+      "title": "Self-signed server certificate",
+      "severity": "medium",
+      "category": "certificate",
+      "description": "Leaf certificate is self-signed and not in the trust store.",
+      "evidence": {
+        "frames": [
+          43
+        ],
+        "client": "10.0.1.198:55896",
+        "server": "10.0.0.8",
+        "server_port": 465,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-ab44786b",
+        "EV-20e084c3",
+        "EV-25bec94e"
+      ],
+      "wireshark_filter": "tcp.port == 465",
+      "score_impact": 70,
+      "priority_rank": 31,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 4,
+        "clients_affected": 4
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Issue a certificate from a trusted or enterprise CA.",
+        "steps": [
+          "Issue a certificate from a trusted or enterprise CA."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-0a962454",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-032",
+      "session_id": "S-48",
+      "rule_id": "TR-002",
+      "rule_version": "1.0",
+      "title": "Email session without transport encryption - STARTTLS not offered",
+      "severity": "medium",
+      "category": "transport",
+      "description": "The session carried mail traffic without any TLS.",
+      "evidence": {
+        "frames": [
+          48
+        ],
+        "client": "10.0.1.120:54597",
+        "server": "10.0.0.6",
+        "server_port": 25,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-944c64d2",
+        "EV-719aad90",
+        "EV-109d9761"
+      ],
+      "wireshark_filter": "tcp.port == 25",
+      "score_impact": 52,
+      "priority_rank": 32,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "inbound_relay",
+        "sessions_affected": 7,
+        "clients_affected": 7
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Enable STARTTLS or implicit TLS on this service.",
+        "steps": [
+          "Enable STARTTLS or implicit TLS on this service.",
+          "Enforce encryption for submission/IMAP/POP3; use MTA-STS/DANE for MX traffic."
+        ],
+        "references": [
+          "RFC 3207",
+          "RFC 8461 (MTA-STS)"
+        ]
+      },
+      "policy_refs": [
+        {
+          "document": "RFC 8314",
+          "section": "3.2",
+          "verified_on": "2025-01-15"
+        }
+      ],
+      "incident_id": "INC-122c9353",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-033",
+      "session_id": "S-3",
+      "rule_id": "CS-005",
+      "rule_version": "1.0",
+      "title": "Client offers insecure or weak cipher suites - insecure suites offered",
+      "severity": "medium",
+      "category": "cipher",
+      "description": "ClientHello lists NULL/EXPORT/RC4/DES/3DES suites.",
+      "evidence": {
+        "frames": [
+          3
+        ],
+        "client": "10.0.1.183:46493",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-54ebd3e5",
+        "EV-3b77fd8f",
+        "EV-4d74f719"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 51,
+      "priority_rank": 33,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 19,
+        "clients_affected": 19
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Reconfigure the client crypto policy.",
+        "steps": [
+          "Reconfigure the client crypto policy."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-ce50b5e0",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-034",
+      "session_id": "S-55",
+      "rule_id": "ML-001",
+      "rule_version": "1.0",
+      "title": "Anomalous TLS session behaviour (ML)",
+      "severity": "medium",
+      "category": "anomaly",
+      "description": "Isolation Forest flagged sessions whose cryptographic/handshake behaviour deviates from the reference profile.",
+      "evidence": {
+        "frames": [
+          55
+        ],
+        "client": "10.0.1.70:58068",
+        "server": "10.0.0.6",
+        "server_port": 25,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-3e11ffb2",
+        "EV-683c9956",
+        "EV-7f984cbc"
+      ],
+      "wireshark_filter": "tcp.port == 25",
+      "score_impact": 49,
+      "priority_rank": 34,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "inbound_relay",
+        "sessions_affected": 7,
+        "clients_affected": 7
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Review the listed sessions and the deviating features.",
+        "steps": [
+          "Review the listed sessions and the deviating features.",
+          "Compare with server change records for the period."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-0d2e29ef",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-035",
+      "session_id": "S-3",
+      "rule_id": "CS-004",
+      "rule_version": "1.0",
+      "title": "No forward secrecy",
+      "severity": "medium",
+      "category": "cipher",
+      "description": "The key exchange was static RSA/DH (no ephemeral keys).",
+      "evidence": {
+        "frames": [
+          3
+        ],
+        "client": "10.0.1.183:46493",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-54ebd3e5",
+        "EV-8f04cf1e",
+        "EV-4fabb39c"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 48,
+      "priority_rank": 35,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 14,
+        "clients_affected": 14
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Prioritise ECDHE/DHE suites; drop static RSA key exchange.",
+        "steps": [
+          "Prioritise ECDHE/DHE suites; drop static RSA key exchange."
+        ],
+        "references": [
+          "RFC 9325 / BCP 195 (TLS recommendations)"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-08df2b12",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-036",
+      "session_id": "S-67",
+      "rule_id": "TR-005",
+      "rule_version": "1.0",
+      "title": "Authentication mechanisms offered before TLS",
+      "severity": "medium",
+      "category": "transport",
+      "description": "Server advertised cleartext-capable authentication (PLAIN/LOGIN/USER-PASS) in the unencrypted phase.",
+      "evidence": {
+        "frames": [
+          67
+        ],
+        "client": "10.0.1.139:49831",
+        "server": "10.0.0.5",
+        "server_port": 143,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-e837870d",
+        "EV-b9235954"
+      ],
+      "wireshark_filter": "tcp.port == 143",
+      "score_impact": 48,
+      "priority_rank": 36,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Only advertise AUTH after TLS is established.",
+        "steps": [
+          "Only advertise AUTH after TLS is established.",
+          "IMAP: enable LOGINDISABLED until STARTTLS."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-ef4e1661",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-037",
+      "session_id": "S-43",
+      "rule_id": "CS-003",
+      "rule_version": "1.0",
+      "title": "CBC-mode cipher suite negotiated",
+      "severity": "low",
+      "category": "cipher",
+      "description": "A CBC suite was negotiated.",
+      "evidence": {
+        "frames": [
+          43
+        ],
+        "client": "10.0.1.198:55896",
+        "server": "10.0.0.8",
+        "server_port": 465,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d601c8ee",
+        "EV-2ee1299f",
+        "EV-5e0250b7"
+      ],
+      "wireshark_filter": "tcp.port == 465",
+      "score_impact": 48,
+      "priority_rank": 37,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 4,
+        "clients_affected": 4
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Prefer AEAD suites (AES-GCM / ChaCha20-Poly1305).",
+        "steps": [
+          "Prefer AEAD suites (AES-GCM / ChaCha20-Poly1305)."
+        ],
+        "references": [
+          "RFC 9325 / BCP 195 (TLS recommendations)"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-aa4befc2",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-038",
+      "session_id": "S-43",
+      "rule_id": "CE-013",
+      "rule_version": "1.0",
+      "title": "Certificate lacks Subject Alternative Name",
+      "severity": "low",
+      "category": "certificate",
+      "description": "Only CN is present.",
+      "evidence": {
+        "frames": [
+          43
+        ],
+        "client": "10.0.1.198:55896",
+        "server": "10.0.0.8",
+        "server_port": 465,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-ab44786b",
+        "EV-20e084c3",
+        "EV-25bec94e"
+      ],
+      "wireshark_filter": "tcp.port == 465",
+      "score_impact": 48,
+      "priority_rank": 38,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 4,
+        "clients_affected": 4
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Re-issue with SAN entries.",
+        "steps": [
+          "Re-issue with SAN entries."
+        ],
+        "references": [
+          "RFC 2818"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-0738ca85",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-039",
+      "session_id": "S-43",
+      "rule_id": "TLS-004",
+      "rule_version": "1.0",
+      "title": "Client offers deprecated protocol versions",
+      "severity": "low",
+      "category": "protocol",
+      "description": "The ClientHello advertises SSLv3 / TLS 1.0 / TLS 1.1.",
+      "evidence": {
+        "frames": [
+          43
+        ],
+        "client": "10.0.1.198:55896",
+        "server": "10.0.0.8",
+        "server_port": 465,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d601c8ee",
+        "EV-2ee1299f",
+        "EV-5e0250b7"
+      ],
+      "wireshark_filter": "tcp.port == 465",
+      "score_impact": 48,
+      "priority_rank": 39,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 4,
+        "clients_affected": 4
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Update client TLS settings to TLS 1.2+.",
+        "steps": [
+          "Update client TLS settings to TLS 1.2+."
+        ],
+        "references": [
+          "RFC 8996 (Deprecating TLS 1.0/1.1)"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-34741397",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-040",
+      "session_id": "S-3",
+      "rule_id": "TLS-007",
+      "rule_version": "1.0",
+      "title": "Secure renegotiation not supported",
+      "severity": "medium",
+      "category": "protocol",
+      "description": "Server did not include renegotiation_info (RFC 5746).",
+      "evidence": {
+        "frames": [
+          3
+        ],
+        "client": "10.0.1.183:46493",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-54ebd3e5",
+        "EV-8f04cf1e",
+        "EV-4fabb39c"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 46,
+      "priority_rank": 40,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 16,
+        "clients_affected": 16
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Upgrade the TLS library / mail server.",
+        "steps": [
+          "Upgrade the TLS library / mail server.",
+          "Disable insecure renegotiation."
+        ],
+        "references": [
+          "CVE-2009-3555",
+          "RFC 5746"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-40aa868c",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-041",
+      "session_id": "S-48",
+      "rule_id": "MS-002",
+      "rule_version": "1.0",
+      "title": "Message-level protection over plaintext transport",
+      "severity": "medium",
+      "category": "message",
+      "description": "PGP/S-MIME content travels over an unencrypted channel.",
+      "evidence": {
+        "frames": [
+          48
+        ],
+        "client": "10.0.1.120:54597",
+        "server": "10.0.0.6",
+        "server_port": 25,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-944c64d2",
+        "EV-ce8ebced"
+      ],
+      "wireshark_filter": "tcp.port == 25",
+      "score_impact": 45,
+      "priority_rank": 41,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "inbound_relay",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Enable TLS in addition to message-level encryption.",
+        "steps": [
+          "Enable TLS in addition to message-level encryption."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-b89b1372",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-042",
+      "session_id": "S-0",
+      "rule_id": "ML-001",
+      "rule_version": "1.0",
+      "title": "Anomalous TLS session behaviour (ML)",
+      "severity": "medium",
+      "category": "anomaly",
+      "description": "Isolation Forest flagged sessions whose cryptographic/handshake behaviour deviates from the reference profile.",
+      "evidence": {
+        "frames": [
+          0
+        ],
+        "client": "10.0.1.67:43062",
+        "server": "10.0.0.6",
+        "server_port": 587,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-43f1dfec",
+        "EV-7c66fadc"
+      ],
+      "wireshark_filter": "tcp.port == 587",
+      "score_impact": 41,
+      "priority_rank": 42,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Review the listed sessions and the deviating features.",
+        "steps": [
+          "Review the listed sessions and the deviating features.",
+          "Compare with server change records for the period."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-fc87f7b3",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-043",
+      "session_id": "S-138",
+      "rule_id": "MS-004",
+      "rule_version": "1.0",
+      "title": "OpenPGP message without integrity protection",
+      "severity": "medium",
+      "category": "message",
+      "description": "Symmetrically-encrypted data packet without MDC (tag 9).",
+      "evidence": {
+        "frames": [
+          138
+        ],
+        "client": "10.0.1.117:59617",
+        "server": "10.0.0.6",
+        "server_port": 25,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d65c6e40"
+      ],
+      "wireshark_filter": "tcp.port == 25",
+      "score_impact": 41,
+      "priority_rank": 43,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "inbound_relay",
+        "sessions_affected": 1,
+        "clients_affected": 1
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Use AEAD/SEIPD packets; update PGP clients.",
+        "steps": [
+          "Use AEAD/SEIPD packets; update PGP clients."
+        ],
+        "references": [
+          "EFAIL (CVE-2017-17688)"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-cf122f46",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-044",
+      "session_id": "S-76",
+      "rule_id": "TLS-005",
+      "rule_version": "1.0",
+      "title": "Client protocol fallback (TLS_FALLBACK_SCSV)",
+      "severity": "medium",
+      "category": "protocol",
+      "description": "Client signalled a fallback retry with a lower protocol version.",
+      "evidence": {
+        "frames": [
+          76
+        ],
+        "client": "10.0.1.138:58328",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-9128306a",
+        "EV-cc06931c"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 40,
+      "priority_rank": 44,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Investigate why the higher-version handshake failed.",
+        "steps": [
+          "Investigate why the higher-version handshake failed."
+        ],
+        "references": [
+          "RFC 7507"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-d04cd07b",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-045",
+      "session_id": "S-4",
+      "rule_id": "DR-KEX",
+      "rule_version": "1.0",
+      "title": "Drift: New key-exchange mechanism(s): DHE",
+      "severity": "low",
+      "category": "drift",
+      "description": "New key-exchange mechanism(s): DHE",
+      "evidence": {
+        "frames": [
+          4
+        ],
+        "client": "10.0.1.62:41228",
+        "server": "10.0.0.7",
+        "server_port": 995,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d4a8960d",
+        "EV-c93f22e2"
+      ],
+      "wireshark_filter": "tcp.port == 995",
+      "score_impact": 30,
+      "priority_rank": 45,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Confirm the change is intentional.",
+        "steps": [
+          "Confirm the change is intentional."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-d0f2e551",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-046",
+      "session_id": "S-4",
+      "rule_id": "CS-009",
+      "rule_version": "1.0",
+      "title": "No post-quantum hybrid key exchange",
+      "severity": "info",
+      "category": "cipher",
+      "description": "Session key exchange is classical only.",
+      "evidence": {
+        "frames": [
+          4
+        ],
+        "client": "10.0.1.62:41228",
+        "server": "10.0.0.7",
+        "server_port": 995,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d4a8960d",
+        "EV-c93f22e2",
+        "EV-aee7f076"
+      ],
+      "wireshark_filter": "tcp.port == 995",
+      "score_impact": 30,
+      "priority_rank": 46,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 12,
+        "clients_affected": 12
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-808db400",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-047",
+      "session_id": "S-43",
+      "rule_id": "CS-009",
+      "rule_version": "1.0",
+      "title": "No post-quantum hybrid key exchange",
+      "severity": "info",
+      "category": "cipher",
+      "description": "Session key exchange is classical only.",
+      "evidence": {
+        "frames": [
+          43
+        ],
+        "client": "10.0.1.198:55896",
+        "server": "10.0.0.8",
+        "server_port": 465,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d601c8ee",
+        "EV-2ee1299f",
+        "EV-5e0250b7"
+      ],
+      "wireshark_filter": "tcp.port == 465",
+      "score_impact": 30,
+      "priority_rank": 47,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 4,
+        "clients_affected": 4
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-ddd2d788",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-048",
+      "session_id": "S-2",
+      "rule_id": "CS-009",
+      "rule_version": "1.0",
+      "title": "No post-quantum hybrid key exchange",
+      "severity": "info",
+      "category": "cipher",
+      "description": "Session key exchange is classical only.",
+      "evidence": {
+        "frames": [
+          2
+        ],
+        "client": "10.0.1.170:52423",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-ad789859",
+        "EV-2d26d930",
+        "EV-1e59e6ea"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 28,
+      "priority_rank": 48,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 68,
+        "clients_affected": 68
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-aa179797",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-049",
+      "session_id": "S-1",
+      "rule_id": "CS-009",
+      "rule_version": "1.0",
+      "title": "No post-quantum hybrid key exchange",
+      "severity": "info",
+      "category": "cipher",
+      "description": "Session key exchange is classical only.",
+      "evidence": {
+        "frames": [
+          1
+        ],
+        "client": "10.0.1.126:47590",
+        "server": "10.0.0.6",
+        "server_port": 587,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-920af4e8",
+        "EV-fd528f03",
+        "EV-e1621df4"
+      ],
+      "wireshark_filter": "tcp.port == 587",
+      "score_impact": 27,
+      "priority_rank": 49,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 40,
+        "clients_affected": 40
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-72ba16ad",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-050",
+      "session_id": "S-12",
+      "rule_id": "CS-009",
+      "rule_version": "1.0",
+      "title": "No post-quantum hybrid key exchange",
+      "severity": "info",
+      "category": "cipher",
+      "description": "Session key exchange is classical only.",
+      "evidence": {
+        "frames": [
+          12
+        ],
+        "client": "10.0.1.183:46831",
+        "server": "10.0.0.5",
+        "server_port": 143,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-aee620a7",
+        "EV-5b35e518",
+        "EV-9fd2a142"
+      ],
+      "wireshark_filter": "tcp.port == 143",
+      "score_impact": 25,
+      "priority_rank": 50,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 10,
+        "clients_affected": 10
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-c9024fd1",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-051",
+      "session_id": "S-12",
+      "rule_id": "CE-016",
+      "rule_version": "1.0",
+      "title": "Server certificate not observable (TLS 1.3)",
+      "severity": "info",
+      "category": "certificate",
+      "description": "TLS 1.3 encrypts the Certificate message; passive chain validation is impossible.",
+      "evidence": {
+        "frames": [
+          12
+        ],
+        "client": "10.0.1.183:46831",
+        "server": "10.0.0.5",
+        "server_port": 143,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-5a42da79",
+        "EV-eddde6e6",
+        "EV-a2fed6d0"
+      ],
+      "wireshark_filter": "tcp.port == 143",
+      "score_impact": 25,
+      "priority_rank": 51,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 10,
+        "clients_affected": 10
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint.",
+        "steps": [
+          "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-9b3cdea6",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-052",
+      "session_id": "S-3",
+      "rule_id": "TLS-004",
+      "rule_version": "1.0",
+      "title": "Client offers deprecated protocol versions",
+      "severity": "low",
+      "category": "protocol",
+      "description": "The ClientHello advertises SSLv3 / TLS 1.0 / TLS 1.1.",
+      "evidence": {
+        "frames": [
+          3
+        ],
+        "client": "10.0.1.183:46493",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-54ebd3e5",
+        "EV-8f04cf1e",
+        "EV-4fabb39c"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 24,
+      "priority_rank": 52,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 16,
+        "clients_affected": 16
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Update client TLS settings to TLS 1.2+.",
+        "steps": [
+          "Update client TLS settings to TLS 1.2+."
+        ],
+        "references": [
+          "RFC 8996 (Deprecating TLS 1.0/1.1)"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-50893c30",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-053",
+      "session_id": "S-20",
+      "rule_id": "CS-009",
+      "rule_version": "1.0",
+      "title": "No post-quantum hybrid key exchange",
+      "severity": "info",
+      "category": "cipher",
+      "description": "Session key exchange is classical only.",
+      "evidence": {
+        "frames": [
+          20
+        ],
+        "client": "10.0.1.69:54923",
+        "server": "10.0.0.6",
+        "server_port": 25,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-882e3aa8",
+        "EV-c7d8d8b0",
+        "EV-69189531"
+      ],
+      "wireshark_filter": "tcp.port == 25",
+      "score_impact": 20,
+      "priority_rank": 53,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "inbound_relay",
+        "sessions_affected": 15,
+        "clients_affected": 15
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-e888173c",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-054",
+      "session_id": "S-20",
+      "rule_id": "CE-016",
+      "rule_version": "1.0",
+      "title": "Server certificate not observable (TLS 1.3)",
+      "severity": "info",
+      "category": "certificate",
+      "description": "TLS 1.3 encrypts the Certificate message; passive chain validation is impossible.",
+      "evidence": {
+        "frames": [
+          20
+        ],
+        "client": "10.0.1.69:54923",
+        "server": "10.0.0.6",
+        "server_port": 25,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-4fde1d6d",
+        "EV-77bdf336",
+        "EV-deb74651"
+      ],
+      "wireshark_filter": "tcp.port == 25",
+      "score_impact": 20,
+      "priority_rank": 54,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "inbound_relay",
+        "sessions_affected": 15,
+        "clients_affected": 15
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint.",
+        "steps": [
+          "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-36ca3672",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-055",
+      "session_id": "S-11",
+      "rule_id": "TLS-002",
+      "rule_version": "1.0",
+      "title": "TLS handshake failed or fatal alert observed",
+      "severity": "low",
+      "category": "protocol",
+      "description": "A fatal alert or an incomplete handshake was seen.",
+      "evidence": {
+        "frames": [
+          11
+        ],
+        "client": "10.0.1.131:41673",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-f5514aac",
+        "EV-df352e71",
+        "EV-e459fe42"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 19,
+      "priority_rank": 55,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 3,
+        "clients_affected": 3
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Review server TLS logs for the client.",
+        "steps": [
+          "Review server TLS logs for the client.",
+          "Check protocol/cipher overlap between client and server."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-f026f350",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-056",
+      "session_id": "S-4",
+      "rule_id": "DR-CIPHER",
+      "rule_version": "1.0",
+      "title": "Drift: New strong cipher suite(s) observed: TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",
+      "severity": "info",
+      "category": "drift",
+      "description": "New strong cipher suite(s) observed: TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",
+      "evidence": {
+        "frames": [
+          4
+        ],
+        "client": "10.0.1.62:41228",
+        "server": "10.0.0.7",
+        "server_port": 995,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-d4a8960d",
+        "EV-c93f22e2"
+      ],
+      "wireshark_filter": "tcp.port == 995",
+      "score_impact": 15,
+      "priority_rank": 56,
+      "confidence": "low",
+      "confidence_basis": [
+        "baseline deviation"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Update baseline if intended.",
+        "steps": [
+          "Update baseline if intended."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-147400b8",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-057",
+      "session_id": "S-1",
+      "rule_id": "CE-016",
+      "rule_version": "1.0",
+      "title": "Server certificate not observable (TLS 1.3)",
+      "severity": "info",
+      "category": "certificate",
+      "description": "TLS 1.3 encrypts the Certificate message; passive chain validation is impossible.",
+      "evidence": {
+        "frames": [
+          1
+        ],
+        "client": "10.0.1.126:47590",
+        "server": "10.0.0.6",
+        "server_port": 587,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-102f34c6",
+        "EV-a54b96e0",
+        "EV-c76b0e4c"
+      ],
+      "wireshark_filter": "tcp.port == 587",
+      "score_impact": 14,
+      "priority_rank": 57,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 20,
+        "clients_affected": 20
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint.",
+        "steps": [
+          "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-029060f3",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-058",
+      "session_id": "S-6",
+      "rule_id": "CE-016",
+      "rule_version": "1.0",
+      "title": "Server certificate not observable (TLS 1.3)",
+      "severity": "info",
+      "category": "certificate",
+      "description": "TLS 1.3 encrypts the Certificate message; passive chain validation is impossible.",
+      "evidence": {
+        "frames": [
+          6
+        ],
+        "client": "10.0.1.172:55382",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-0f0e4e0e",
+        "EV-6097a054",
+        "EV-3f9f950e"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 12,
+      "priority_rank": 58,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 30,
+        "clients_affected": 30
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint.",
+        "steps": [
+          "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-02da0d4e",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-059",
+      "session_id": "S-48",
+      "rule_id": "MS-001",
+      "rule_version": "1.0",
+      "title": "Message-level encryption/signing observed (PGP / S-MIME)",
+      "severity": "info",
+      "category": "message",
+      "description": "OpenPGP or S/MIME protected content was detected.",
+      "evidence": {
+        "frames": [
+          48
+        ],
+        "client": "10.0.1.120:54597",
+        "server": "10.0.0.6",
+        "server_port": 25,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-944c64d2",
+        "EV-ce8ebced"
+      ],
+      "wireshark_filter": "tcp.port == 25",
+      "score_impact": 2,
+      "priority_rank": 59,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "inbound_relay",
+        "sessions_affected": 2,
+        "clients_affected": 2
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Keep key hygiene policies; combine with TLS.",
+        "steps": [
+          "Keep key hygiene policies; combine with TLS."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-9d1c8428",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    }
+  ]
+}

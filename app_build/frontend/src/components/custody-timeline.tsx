@@ -7,7 +7,6 @@ const ICONS: Record<string, string> = {
   analysis_started: "🔬",
   analysis_completed: "✅",
   report_exported: "📄",
-  triage_changed: "🏷️",
   payload_deleted: "🗑️",
   keylog_attached: "🔑",
   artifact_attached: "📎",

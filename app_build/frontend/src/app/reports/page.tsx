@@ -94,7 +94,7 @@ function ReportsContent() {
     loadReport(id);
   }
 
-  function downloadFixtureJson() {
+  function downloadJson() {
     if (!summary) return;
     const blob = new Blob([JSON.stringify({ summary, findings }, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -108,13 +108,17 @@ function ReportsContent() {
   const selectedCap = caps.find((c) => c.id === selectedCapId);
   const completeCaps = caps.filter((c) => c.status === "complete");
 
+  const shaVal = selectedCap?.custody?.sha256 ?? selectedCap?.sha256 ?? "—";
+  const toolVer = selectedCap?.analysis?.tool_version ?? "1.0.0";
+  const ruleVer = selectedCap?.analysis?.ruleset_version ?? "2025.03.1";
+
   return (
     <div className="max-w-[1400px] mx-auto px-4 py-8">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-xl font-semibold font-serif">Security posture reports</h1>
+          <h1 className="text-xl font-semibold">Security posture reports</h1>
           <p className="text-sm text-muted">
-            Export executive summaries and detailed forensic audit records for compliance reporting
+            Export executive summaries and forensic audit records for compliance reporting
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -133,6 +137,21 @@ function ReportsContent() {
         </div>
       </div>
 
+      <div className="bg-surface-0 border border-border rounded-lg p-4 mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+        <div>
+          <span className="text-muted block text-[11px]">Capture SHA-256</span>
+          <span className="font-mono text-foreground font-medium break-all">{shaVal}</span>
+        </div>
+        <div>
+          <span className="text-muted block text-[11px]">Tool version</span>
+          <span className="font-mono text-foreground font-medium">{toolVer}</span>
+        </div>
+        <div>
+          <span className="text-muted block text-[11px]">Ruleset version</span>
+          <span className="font-mono text-foreground font-medium">{ruleVer}</span>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <div className="bg-surface-0 rounded-lg border border-border-subtle p-5 flex flex-col justify-between">
           <div>
@@ -144,7 +163,7 @@ function ReportsContent() {
           </div>
           <div className="mt-5 pt-3 border-t border-border-subtle">
             <button
-              onClick={downloadFixtureJson}
+              onClick={downloadJson}
               className="w-full flex items-center justify-center text-xs font-medium bg-surface-2 hover:bg-surface-1 text-foreground border border-border rounded-md py-2 transition-colors"
             >
               Download JSON
@@ -213,7 +232,7 @@ function ReportsContent() {
         <div className="bg-surface-0 rounded-lg border border-border-subtle overflow-hidden">
           <div className="px-6 py-4 border-b border-border bg-surface-1 flex items-center justify-between">
             <div>
-              <h2 className="text-base font-semibold text-foreground font-serif">Executive posture summary</h2>
+              <h2 className="text-base font-semibold text-foreground">Executive posture summary</h2>
               <p className="text-xs font-mono text-muted">
                 Audit target: {selectedCap?.filename ?? selectedCapId}
               </p>

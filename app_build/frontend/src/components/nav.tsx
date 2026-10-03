@@ -9,9 +9,6 @@ const links = [
   { href: "/overview", label: "Overview" },
   { href: "/sessions", label: "Sessions" },
   { href: "/findings", label: "Findings" },
-  { href: "/incidents", label: "Incidents" },
-  { href: "/assets", label: "Assets" },
-  { href: "/evidence", label: "Evidence" },
   { href: "/drift", label: "Drift" },
   { href: "/evaluation", label: "Evaluation" },
   { href: "/reports", label: "Reports" },
@@ -19,6 +16,7 @@ const links = [
 
 export function Nav() {
   const path = usePathname();
+  const isDemo = process.env.NEXT_PUBLIC_DEMO_MODE === "1" || process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
   return (
     <>
@@ -51,10 +49,10 @@ export function Nav() {
           </div>
 
           <Link
-            href="/captures"
+            href={isDemo ? "/overview?capture=cap-001" : "/captures"}
             className="px-3.5 py-1.5 rounded-md bg-brand hover:bg-brand-hover text-white text-xs font-semibold transition-colors shrink-0"
           >
-            Upload PCAP
+            {isDemo ? "Open the sample analysis" : "Upload PCAP"}
           </Link>
         </div>
       </header>

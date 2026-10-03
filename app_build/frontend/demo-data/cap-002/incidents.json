@@ -1,0 +1,606 @@
+{
+  "ruleset_version": "2025.03.1",
+  "run_at": "2026-10-03T09:37:12.495945+00:00",
+  "capture_id": "cap-002",
+  "total": 9,
+  "items": [
+    {
+      "id": "INC-eee56e56",
+      "rule_id": "CS-009",
+      "title": "No post-quantum hybrid key exchange",
+      "server": "10.0.0.5:143",
+      "server_role": "mailbox",
+      "severity": "info",
+      "confidence": "high",
+      "sessions_affected": 10,
+      "clients_affected": 10,
+      "first_seen": "2026-09-01T08:00:27.982978+00:00",
+      "last_seen": "2026-09-01T08:56:03.867372+00:00",
+      "finding_ids": [
+        "F-001"
+      ],
+      "evidence_ids": [
+        "EV-dbb5bf47",
+        "EV-8ecdeb1d",
+        "EV-0f31e748"
+      ],
+      "state": "open",
+      "priority_rank": 1,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "INC-534f5b46",
+      "rule_id": "CS-009",
+      "title": "No post-quantum hybrid key exchange",
+      "server": "10.0.0.5:993",
+      "server_role": "mailbox",
+      "severity": "info",
+      "confidence": "high",
+      "sessions_affected": 80,
+      "clients_affected": 80,
+      "first_seen": "2026-09-01T08:00:44.168083+00:00",
+      "last_seen": "2026-09-01T09:07:07.859125+00:00",
+      "finding_ids": [
+        "F-002"
+      ],
+      "evidence_ids": [
+        "EV-12dbf17a",
+        "EV-33feb433",
+        "EV-94dae3c9"
+      ],
+      "state": "open",
+      "priority_rank": 2,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "INC-8bb5b811",
+      "rule_id": "CS-009",
+      "title": "No post-quantum hybrid key exchange",
+      "server": "10.0.0.6:587",
+      "server_role": "submission",
+      "severity": "info",
+      "confidence": "high",
+      "sessions_affected": 50,
+      "clients_affected": 50,
+      "first_seen": "2026-09-01T08:01:15.802733+00:00",
+      "last_seen": "2026-09-01T09:05:16.702749+00:00",
+      "finding_ids": [
+        "F-003"
+      ],
+      "evidence_ids": [
+        "EV-bd0bc9d6",
+        "EV-69ee7133",
+        "EV-f07d292d"
+      ],
+      "state": "open",
+      "priority_rank": 3,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "INC-d5297d60",
+      "rule_id": "CS-009",
+      "title": "No post-quantum hybrid key exchange",
+      "server": "10.0.0.6:25",
+      "server_role": "inbound_relay",
+      "severity": "info",
+      "confidence": "high",
+      "sessions_affected": 25,
+      "clients_affected": 25,
+      "first_seen": "2026-09-01T08:01:38.192707+00:00",
+      "last_seen": "2026-09-01T09:06:43.237407+00:00",
+      "finding_ids": [
+        "F-004"
+      ],
+      "evidence_ids": [
+        "EV-1a35964e",
+        "EV-40c4d610",
+        "EV-88b9f65e"
+      ],
+      "state": "open",
+      "priority_rank": 4,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "INC-ad70feca",
+      "rule_id": "CS-009",
+      "title": "No post-quantum hybrid key exchange",
+      "server": "10.0.0.7:995",
+      "server_role": "mailbox",
+      "severity": "info",
+      "confidence": "high",
+      "sessions_affected": 12,
+      "clients_affected": 12,
+      "first_seen": "2026-09-01T08:09:58.537765+00:00",
+      "last_seen": "2026-09-01T09:04:13.983031+00:00",
+      "finding_ids": [
+        "F-005"
+      ],
+      "evidence_ids": [
+        "EV-de4b5c83",
+        "EV-4aa994cd",
+        "EV-ed1a187d"
+      ],
+      "state": "open",
+      "priority_rank": 5,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "INC-8186a42c",
+      "rule_id": "CE-016",
+      "title": "Server certificate not observable (TLS 1.3)",
+      "server": "10.0.0.5:143",
+      "server_role": "mailbox",
+      "severity": "info",
+      "confidence": "high",
+      "sessions_affected": 10,
+      "clients_affected": 10,
+      "first_seen": "2026-09-01T08:00:27.982978+00:00",
+      "last_seen": "2026-09-01T08:56:03.867372+00:00",
+      "finding_ids": [
+        "F-006"
+      ],
+      "evidence_ids": [
+        "EV-cc61af6f",
+        "EV-d2e7de19",
+        "EV-bccc9591"
+      ],
+      "state": "open",
+      "priority_rank": 6,
+      "remediation": {
+        "summary": "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint.",
+        "steps": [
+          "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint."
+        ],
+        "references": []
+      },
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "INC-f6b7fcc2",
+      "rule_id": "CE-016",
+      "title": "Server certificate not observable (TLS 1.3)",
+      "server": "10.0.0.6:25",
+      "server_role": "inbound_relay",
+      "severity": "info",
+      "confidence": "high",
+      "sessions_affected": 25,
+      "clients_affected": 25,
+      "first_seen": "2026-09-01T08:01:38.192707+00:00",
+      "last_seen": "2026-09-01T09:06:43.237407+00:00",
+      "finding_ids": [
+        "F-007"
+      ],
+      "evidence_ids": [
+        "EV-03678e2c",
+        "EV-be0a09e4",
+        "EV-e458fcfa"
+      ],
+      "state": "open",
+      "priority_rank": 7,
+      "remediation": {
+        "summary": "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint.",
+        "steps": [
+          "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint."
+        ],
+        "references": []
+      },
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "INC-bfcc624b",
+      "rule_id": "CE-016",
+      "title": "Server certificate not observable (TLS 1.3)",
+      "server": "10.0.0.5:993",
+      "server_role": "mailbox",
+      "severity": "info",
+      "confidence": "high",
+      "sessions_affected": 50,
+      "clients_affected": 50,
+      "first_seen": "2026-09-01T08:00:44.168083+00:00",
+      "last_seen": "2026-09-01T09:07:07.859125+00:00",
+      "finding_ids": [
+        "F-008"
+      ],
+      "evidence_ids": [
+        "EV-38bcc74b",
+        "EV-691b5501",
+        "EV-bc9c295a"
+      ],
+      "state": "open",
+      "priority_rank": 8,
+      "remediation": {
+        "summary": "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint.",
+        "steps": [
+          "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint."
+        ],
+        "references": []
+      },
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "INC-cd69fb3b",
+      "rule_id": "CE-016",
+      "title": "Server certificate not observable (TLS 1.3)",
+      "server": "10.0.0.6:587",
+      "server_role": "submission",
+      "severity": "info",
+      "confidence": "high",
+      "sessions_affected": 30,
+      "clients_affected": 30,
+      "first_seen": "2026-09-01T08:01:15.802733+00:00",
+      "last_seen": "2026-09-01T09:04:06.231870+00:00",
+      "finding_ids": [
+        "F-009"
+      ],
+      "evidence_ids": [
+        "EV-959c1dda",
+        "EV-369d5be5",
+        "EV-4ed4a839"
+      ],
+      "state": "open",
+      "priority_rank": 9,
+      "remediation": {
+        "summary": "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint.",
+        "steps": [
+          "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint."
+        ],
+        "references": []
+      },
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    }
+  ],
+  "incidents": [
+    {
+      "id": "INC-eee56e56",
+      "rule_id": "CS-009",
+      "title": "No post-quantum hybrid key exchange",
+      "server": "10.0.0.5:143",
+      "server_role": "mailbox",
+      "severity": "info",
+      "confidence": "high",
+      "sessions_affected": 10,
+      "clients_affected": 10,
+      "first_seen": "2026-09-01T08:00:27.982978+00:00",
+      "last_seen": "2026-09-01T08:56:03.867372+00:00",
+      "finding_ids": [
+        "F-001"
+      ],
+      "evidence_ids": [
+        "EV-dbb5bf47",
+        "EV-8ecdeb1d",
+        "EV-0f31e748"
+      ],
+      "state": "open",
+      "priority_rank": 1,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "INC-534f5b46",
+      "rule_id": "CS-009",
+      "title": "No post-quantum hybrid key exchange",
+      "server": "10.0.0.5:993",
+      "server_role": "mailbox",
+      "severity": "info",
+      "confidence": "high",
+      "sessions_affected": 80,
+      "clients_affected": 80,
+      "first_seen": "2026-09-01T08:00:44.168083+00:00",
+      "last_seen": "2026-09-01T09:07:07.859125+00:00",
+      "finding_ids": [
+        "F-002"
+      ],
+      "evidence_ids": [
+        "EV-12dbf17a",
+        "EV-33feb433",
+        "EV-94dae3c9"
+      ],
+      "state": "open",
+      "priority_rank": 2,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "INC-8bb5b811",
+      "rule_id": "CS-009",
+      "title": "No post-quantum hybrid key exchange",
+      "server": "10.0.0.6:587",
+      "server_role": "submission",
+      "severity": "info",
+      "confidence": "high",
+      "sessions_affected": 50,
+      "clients_affected": 50,
+      "first_seen": "2026-09-01T08:01:15.802733+00:00",
+      "last_seen": "2026-09-01T09:05:16.702749+00:00",
+      "finding_ids": [
+        "F-003"
+      ],
+      "evidence_ids": [
+        "EV-bd0bc9d6",
+        "EV-69ee7133",
+        "EV-f07d292d"
+      ],
+      "state": "open",
+      "priority_rank": 3,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "INC-d5297d60",
+      "rule_id": "CS-009",
+      "title": "No post-quantum hybrid key exchange",
+      "server": "10.0.0.6:25",
+      "server_role": "inbound_relay",
+      "severity": "info",
+      "confidence": "high",
+      "sessions_affected": 25,
+      "clients_affected": 25,
+      "first_seen": "2026-09-01T08:01:38.192707+00:00",
+      "last_seen": "2026-09-01T09:06:43.237407+00:00",
+      "finding_ids": [
+        "F-004"
+      ],
+      "evidence_ids": [
+        "EV-1a35964e",
+        "EV-40c4d610",
+        "EV-88b9f65e"
+      ],
+      "state": "open",
+      "priority_rank": 4,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "INC-ad70feca",
+      "rule_id": "CS-009",
+      "title": "No post-quantum hybrid key exchange",
+      "server": "10.0.0.7:995",
+      "server_role": "mailbox",
+      "severity": "info",
+      "confidence": "high",
+      "sessions_affected": 12,
+      "clients_affected": 12,
+      "first_seen": "2026-09-01T08:09:58.537765+00:00",
+      "last_seen": "2026-09-01T09:04:13.983031+00:00",
+      "finding_ids": [
+        "F-005"
+      ],
+      "evidence_ids": [
+        "EV-de4b5c83",
+        "EV-4aa994cd",
+        "EV-ed1a187d"
+      ],
+      "state": "open",
+      "priority_rank": 5,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "INC-8186a42c",
+      "rule_id": "CE-016",
+      "title": "Server certificate not observable (TLS 1.3)",
+      "server": "10.0.0.5:143",
+      "server_role": "mailbox",
+      "severity": "info",
+      "confidence": "high",
+      "sessions_affected": 10,
+      "clients_affected": 10,
+      "first_seen": "2026-09-01T08:00:27.982978+00:00",
+      "last_seen": "2026-09-01T08:56:03.867372+00:00",
+      "finding_ids": [
+        "F-006"
+      ],
+      "evidence_ids": [
+        "EV-cc61af6f",
+        "EV-d2e7de19",
+        "EV-bccc9591"
+      ],
+      "state": "open",
+      "priority_rank": 6,
+      "remediation": {
+        "summary": "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint.",
+        "steps": [
+          "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint."
+        ],
+        "references": []
+      },
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "INC-f6b7fcc2",
+      "rule_id": "CE-016",
+      "title": "Server certificate not observable (TLS 1.3)",
+      "server": "10.0.0.6:25",
+      "server_role": "inbound_relay",
+      "severity": "info",
+      "confidence": "high",
+      "sessions_affected": 25,
+      "clients_affected": 25,
+      "first_seen": "2026-09-01T08:01:38.192707+00:00",
+      "last_seen": "2026-09-01T09:06:43.237407+00:00",
+      "finding_ids": [
+        "F-007"
+      ],
+      "evidence_ids": [
+        "EV-03678e2c",
+        "EV-be0a09e4",
+        "EV-e458fcfa"
+      ],
+      "state": "open",
+      "priority_rank": 7,
+      "remediation": {
+        "summary": "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint.",
+        "steps": [
+          "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint."
+        ],
+        "references": []
+      },
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "INC-bfcc624b",
+      "rule_id": "CE-016",
+      "title": "Server certificate not observable (TLS 1.3)",
+      "server": "10.0.0.5:993",
+      "server_role": "mailbox",
+      "severity": "info",
+      "confidence": "high",
+      "sessions_affected": 50,
+      "clients_affected": 50,
+      "first_seen": "2026-09-01T08:00:44.168083+00:00",
+      "last_seen": "2026-09-01T09:07:07.859125+00:00",
+      "finding_ids": [
+        "F-008"
+      ],
+      "evidence_ids": [
+        "EV-38bcc74b",
+        "EV-691b5501",
+        "EV-bc9c295a"
+      ],
+      "state": "open",
+      "priority_rank": 8,
+      "remediation": {
+        "summary": "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint.",
+        "steps": [
+          "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint."
+        ],
+        "references": []
+      },
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "INC-cd69fb3b",
+      "rule_id": "CE-016",
+      "title": "Server certificate not observable (TLS 1.3)",
+      "server": "10.0.0.6:587",
+      "server_role": "submission",
+      "severity": "info",
+      "confidence": "high",
+      "sessions_affected": 30,
+      "clients_affected": 30,
+      "first_seen": "2026-09-01T08:01:15.802733+00:00",
+      "last_seen": "2026-09-01T09:04:06.231870+00:00",
+      "finding_ids": [
+        "F-009"
+      ],
+      "evidence_ids": [
+        "EV-959c1dda",
+        "EV-369d5be5",
+        "EV-4ed4a839"
+      ],
+      "state": "open",
+      "priority_rank": 9,
+      "remediation": {
+        "summary": "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint.",
+        "steps": [
+          "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint."
+        ],
+        "references": []
+      },
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    }
+  ]
+}

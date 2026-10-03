@@ -1,0 +1,820 @@
+{
+  "ruleset_version": "2025.03.1",
+  "run_at": "2026-10-03T09:37:12.495945+00:00",
+  "capture_id": "cap-002",
+  "total": 27,
+  "items": [
+    {
+      "id": "EV-dbb5bf47",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-0",
+      "frames": [
+        1,
+        3
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 0",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-8ecdeb1d",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-7",
+      "frames": [
+        71,
+        73
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 7",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-0f31e748",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-19",
+      "frames": [
+        191,
+        193
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 19",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-12dbf17a",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-1",
+      "frames": [
+        11,
+        13
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 1",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-33feb433",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-2",
+      "frames": [
+        21,
+        23
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 2",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-94dae3c9",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-6",
+      "frames": [
+        61,
+        63
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 6",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-bd0bc9d6",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-3",
+      "frames": [
+        31,
+        33
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 3",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-69ee7133",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-4",
+      "frames": [
+        41,
+        43
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 4",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-f07d292d",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-9",
+      "frames": [
+        91,
+        93
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 9",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-1a35964e",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-5",
+      "frames": [
+        51,
+        53
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 5",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-40c4d610",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-20",
+      "frames": [
+        201,
+        203
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 20",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-88b9f65e",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-21",
+      "frames": [
+        211,
+        213
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 21",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-de4b5c83",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-31",
+      "frames": [
+        311,
+        313
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 31",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-4aa994cd",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-56",
+      "frames": [
+        561,
+        563
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 56",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-ed1a187d",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-63",
+      "frames": [
+        631,
+        633
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 63",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-cc61af6f",
+      "capture_id": "cap-002",
+      "type": "certificate",
+      "session_id": "S-0",
+      "frames": [
+        1,
+        3
+      ],
+      "summary": "Certificate message encrypted (TLS 1.3)",
+      "wireshark_filter": "tcp.stream eq 0",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-d2e7de19",
+      "capture_id": "cap-002",
+      "type": "certificate",
+      "session_id": "S-7",
+      "frames": [
+        71,
+        73
+      ],
+      "summary": "Certificate message encrypted (TLS 1.3)",
+      "wireshark_filter": "tcp.stream eq 7",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-bccc9591",
+      "capture_id": "cap-002",
+      "type": "certificate",
+      "session_id": "S-19",
+      "frames": [
+        191,
+        193
+      ],
+      "summary": "Certificate message encrypted (TLS 1.3)",
+      "wireshark_filter": "tcp.stream eq 19",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-03678e2c",
+      "capture_id": "cap-002",
+      "type": "certificate",
+      "session_id": "S-5",
+      "frames": [
+        51,
+        53
+      ],
+      "summary": "Certificate message encrypted (TLS 1.3)",
+      "wireshark_filter": "tcp.stream eq 5",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-be0a09e4",
+      "capture_id": "cap-002",
+      "type": "certificate",
+      "session_id": "S-20",
+      "frames": [
+        201,
+        203
+      ],
+      "summary": "Certificate message encrypted (TLS 1.3)",
+      "wireshark_filter": "tcp.stream eq 20",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-e458fcfa",
+      "capture_id": "cap-002",
+      "type": "certificate",
+      "session_id": "S-21",
+      "frames": [
+        211,
+        213
+      ],
+      "summary": "Certificate message encrypted (TLS 1.3)",
+      "wireshark_filter": "tcp.stream eq 21",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-38bcc74b",
+      "capture_id": "cap-002",
+      "type": "certificate",
+      "session_id": "S-1",
+      "frames": [
+        11,
+        13
+      ],
+      "summary": "Certificate message encrypted (TLS 1.3)",
+      "wireshark_filter": "tcp.stream eq 1",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-691b5501",
+      "capture_id": "cap-002",
+      "type": "certificate",
+      "session_id": "S-2",
+      "frames": [
+        21,
+        23
+      ],
+      "summary": "Certificate message encrypted (TLS 1.3)",
+      "wireshark_filter": "tcp.stream eq 2",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-bc9c295a",
+      "capture_id": "cap-002",
+      "type": "certificate",
+      "session_id": "S-6",
+      "frames": [
+        61,
+        63
+      ],
+      "summary": "Certificate message encrypted (TLS 1.3)",
+      "wireshark_filter": "tcp.stream eq 6",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-959c1dda",
+      "capture_id": "cap-002",
+      "type": "certificate",
+      "session_id": "S-3",
+      "frames": [
+        31,
+        33
+      ],
+      "summary": "Certificate message encrypted (TLS 1.3)",
+      "wireshark_filter": "tcp.stream eq 3",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-369d5be5",
+      "capture_id": "cap-002",
+      "type": "certificate",
+      "session_id": "S-4",
+      "frames": [
+        41,
+        43
+      ],
+      "summary": "Certificate message encrypted (TLS 1.3)",
+      "wireshark_filter": "tcp.stream eq 4",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-4ed4a839",
+      "capture_id": "cap-002",
+      "type": "certificate",
+      "session_id": "S-18",
+      "frames": [
+        181,
+        183
+      ],
+      "summary": "Certificate message encrypted (TLS 1.3)",
+      "wireshark_filter": "tcp.stream eq 18",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "EV-dbb5bf47",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-0",
+      "frames": [
+        1,
+        3
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 0",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-8ecdeb1d",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-7",
+      "frames": [
+        71,
+        73
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 7",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-0f31e748",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-19",
+      "frames": [
+        191,
+        193
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 19",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-12dbf17a",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-1",
+      "frames": [
+        11,
+        13
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 1",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-33feb433",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-2",
+      "frames": [
+        21,
+        23
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 2",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-94dae3c9",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-6",
+      "frames": [
+        61,
+        63
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 6",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-bd0bc9d6",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-3",
+      "frames": [
+        31,
+        33
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 3",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-69ee7133",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-4",
+      "frames": [
+        41,
+        43
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 4",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-f07d292d",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-9",
+      "frames": [
+        91,
+        93
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 9",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-1a35964e",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-5",
+      "frames": [
+        51,
+        53
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 5",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-40c4d610",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-20",
+      "frames": [
+        201,
+        203
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 20",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-88b9f65e",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-21",
+      "frames": [
+        211,
+        213
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 21",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-de4b5c83",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-31",
+      "frames": [
+        311,
+        313
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 31",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-4aa994cd",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-56",
+      "frames": [
+        561,
+        563
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 56",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-ed1a187d",
+      "capture_id": "cap-002",
+      "type": "session",
+      "session_id": "S-63",
+      "frames": [
+        631,
+        633
+      ],
+      "summary": "classical key exchange only",
+      "wireshark_filter": "tcp.stream eq 63",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-cc61af6f",
+      "capture_id": "cap-002",
+      "type": "certificate",
+      "session_id": "S-0",
+      "frames": [
+        1,
+        3
+      ],
+      "summary": "Certificate message encrypted (TLS 1.3)",
+      "wireshark_filter": "tcp.stream eq 0",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-d2e7de19",
+      "capture_id": "cap-002",
+      "type": "certificate",
+      "session_id": "S-7",
+      "frames": [
+        71,
+        73
+      ],
+      "summary": "Certificate message encrypted (TLS 1.3)",
+      "wireshark_filter": "tcp.stream eq 7",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-bccc9591",
+      "capture_id": "cap-002",
+      "type": "certificate",
+      "session_id": "S-19",
+      "frames": [
+        191,
+        193
+      ],
+      "summary": "Certificate message encrypted (TLS 1.3)",
+      "wireshark_filter": "tcp.stream eq 19",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-03678e2c",
+      "capture_id": "cap-002",
+      "type": "certificate",
+      "session_id": "S-5",
+      "frames": [
+        51,
+        53
+      ],
+      "summary": "Certificate message encrypted (TLS 1.3)",
+      "wireshark_filter": "tcp.stream eq 5",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-be0a09e4",
+      "capture_id": "cap-002",
+      "type": "certificate",
+      "session_id": "S-20",
+      "frames": [
+        201,
+        203
+      ],
+      "summary": "Certificate message encrypted (TLS 1.3)",
+      "wireshark_filter": "tcp.stream eq 20",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-e458fcfa",
+      "capture_id": "cap-002",
+      "type": "certificate",
+      "session_id": "S-21",
+      "frames": [
+        211,
+        213
+      ],
+      "summary": "Certificate message encrypted (TLS 1.3)",
+      "wireshark_filter": "tcp.stream eq 21",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-38bcc74b",
+      "capture_id": "cap-002",
+      "type": "certificate",
+      "session_id": "S-1",
+      "frames": [
+        11,
+        13
+      ],
+      "summary": "Certificate message encrypted (TLS 1.3)",
+      "wireshark_filter": "tcp.stream eq 1",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-691b5501",
+      "capture_id": "cap-002",
+      "type": "certificate",
+      "session_id": "S-2",
+      "frames": [
+        21,
+        23
+      ],
+      "summary": "Certificate message encrypted (TLS 1.3)",
+      "wireshark_filter": "tcp.stream eq 2",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-bc9c295a",
+      "capture_id": "cap-002",
+      "type": "certificate",
+      "session_id": "S-6",
+      "frames": [
+        61,
+        63
+      ],
+      "summary": "Certificate message encrypted (TLS 1.3)",
+      "wireshark_filter": "tcp.stream eq 6",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-959c1dda",
+      "capture_id": "cap-002",
+      "type": "certificate",
+      "session_id": "S-3",
+      "frames": [
+        31,
+        33
+      ],
+      "summary": "Certificate message encrypted (TLS 1.3)",
+      "wireshark_filter": "tcp.stream eq 3",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-369d5be5",
+      "capture_id": "cap-002",
+      "type": "certificate",
+      "session_id": "S-4",
+      "frames": [
+        41,
+        43
+      ],
+      "summary": "Certificate message encrypted (TLS 1.3)",
+      "wireshark_filter": "tcp.stream eq 4",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "EV-4ed4a839",
+      "capture_id": "cap-002",
+      "type": "certificate",
+      "session_id": "S-18",
+      "frames": [
+        181,
+        183
+      ],
+      "summary": "Certificate message encrypted (TLS 1.3)",
+      "wireshark_filter": "tcp.stream eq 18",
+      "certificate_sha256": null,
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    }
+  ]
+}

@@ -11,8 +11,8 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
 
   if (!ready) return null;
 
-  const USE_FIXTURES = process.env.NEXT_PUBLIC_USE_FIXTURES === "1";
-  if (USE_FIXTURES || (token && actor)) return <>{children}</>;
+  const isDemo = process.env.NEXT_PUBLIC_DEMO_MODE === "1" || process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+  if (isDemo || (token && actor)) return <>{children}</>;
 
   function submit(e: React.FormEvent) {
     e.preventDefault();

@@ -1,0 +1,46 @@
+{
+  "ruleset_version": "2025.03.1",
+  "captures": [
+    {
+      "id": "cap-002",
+      "filename": "securemail_baseline.pcap",
+      "role": "baseline",
+      "expected_score_range": [90, 100],
+      "expected_findings": [],
+      "expected_critical_or_high": 0
+    },
+    {
+      "id": "cap-001",
+      "filename": "securemail_drift.pcap",
+      "role": "drift_regression",
+      "expected_score_range": [30, 60],
+      "expected_findings": [
+        "TR-001",
+        "TR-002",
+        "TR-003",
+        "TLS-001",
+        "TLS-003",
+        "TLS-005",
+        "CS-001",
+        "CS-002",
+        "CS-004",
+        "CS-006",
+        "CE-001",
+        "CE-003",
+        "CE-004",
+        "CE-005",
+        "CE-008",
+        "MS-001",
+        "MS-002",
+        "MS-004",
+        "ML-001"
+      ],
+      "expected_drift_changes": [
+        "starttls",
+        "tls_version",
+        "cipher_suite",
+        "certificate"
+      ]
+    }
+  ]
+}

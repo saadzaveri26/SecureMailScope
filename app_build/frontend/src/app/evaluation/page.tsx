@@ -110,6 +110,11 @@ export default function EvaluationPage() {
           </table>
         </div>
       </div>
+
+      <div className="flex items-center justify-between text-xs text-muted font-mono pt-1">
+        <span>Run at: {new Date(ev.run_at).toUTCString()}</span>
+        <span>Corpus version: {ev.corpus_version}</span>
+      </div>
     </div>
   );
 }

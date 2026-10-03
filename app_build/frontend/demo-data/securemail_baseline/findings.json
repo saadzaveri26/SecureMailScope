@@ -1,0 +1,894 @@
+{
+  "ruleset_version": "2025.03.1",
+  "run_at": "2026-10-03T09:37:12.495945+00:00",
+  "capture_id": "cap-002",
+  "total": 9,
+  "items": [
+    {
+      "id": "F-001",
+      "session_id": "S-0",
+      "rule_id": "CS-009",
+      "rule_version": "1.0",
+      "title": "No post-quantum hybrid key exchange",
+      "severity": "info",
+      "category": "cipher",
+      "description": "Session key exchange is classical only.",
+      "evidence": {
+        "frames": [
+          0
+        ],
+        "client": "10.0.1.175:49649",
+        "server": "10.0.0.5",
+        "server_port": 143,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-dbb5bf47",
+        "EV-8ecdeb1d",
+        "EV-0f31e748"
+      ],
+      "wireshark_filter": "tcp.port == 143",
+      "score_impact": 30,
+      "priority_rank": 1,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 10,
+        "clients_affected": 10
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-eee56e56",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-002",
+      "session_id": "S-1",
+      "rule_id": "CS-009",
+      "rule_version": "1.0",
+      "title": "No post-quantum hybrid key exchange",
+      "severity": "info",
+      "category": "cipher",
+      "description": "Session key exchange is classical only.",
+      "evidence": {
+        "frames": [
+          1
+        ],
+        "client": "10.0.1.108:59013",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-12dbf17a",
+        "EV-33feb433",
+        "EV-94dae3c9"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 30,
+      "priority_rank": 2,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 80,
+        "clients_affected": 80
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-534f5b46",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-003",
+      "session_id": "S-3",
+      "rule_id": "CS-009",
+      "rule_version": "1.0",
+      "title": "No post-quantum hybrid key exchange",
+      "severity": "info",
+      "category": "cipher",
+      "description": "Session key exchange is classical only.",
+      "evidence": {
+        "frames": [
+          3
+        ],
+        "client": "10.0.1.105:58357",
+        "server": "10.0.0.6",
+        "server_port": 587,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-bd0bc9d6",
+        "EV-69ee7133",
+        "EV-f07d292d"
+      ],
+      "wireshark_filter": "tcp.port == 587",
+      "score_impact": 30,
+      "priority_rank": 3,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 50,
+        "clients_affected": 50
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-8bb5b811",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-004",
+      "session_id": "S-5",
+      "rule_id": "CS-009",
+      "rule_version": "1.0",
+      "title": "No post-quantum hybrid key exchange",
+      "severity": "info",
+      "category": "cipher",
+      "description": "Session key exchange is classical only.",
+      "evidence": {
+        "frames": [
+          5
+        ],
+        "client": "10.0.1.115:51384",
+        "server": "10.0.0.6",
+        "server_port": 25,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-1a35964e",
+        "EV-40c4d610",
+        "EV-88b9f65e"
+      ],
+      "wireshark_filter": "tcp.port == 25",
+      "score_impact": 30,
+      "priority_rank": 4,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "inbound_relay",
+        "sessions_affected": 25,
+        "clients_affected": 25
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-d5297d60",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-005",
+      "session_id": "S-31",
+      "rule_id": "CS-009",
+      "rule_version": "1.0",
+      "title": "No post-quantum hybrid key exchange",
+      "severity": "info",
+      "category": "cipher",
+      "description": "Session key exchange is classical only.",
+      "evidence": {
+        "frames": [
+          31
+        ],
+        "client": "10.0.1.188:49069",
+        "server": "10.0.0.7",
+        "server_port": 995,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-de4b5c83",
+        "EV-4aa994cd",
+        "EV-ed1a187d"
+      ],
+      "wireshark_filter": "tcp.port == 995",
+      "score_impact": 30,
+      "priority_rank": 5,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 12,
+        "clients_affected": 12
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-ad70feca",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-006",
+      "session_id": "S-0",
+      "rule_id": "CE-016",
+      "rule_version": "1.0",
+      "title": "Server certificate not observable (TLS 1.3)",
+      "severity": "info",
+      "category": "certificate",
+      "description": "TLS 1.3 encrypts the Certificate message; passive chain validation is impossible.",
+      "evidence": {
+        "frames": [
+          0
+        ],
+        "client": "10.0.1.175:49649",
+        "server": "10.0.0.5",
+        "server_port": 143,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-cc61af6f",
+        "EV-d2e7de19",
+        "EV-bccc9591"
+      ],
+      "wireshark_filter": "tcp.port == 143",
+      "score_impact": 30,
+      "priority_rank": 6,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 10,
+        "clients_affected": 10
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint.",
+        "steps": [
+          "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-8186a42c",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-007",
+      "session_id": "S-5",
+      "rule_id": "CE-016",
+      "rule_version": "1.0",
+      "title": "Server certificate not observable (TLS 1.3)",
+      "severity": "info",
+      "category": "certificate",
+      "description": "TLS 1.3 encrypts the Certificate message; passive chain validation is impossible.",
+      "evidence": {
+        "frames": [
+          5
+        ],
+        "client": "10.0.1.115:51384",
+        "server": "10.0.0.6",
+        "server_port": 25,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-03678e2c",
+        "EV-be0a09e4",
+        "EV-e458fcfa"
+      ],
+      "wireshark_filter": "tcp.port == 25",
+      "score_impact": 30,
+      "priority_rank": 7,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "inbound_relay",
+        "sessions_affected": 25,
+        "clients_affected": 25
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint.",
+        "steps": [
+          "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-f6b7fcc2",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-008",
+      "session_id": "S-1",
+      "rule_id": "CE-016",
+      "rule_version": "1.0",
+      "title": "Server certificate not observable (TLS 1.3)",
+      "severity": "info",
+      "category": "certificate",
+      "description": "TLS 1.3 encrypts the Certificate message; passive chain validation is impossible.",
+      "evidence": {
+        "frames": [
+          1
+        ],
+        "client": "10.0.1.108:59013",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-38bcc74b",
+        "EV-691b5501",
+        "EV-bc9c295a"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 18,
+      "priority_rank": 8,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 50,
+        "clients_affected": 50
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint.",
+        "steps": [
+          "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-bfcc624b",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-009",
+      "session_id": "S-3",
+      "rule_id": "CE-016",
+      "rule_version": "1.0",
+      "title": "Server certificate not observable (TLS 1.3)",
+      "severity": "info",
+      "category": "certificate",
+      "description": "TLS 1.3 encrypts the Certificate message; passive chain validation is impossible.",
+      "evidence": {
+        "frames": [
+          3
+        ],
+        "client": "10.0.1.105:58357",
+        "server": "10.0.0.6",
+        "server_port": 587,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-959c1dda",
+        "EV-369d5be5",
+        "EV-4ed4a839"
+      ],
+      "wireshark_filter": "tcp.port == 587",
+      "score_impact": 18,
+      "priority_rank": 9,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 30,
+        "clients_affected": 30
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint.",
+        "steps": [
+          "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-cd69fb3b",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    }
+  ],
+  "findings": [
+    {
+      "id": "F-001",
+      "session_id": "S-0",
+      "rule_id": "CS-009",
+      "rule_version": "1.0",
+      "title": "No post-quantum hybrid key exchange",
+      "severity": "info",
+      "category": "cipher",
+      "description": "Session key exchange is classical only.",
+      "evidence": {
+        "frames": [
+          0
+        ],
+        "client": "10.0.1.175:49649",
+        "server": "10.0.0.5",
+        "server_port": 143,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-dbb5bf47",
+        "EV-8ecdeb1d",
+        "EV-0f31e748"
+      ],
+      "wireshark_filter": "tcp.port == 143",
+      "score_impact": 30,
+      "priority_rank": 1,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 10,
+        "clients_affected": 10
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-eee56e56",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-002",
+      "session_id": "S-1",
+      "rule_id": "CS-009",
+      "rule_version": "1.0",
+      "title": "No post-quantum hybrid key exchange",
+      "severity": "info",
+      "category": "cipher",
+      "description": "Session key exchange is classical only.",
+      "evidence": {
+        "frames": [
+          1
+        ],
+        "client": "10.0.1.108:59013",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-12dbf17a",
+        "EV-33feb433",
+        "EV-94dae3c9"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 30,
+      "priority_rank": 2,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 80,
+        "clients_affected": 80
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-534f5b46",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-003",
+      "session_id": "S-3",
+      "rule_id": "CS-009",
+      "rule_version": "1.0",
+      "title": "No post-quantum hybrid key exchange",
+      "severity": "info",
+      "category": "cipher",
+      "description": "Session key exchange is classical only.",
+      "evidence": {
+        "frames": [
+          3
+        ],
+        "client": "10.0.1.105:58357",
+        "server": "10.0.0.6",
+        "server_port": 587,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-bd0bc9d6",
+        "EV-69ee7133",
+        "EV-f07d292d"
+      ],
+      "wireshark_filter": "tcp.port == 587",
+      "score_impact": 30,
+      "priority_rank": 3,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 50,
+        "clients_affected": 50
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-8bb5b811",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-004",
+      "session_id": "S-5",
+      "rule_id": "CS-009",
+      "rule_version": "1.0",
+      "title": "No post-quantum hybrid key exchange",
+      "severity": "info",
+      "category": "cipher",
+      "description": "Session key exchange is classical only.",
+      "evidence": {
+        "frames": [
+          5
+        ],
+        "client": "10.0.1.115:51384",
+        "server": "10.0.0.6",
+        "server_port": 25,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-1a35964e",
+        "EV-40c4d610",
+        "EV-88b9f65e"
+      ],
+      "wireshark_filter": "tcp.port == 25",
+      "score_impact": 30,
+      "priority_rank": 4,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "inbound_relay",
+        "sessions_affected": 25,
+        "clients_affected": 25
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-d5297d60",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-005",
+      "session_id": "S-31",
+      "rule_id": "CS-009",
+      "rule_version": "1.0",
+      "title": "No post-quantum hybrid key exchange",
+      "severity": "info",
+      "category": "cipher",
+      "description": "Session key exchange is classical only.",
+      "evidence": {
+        "frames": [
+          31
+        ],
+        "client": "10.0.1.188:49069",
+        "server": "10.0.0.7",
+        "server_port": 995,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-de4b5c83",
+        "EV-4aa994cd",
+        "EV-ed1a187d"
+      ],
+      "wireshark_filter": "tcp.port == 995",
+      "score_impact": 30,
+      "priority_rank": 5,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 12,
+        "clients_affected": 12
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Plan migration to hybrid X25519MLKEM768 where supported.",
+        "steps": [
+          "Plan migration to hybrid X25519MLKEM768 where supported."
+        ],
+        "references": [
+          "NIST FIPS 203"
+        ]
+      },
+      "policy_refs": [],
+      "incident_id": "INC-ad70feca",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-006",
+      "session_id": "S-0",
+      "rule_id": "CE-016",
+      "rule_version": "1.0",
+      "title": "Server certificate not observable (TLS 1.3)",
+      "severity": "info",
+      "category": "certificate",
+      "description": "TLS 1.3 encrypts the Certificate message; passive chain validation is impossible.",
+      "evidence": {
+        "frames": [
+          0
+        ],
+        "client": "10.0.1.175:49649",
+        "server": "10.0.0.5",
+        "server_port": 143,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-cc61af6f",
+        "EV-d2e7de19",
+        "EV-bccc9591"
+      ],
+      "wireshark_filter": "tcp.port == 143",
+      "score_impact": 30,
+      "priority_rank": 6,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 10,
+        "clients_affected": 10
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint.",
+        "steps": [
+          "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-8186a42c",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-007",
+      "session_id": "S-5",
+      "rule_id": "CE-016",
+      "rule_version": "1.0",
+      "title": "Server certificate not observable (TLS 1.3)",
+      "severity": "info",
+      "category": "certificate",
+      "description": "TLS 1.3 encrypts the Certificate message; passive chain validation is impossible.",
+      "evidence": {
+        "frames": [
+          5
+        ],
+        "client": "10.0.1.115:51384",
+        "server": "10.0.0.6",
+        "server_port": 25,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-03678e2c",
+        "EV-be0a09e4",
+        "EV-e458fcfa"
+      ],
+      "wireshark_filter": "tcp.port == 25",
+      "score_impact": 30,
+      "priority_rank": 7,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "inbound_relay",
+        "sessions_affected": 25,
+        "clients_affected": 25
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint.",
+        "steps": [
+          "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-f6b7fcc2",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-008",
+      "session_id": "S-1",
+      "rule_id": "CE-016",
+      "rule_version": "1.0",
+      "title": "Server certificate not observable (TLS 1.3)",
+      "severity": "info",
+      "category": "certificate",
+      "description": "TLS 1.3 encrypts the Certificate message; passive chain validation is impossible.",
+      "evidence": {
+        "frames": [
+          1
+        ],
+        "client": "10.0.1.108:59013",
+        "server": "10.0.0.5",
+        "server_port": 993,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-38bcc74b",
+        "EV-691b5501",
+        "EV-bc9c295a"
+      ],
+      "wireshark_filter": "tcp.port == 993",
+      "score_impact": 18,
+      "priority_rank": 8,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "mailbox",
+        "sessions_affected": 50,
+        "clients_affected": 50
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint.",
+        "steps": [
+          "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-bfcc624b",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    },
+    {
+      "id": "F-009",
+      "session_id": "S-3",
+      "rule_id": "CE-016",
+      "rule_version": "1.0",
+      "title": "Server certificate not observable (TLS 1.3)",
+      "severity": "info",
+      "category": "certificate",
+      "description": "TLS 1.3 encrypts the Certificate message; passive chain validation is impossible.",
+      "evidence": {
+        "frames": [
+          3
+        ],
+        "client": "10.0.1.105:58357",
+        "server": "10.0.0.6",
+        "server_port": 587,
+        "certificate_sha256": null
+      },
+      "evidence_ids": [
+        "EV-959c1dda",
+        "EV-369d5be5",
+        "EV-4ed4a839"
+      ],
+      "wireshark_filter": "tcp.port == 587",
+      "score_impact": 18,
+      "priority_rank": 9,
+      "confidence": "high",
+      "confidence_basis": [
+        "full application-layer exchange observed"
+      ],
+      "context": {
+        "server_role": "submission",
+        "sessions_affected": 30,
+        "clients_affected": 30
+      },
+      "anomaly": null,
+      "remediation": {
+        "summary": "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint.",
+        "steps": [
+          "Complement with an active scan (openssl s_client / testssl.sh) for the endpoint."
+        ],
+        "references": []
+      },
+      "policy_refs": [],
+      "incident_id": "INC-cd69fb3b",
+      "ruleset_version": "2025.03.1",
+      "run_at": "2026-10-03T09:37:12.495945+00:00"
+    }
+  ]
+}

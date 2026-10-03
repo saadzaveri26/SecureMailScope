@@ -38,9 +38,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const t = sessionStorage.getItem(K_TOKEN) ?? "";
     const a = sessionStorage.getItem(K_ACTOR) ?? "";
-    setToken(t);
-    setActor(a);
-    setReady(true);
+    queueMicrotask(() => {
+      setToken(t);
+      setActor(a);
+      setReady(true);
+    });
   }, []);
 
   const setCredentials = useCallback((t: string, a: string) => {

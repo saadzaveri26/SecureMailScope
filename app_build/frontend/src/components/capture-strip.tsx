@@ -18,9 +18,6 @@ export function CaptureStrip() {
     "/overview",
     "/sessions",
     "/findings",
-    "/incidents",
-    "/assets",
-    "/evidence",
     "/drift",
     "/reports",
   ].some((p) => path.startsWith(p));

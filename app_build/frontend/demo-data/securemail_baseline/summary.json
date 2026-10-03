@@ -1,0 +1,97 @@
+{
+  "posture": {
+    "score": 100,
+    "grade": "A",
+    "factors": [
+      {
+        "name": "Transport Security",
+        "weight": 0.35,
+        "impact": 0,
+        "detail": "No critical findings observed",
+        "finding_ids": []
+      },
+      {
+        "name": "Certificate Hygiene",
+        "weight": 0.25,
+        "impact": -19,
+        "detail": "4 finding(s) observed",
+        "finding_ids": [
+          "F-006",
+          "F-007",
+          "F-008",
+          "F-009"
+        ]
+      },
+      {
+        "name": "Protocol Configuration",
+        "weight": 0.2,
+        "impact": 0,
+        "detail": "No critical findings observed",
+        "finding_ids": []
+      },
+      {
+        "name": "Cipher Strength",
+        "weight": 0.15,
+        "impact": -30,
+        "detail": "5 finding(s) observed",
+        "finding_ids": [
+          "F-001",
+          "F-002",
+          "F-003",
+          "F-004",
+          "F-005"
+        ]
+      },
+      {
+        "name": "Message Layer",
+        "weight": 0.05,
+        "impact": 0,
+        "detail": "No critical findings observed",
+        "finding_ids": []
+      }
+    ],
+    "triaged_score": 100,
+    "triage_adjustments": []
+  },
+  "severity_counts": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "info": 9
+  },
+  "protocol_counts": {
+    "smtp": 75,
+    "imap": 90,
+    "pop3": 12,
+    "unknown": 0
+  },
+  "transport_counts": {
+    "implicit_tls": 92,
+    "starttls": 85,
+    "plaintext": 0
+  },
+  "limitations": [
+    "TLS 1.3 sessions encrypt certificates on the wire; chain validation relies on observed SNI/negotiation"
+  ],
+  "baseline_status": "not_configured",
+  "visibility": {
+    "sessions_total": 177,
+    "handshake_complete": 177,
+    "handshake_partial": 0,
+    "certificate_observable": 62,
+    "certificate_hidden_tls13": 115,
+    "certificate_resumed": 0,
+    "message_layer_observable": 0,
+    "plaintext_sessions": 0,
+    "checks_not_performed": [
+      {
+        "check": "Certificate chain validation",
+        "reason": "TLS 1.3 encrypts certificate",
+        "sessions": 115
+      }
+    ]
+  },
+  "ruleset_version": "2025.03.1",
+  "run_at": "2026-10-03T09:37:12.495945+00:00"
+}
