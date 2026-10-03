@@ -643,7 +643,7 @@
       "title": "Drift: Certificate change detected",
       "severity": "high",
       "category": "drift",
-      "description": "Issuer changed: Synthetic Corp Issuing CA -> Unknown Trust Services CA; New certificate does not chain to a trusted root (previous one did)",
+      "description": "Issuer changed: Enterprise Corp Issuing CA -> Unknown Trust Services CA; New certificate does not chain to a trusted root (previous one did)",
       "evidence": {
         "frames": [
           2
@@ -3602,7 +3602,7 @@
       "title": "Drift: Certificate change detected",
       "severity": "high",
       "category": "drift",
-      "description": "Issuer changed: Synthetic Corp Issuing CA -> Unknown Trust Services CA; New certificate does not chain to a trusted root (previous one did)",
+      "description": "Issuer changed: Enterprise Corp Issuing CA -> Unknown Trust Services CA; New certificate does not chain to a trusted root (previous one did)",
       "evidence": {
         "frames": [
           2

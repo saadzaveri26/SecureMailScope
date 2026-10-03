@@ -6,7 +6,16 @@ import type { Finding, Severity, FindingCategory, Incident, Evidence } from "@/t
 import { getFindings, getIncidents, getEvidence } from "@/data";
 import { SeverityBadge } from "@/components/severity";
 import { ConfidenceBadge } from "@/components/confidence-badge";
+import { EvidenceTag } from "@/components/evidence-tag";
 import { X, Copy, Check, CaretDown, CaretRight, ArrowSquareOut } from "@phosphor-icons/react";
+
+const sevBorder: Record<Severity, string> = {
+  critical: "border-l-sev-critical",
+  high: "border-l-sev-high",
+  medium: "border-l-sev-medium",
+  low: "border-l-sev-low",
+  info: "border-l-sev-info",
+};
 
 export default function FindingsPage() {
   return (
@@ -26,10 +35,10 @@ function FindingsSkeleton() {
         </div>
         <div className="h-8 w-48 bg-surface-2 rounded" />
       </div>
-      <div className="bg-surface-0 rounded-lg border border-border-subtle overflow-hidden">
-        <div className="h-10 bg-surface-1 border-b border-border-subtle" />
+      <div className="bg-surface-0 rounded-sm border border-border overflow-hidden">
+        <div className="h-10 bg-surface-1 border-b border-border" />
         {[...Array(6)].map((_, i) => (
-          <div key={i} className="h-10 border-b border-border-subtle flex items-center px-4 gap-4">
+          <div key={i} className="h-10 border-b border-border flex items-center px-4 gap-4">
             <div className="h-4 w-12 bg-surface-2 rounded" />
             <div className="h-4 w-20 bg-surface-2 rounded" />
             <div className="h-4 w-48 bg-surface-2 rounded" />
@@ -148,13 +157,13 @@ function FindingsContent() {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex rounded-md border border-border p-0.5 bg-surface-1">
+          <div className="flex rounded-sm border border-border p-0.5 bg-surface-1">
             <button
               onClick={() => setView("findings")}
               className={[
                 "px-3 py-1.5 text-xs font-medium rounded transition-colors",
                 view === "findings"
-                  ? "bg-surface-0 text-foreground shadow-sm"
+                  ? "bg-surface-0 text-foreground"
                   : "text-muted hover:text-foreground",
               ].join(" ")}
             >
@@ -165,7 +174,7 @@ function FindingsContent() {
               className={[
                 "px-3 py-1.5 text-xs font-medium rounded transition-colors",
                 view === "incident"
-                  ? "bg-surface-0 text-foreground shadow-sm"
+                  ? "bg-surface-0 text-foreground"
                   : "text-muted hover:text-foreground",
               ].join(" ")}
             >
@@ -178,7 +187,7 @@ function FindingsContent() {
               <select
                 value={sev}
                 onChange={(e) => setSev(e.target.value)}
-                className="text-xs bg-surface-0 border border-border rounded-md px-3 py-1.5 focus:outline-none focus:border-brand"
+                className="text-xs bg-surface-0 border border-border rounded-sm px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-ink"
               >
                 <option value="">All severities</option>
                 <option value="critical">Critical</option>
@@ -190,7 +199,7 @@ function FindingsContent() {
               <select
                 value={cat}
                 onChange={(e) => setCat(e.target.value)}
-                className="text-xs bg-surface-0 border border-border rounded-md px-3 py-1.5 focus:outline-none focus:border-brand"
+                className="text-xs bg-surface-0 border border-border rounded-sm px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-ink"
               >
                 <option value="">All categories</option>
                 <option value="transport">Transport</option>
@@ -208,7 +217,7 @@ function FindingsContent() {
       {loading ? (
         <FindingsSkeleton />
       ) : error ? (
-        <div className="bg-sev-critical-bg border border-sev-critical/20 rounded-md p-4 space-y-2">
+        <div className="bg-sev-critical-bg border border-sev-critical/20 rounded-sm p-4 space-y-2">
           <p className="text-xs font-semibold text-sev-critical">Failed to load findings</p>
           <p className="text-xs text-sev-critical/90">{error}</p>
           <button
@@ -220,12 +229,12 @@ function FindingsContent() {
         </div>
       ) : view === "findings" ? (
         findings.length === 0 ? (
-          <div className="text-center py-16 bg-surface-0 rounded-lg border border-border-subtle text-muted">
+          <div className="text-center py-16 bg-surface-0 rounded-sm border border-border text-muted">
             <p className="text-xs font-medium text-foreground">No findings match the selected filters</p>
             <p className="text-xs text-muted mt-1">Try adjusting the severity or category filter</p>
           </div>
         ) : (
-          <div className="bg-surface-0 rounded-lg border border-border-subtle overflow-hidden">
+          <div className="bg-surface-0 rounded-sm border border-border overflow-hidden">
             <div className="overflow-x-auto max-h-[750px] overflow-y-auto">
               <table className="w-full text-xs">
                 <thead className="sticky top-0 bg-surface-1 z-10 border-b border-border shadow-none">
@@ -245,9 +254,9 @@ function FindingsContent() {
                     <tr
                       key={f.id}
                       onClick={() => setSelFinding(f)}
-                      className="border-b border-border-subtle last:border-0 hover:bg-surface-1 cursor-pointer transition-colors h-10"
+                      className="border-b border-border last:border-0 hover:bg-surface-1 cursor-pointer transition-colors h-10"
                     >
-                      <td className="px-4 py-2 font-mono text-muted tabular-nums">
+                      <td className={`px-4 py-2 font-mono text-muted tabular-nums border-l-[3px] ${sevBorder[f.severity]}`}>
                         #{f.priority_rank}
                       </td>
                       <td className="px-4 py-2">
@@ -262,7 +271,7 @@ function FindingsContent() {
                         <div className="text-[10px] font-mono text-muted/70">{f.rule_id}</div>
                       </td>
                       <td className="px-4 py-2">
-                        <span className="text-xs px-2 py-0.5 bg-surface-2 rounded-[3px] text-muted border border-border-subtle">
+                        <span className="text-xs px-2 py-0.5 bg-surface-2 rounded-[3px] text-muted border border-border">
                           {f.category}
                         </span>
                       </td>
@@ -281,7 +290,7 @@ function FindingsContent() {
                       <td className="px-4 py-2 text-right">
                         <button
                           onClick={(e) => { e.stopPropagation(); setSelFinding(f); }}
-                          className="text-xs font-medium text-brand hover:underline"
+                          className="text-xs font-medium text-foreground underline hover:text-ink"
                         >
                           Inspect
                         </button>
@@ -295,7 +304,7 @@ function FindingsContent() {
         )
       ) : (
         incidents.length === 0 ? (
-          <div className="text-center py-16 bg-surface-0 rounded-lg border border-border-subtle text-muted">
+          <div className="text-center py-16 bg-surface-0 rounded-sm border border-border text-muted">
             <p className="text-xs font-medium text-foreground">No incidents found</p>
           </div>
         ) : (
@@ -306,7 +315,7 @@ function FindingsContent() {
                 (f) => inc.finding_ids.includes(f.id) || f.incident_id === inc.id
               );
               return (
-                <div key={inc.id} className="bg-surface-0 rounded-lg border border-border overflow-hidden">
+                <div key={inc.id} className="bg-surface-0 rounded-sm border border-border overflow-hidden">
                   <div
                     onClick={() => toggleInc(inc.id)}
                     className="p-4 flex items-center justify-between gap-4 cursor-pointer hover:bg-surface-1 transition-colors"
@@ -317,7 +326,7 @@ function FindingsContent() {
                       </span>
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-mono text-xs font-semibold text-foreground">{inc.id}</span>
+                          <EvidenceTag>{inc.id}</EvidenceTag>
                           <span className="font-mono text-xs text-muted">({inc.rule_id})</span>
                           <SeverityBadge severity={inc.severity} />
                           <ConfidenceBadge level={inc.confidence} />
@@ -343,7 +352,7 @@ function FindingsContent() {
                   </div>
 
                   {isExp && (
-                    <div className="border-t border-border-subtle bg-surface-1 px-4 py-3 space-y-2">
+                    <div className="border-t border-border bg-surface-1 px-4 py-3 space-y-2">
                       <div className="text-[11px] font-semibold text-muted uppercase tracking-wider mb-2">
                         Grouped findings ({incFindings.length})
                       </div>
@@ -351,7 +360,7 @@ function FindingsContent() {
                         <div
                           key={f.id}
                           onClick={() => setSelFinding(f)}
-                          className="bg-surface-0 border border-border-subtle rounded-md p-3 flex items-center justify-between gap-3 cursor-pointer hover:border-brand transition-colors"
+                          className="bg-surface-0 border border-border rounded-sm p-3 flex items-center justify-between gap-3 cursor-pointer hover:border-ink transition-colors"
                         >
                           <div className="min-w-0">
                             <div className="flex items-center gap-2">
@@ -367,7 +376,7 @@ function FindingsContent() {
                             </span>
                             <button
                               onClick={(e) => { e.stopPropagation(); setSelFinding(f); }}
-                              className="text-xs font-medium text-brand hover:underline"
+                              className="text-xs font-medium text-foreground underline hover:text-ink"
                             >
                               Inspect evidence
                             </button>
@@ -401,7 +410,7 @@ function FindingsContent() {
               </div>
               <button
                 onClick={() => setSelFinding(null)}
-                className="p-1.5 rounded-md hover:bg-surface-2 text-muted hover:text-foreground shrink-0"
+                className="p-1.5 rounded-sm hover:bg-surface-2 text-muted hover:text-foreground shrink-0"
               >
                 <X size={18} />
               </button>
@@ -412,13 +421,13 @@ function FindingsContent() {
                 <h3 className="text-xs font-medium text-muted mb-2">
                   Description
                 </h3>
-                <p className="text-sm leading-relaxed text-foreground bg-surface-1 p-3.5 rounded-md border border-border-subtle">
+                <p className="text-sm leading-relaxed text-foreground bg-surface-1 p-3.5 rounded-sm border border-border">
                   {selFinding.description}
                 </p>
               </div>
 
               {selFinding.confidence_basis && selFinding.confidence_basis.length > 0 && (
-                <div className="bg-surface-1 rounded-md p-4 border border-border-subtle">
+                <div className="bg-surface-1 rounded-sm p-4 border border-border">
                   <h3 className="text-xs font-medium text-muted mb-2">
                     Confidence basis
                   </h3>
@@ -430,22 +439,22 @@ function FindingsContent() {
                 </div>
               )}
 
-              <div className="bg-surface-1 rounded-md p-4 border border-border-subtle">
+              <div className="bg-surface-1 rounded-sm p-4 border border-border">
                 <h3 className="text-xs font-medium text-muted mb-3">
                   Wireshark display filter
                 </h3>
                 <div className="flex items-center justify-between gap-2 bg-surface-0 border border-border rounded px-3 py-2">
-                  <code className="text-xs font-mono text-brand truncate">{selFinding.wireshark_filter}</code>
+                  <code className="text-xs font-mono text-foreground truncate">{selFinding.wireshark_filter}</code>
                   <button
                     onClick={() => copyText(selFinding.wireshark_filter)}
                     className="p-1 rounded hover:bg-surface-2 text-muted hover:text-foreground shrink-0 transition-colors"
                   >
-                    {copied ? <Check size={14} className="text-brand" /> : <Copy size={14} />}
+                    {copied ? <Check size={14} className="text-sev-pass" /> : <Copy size={14} />}
                   </button>
                 </div>
               </div>
 
-              <div className="bg-surface-1 rounded-md p-4 border border-border-subtle">
+              <div className="bg-surface-1 rounded-sm p-4 border border-border">
                 <h3 className="text-xs font-medium text-muted mb-3">
                   Technical evidence
                 </h3>
@@ -460,13 +469,17 @@ function FindingsContent() {
                     <span className="text-muted block">Client IP</span>
                     <span className="font-mono font-medium">{selFinding.evidence.client || "—"}</span>
                   </div>
-                  <div>
-                    <span className="text-muted block">Associated frames</span>
-                    <span className="font-mono font-medium tabular-nums">
-                      {selFinding.evidence.frames.length > 0
-                        ? selFinding.evidence.frames.map((n) => `#${n}`).join(", ")
-                        : "—"}
-                    </span>
+                  <div className="col-span-2">
+                    <span className="text-muted block mb-1">Associated frames</span>
+                    <div className="flex flex-wrap gap-1">
+                      {selFinding.evidence.frames.length > 0 ? (
+                        selFinding.evidence.frames.map((n) => (
+                          <EvidenceTag key={n}>#{n}</EvidenceTag>
+                        ))
+                      ) : (
+                        <span className="text-muted font-mono">—</span>
+                      )}
+                    </div>
                   </div>
                   <div>
                     <span className="text-muted block">Session ID</span>
@@ -484,7 +497,7 @@ function FindingsContent() {
               </div>
 
               {relatedEvidence.length > 0 && (
-                <div className="bg-surface-1 rounded-md p-4 border border-border-subtle space-y-3">
+                <div className="bg-surface-1 rounded-sm p-4 border border-border space-y-3">
                   <h3 className="text-xs font-medium text-muted">
                     Evidence items ({relatedEvidence.length})
                   </h3>
@@ -501,7 +514,7 @@ function FindingsContent() {
                               <span className="text-muted">
                                 {isEvExp ? <CaretDown size={12} /> : <CaretRight size={12} />}
                               </span>
-                              <span className="font-mono font-semibold text-foreground">{ev.id}</span>
+                              <EvidenceTag>{ev.id}</EvidenceTag>
                               <span className="text-muted font-mono">[{ev.type}]</span>
                             </div>
                             <span className="text-muted font-mono tabular-nums">
@@ -512,16 +525,18 @@ function FindingsContent() {
                           <p className="text-muted text-[11px]">{ev.summary}</p>
 
                           {isEvExp && (
-                            <div className="pt-2 border-t border-border-subtle space-y-2">
+                            <div className="pt-2 border-t border-border space-y-2">
                               <div>
-                                <span className="text-muted block text-[10px]">Frames:</span>
-                                <span className="font-mono text-foreground tabular-nums">
-                                  {ev.frames.map((n) => `#${n}`).join(", ")}
-                                </span>
+                                <span className="text-muted block text-[10px] mb-1">Frames:</span>
+                                <div className="flex flex-wrap gap-1">
+                                  {ev.frames.map((n) => (
+                                    <EvidenceTag key={n}>#{n}</EvidenceTag>
+                                  ))}
+                                </div>
                               </div>
                               <div>
                                 <span className="text-muted block text-[10px]">Filter:</span>
-                                <code className="font-mono text-[11px] text-brand block break-all">{ev.wireshark_filter}</code>
+                                <code className="font-mono text-[11px] text-foreground block break-all">{ev.wireshark_filter}</code>
                               </div>
                               {ev.certificate_sha256 && (
                                 <div>
@@ -544,7 +559,7 @@ function FindingsContent() {
                 </div>
               )}
 
-              <div className="bg-surface-1 rounded-md p-4 border border-border-subtle">
+              <div className="bg-surface-1 rounded-sm p-4 border border-border">
                 <h3 className="text-xs font-medium text-muted mb-3">
                   Operational context
                 </h3>
@@ -565,7 +580,7 @@ function FindingsContent() {
               </div>
 
               {selFinding.anomaly && selFinding.anomaly.deviating_features.length > 0 && (
-                <div className="bg-surface-1 rounded-md p-4 border border-border-subtle">
+                <div className="bg-surface-1 rounded-sm p-4 border border-border">
                   <h3 className="text-xs font-medium text-sev-high mb-3">
                     Baseline anomaly deviations
                   </h3>
@@ -589,7 +604,7 @@ function FindingsContent() {
                 </div>
               )}
 
-              <div className="bg-surface-1 rounded-md p-4 border border-border-subtle">
+              <div className="bg-surface-1 rounded-sm p-4 border border-border">
                 <h3 className="text-xs font-medium text-muted mb-2">
                   Remediation recommendations
                 </h3>
@@ -606,9 +621,9 @@ function FindingsContent() {
                     <span className="text-xs text-muted block mb-1">References:</span>
                     <div className="space-y-1">
                       {selFinding.remediation.references.map((ref, idx) => (
-                        <div key={idx} className="flex items-center gap-1 text-xs text-brand">
-                          <ArrowSquareOut size={12} />
-                          <span className="font-mono">{ref}</span>
+                        <div key={idx} className="flex items-center gap-1.5 text-xs text-foreground font-mono">
+                          <ArrowSquareOut size={12} className="text-muted shrink-0" />
+                          <span className="underline hover:text-ink break-all">{ref}</span>
                         </div>
                       ))}
                     </div>

@@ -9,9 +9,9 @@ const gradeColors: Record<Grade, string> = {
 };
 
 const strokeColors: Record<Grade, string> = {
-  A: "#475569",
-  B: "#475569",
-  C: "#a16207",
+  A: "#0E1116",
+  B: "#0E1116",
+  C: "#946005",
   D: "#c2410c",
   F: "#b91c1c",
 };
@@ -26,7 +26,7 @@ export function ScoreGauge({ score, grade }: { score: number; grade: Grade }) {
     <div className="flex flex-col items-center">
       <div className="relative w-32 h-32">
         <svg viewBox="0 0 120 120" className="w-full h-full -rotate-90">
-          <circle cx="60" cy="60" r={r} fill="none" stroke="#e2e4e8" strokeWidth="8" />
+          <circle cx="60" cy="60" r={r} fill="none" stroke="#DAD8D2" strokeWidth="8" />
           <circle
             cx="60" cy="60" r={r} fill="none"
             stroke={strokeColors[grade]}

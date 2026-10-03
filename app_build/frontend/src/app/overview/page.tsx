@@ -24,21 +24,21 @@ function OverviewSkeleton() {
     <div className="max-w-[1400px] mx-auto px-4 py-8 space-y-6 animate-pulse">
       <div className="h-6 w-32 bg-surface-2 rounded" />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-surface-0 rounded-lg border border-border-subtle p-6 space-y-4">
+        <div className="bg-surface-0 rounded-sm border border-border p-6 space-y-4">
           <div className="h-12 w-24 bg-surface-2 rounded" />
-          <div className="space-y-3 pt-4 border-t border-border-subtle">
+          <div className="space-y-3 pt-4 border-t border-border">
             <div className="h-4 w-full bg-surface-2 rounded" />
             <div className="h-4 w-full bg-surface-2 rounded" />
             <div className="h-4 w-full bg-surface-2 rounded" />
           </div>
         </div>
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-surface-0 rounded-lg border border-border-subtle p-5 space-y-4">
+          <div className="bg-surface-0 rounded-sm border border-border p-5 space-y-4">
             <div className="h-4 w-32 bg-surface-2 rounded" />
             <div className="h-3 w-full bg-surface-2 rounded" />
             <div className="h-3 w-full bg-surface-2 rounded" />
           </div>
-          <div className="bg-surface-0 rounded-lg border border-border-subtle p-5 space-y-3">
+          <div className="bg-surface-0 rounded-sm border border-border p-5 space-y-3">
             <div className="h-4 w-28 bg-surface-2 rounded" />
             <div className="h-8 w-full bg-surface-2 rounded" />
             <div className="h-8 w-full bg-surface-2 rounded" />
@@ -121,7 +121,7 @@ function OverviewContent() {
   if (error) {
     return (
       <div className="max-w-[1400px] mx-auto px-4 py-8">
-        <div className="bg-sev-critical-bg border border-sev-critical/20 rounded-md p-4 space-y-2">
+        <div className="bg-sev-critical-bg border border-sev-critical/20 rounded-sm p-4 space-y-2">
           <p className="text-xs font-semibold text-sev-critical">Unable to load posture overview</p>
           <p className="text-xs text-sev-critical/90">{error}</p>
           <button
@@ -167,16 +167,33 @@ function OverviewContent() {
       <h1 className="text-xl font-semibold">Overview</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-5 bg-surface-0 rounded-lg border border-border-subtle p-5 flex flex-col justify-between">
+        <div className="lg:col-span-5 bg-surface-0 rounded-sm border border-border p-5 flex flex-col justify-between">
           <div>
-            <div className="flex items-baseline gap-3 pb-4 border-b border-border-subtle">
-              <span className="text-4xl font-bold font-mono text-foreground tabular-nums">
-                {summary.posture.score}
-              </span>
-              <span className="text-lg font-bold font-mono text-sev-high">
-                Grade {summary.posture.grade}
-              </span>
-              <span className="text-xs text-muted ml-auto">Posture score</span>
+            <div className="flex items-center gap-4 pb-4 border-b border-border">
+              <div
+                className={`w-16 h-16 sm:w-20 sm:h-20 flex flex-col items-center justify-center rounded-[3px] text-white shrink-0 ${
+                  summary.posture.grade === "A" || summary.posture.grade === "B"
+                    ? "bg-sev-pass"
+                    : summary.posture.grade === "C"
+                    ? "bg-sev-medium"
+                    : summary.posture.grade === "D"
+                    ? "bg-sev-high"
+                    : "bg-sev-critical"
+                }`}
+              >
+                <span className="text-3xl sm:text-4xl font-bold font-mono tabular-nums leading-none">
+                  {summary.posture.score}
+                </span>
+                <span className="text-[10px] font-mono font-semibold uppercase tracking-wider mt-1 opacity-90">
+                  Grade {summary.posture.grade}
+                </span>
+              </div>
+              <div>
+                <span className="text-base font-bold text-foreground block">
+                  Grade {summary.posture.grade}
+                </span>
+                <span className="text-xs text-muted block mt-0.5">Posture score</span>
+              </div>
             </div>
 
             <div className="mt-5 space-y-3.5">
@@ -203,7 +220,7 @@ function OverviewContent() {
         </div>
 
         <div className="lg:col-span-7 space-y-6">
-          <div className="bg-surface-0 rounded-lg border border-border-subtle p-5 space-y-5">
+          <div className="bg-surface-0 rounded-sm border border-border p-5 space-y-5">
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs">
                 <span className="font-medium text-foreground">Severity distribution</span>
@@ -255,7 +272,7 @@ function OverviewContent() {
               </div>
             </div>
 
-            <div className="space-y-2 pt-4 border-t border-border-subtle">
+            <div className="space-y-2 pt-4 border-t border-border">
               <div className="flex items-center justify-between text-xs">
                 <span className="font-medium text-foreground">Protocol distribution</span>
                 <span className="text-muted font-mono tabular-nums">{totalProto} sessions</span>
@@ -264,21 +281,21 @@ function OverviewContent() {
                 {summary.protocol_counts.smtp > 0 && (
                   <div
                     style={{ width: `${(summary.protocol_counts.smtp / totalProto) * 100}%` }}
-                    className="bg-[#334155] h-full"
+                    className="bg-slate-700 h-full"
                     title={`SMTP: ${summary.protocol_counts.smtp}`}
                   />
                 )}
                 {summary.protocol_counts.imap > 0 && (
                   <div
                     style={{ width: `${(summary.protocol_counts.imap / totalProto) * 100}%` }}
-                    className="bg-[#64748b] h-full"
+                    className="bg-slate-500 h-full"
                     title={`IMAP: ${summary.protocol_counts.imap}`}
                   />
                 )}
                 {summary.protocol_counts.pop3 > 0 && (
                   <div
                     style={{ width: `${(summary.protocol_counts.pop3 / totalProto) * 100}%` }}
-                    className="bg-[#94a3b8] h-full"
+                    className="bg-slate-400 h-full"
                     title={`POP3: ${summary.protocol_counts.pop3}`}
                   />
                 )}
@@ -290,7 +307,7 @@ function OverviewContent() {
               </div>
             </div>
 
-            <div className="space-y-2 pt-4 border-t border-border-subtle">
+            <div className="space-y-2 pt-4 border-t border-border">
               <div className="flex items-center justify-between text-xs">
                 <span className="font-medium text-foreground">Transport distribution</span>
                 <span className="text-muted font-mono tabular-nums">{totalTrans} sessions</span>
@@ -299,7 +316,7 @@ function OverviewContent() {
                 {summary.transport_counts.implicit_tls > 0 && (
                   <div
                     style={{ width: `${(summary.transport_counts.implicit_tls / totalTrans) * 100}%` }}
-                    className="bg-[#475569] h-full"
+                    className="bg-slate-600 h-full"
                     title={`Implicit TLS: ${summary.transport_counts.implicit_tls}`}
                   />
                 )}
@@ -327,7 +344,7 @@ function OverviewContent() {
           </div>
 
           {summary.limitations.length > 0 && (
-            <div className="bg-not-observable-bg border border-border-subtle rounded-md px-4 py-3">
+            <div className="bg-not-observable-bg border border-border rounded-sm px-4 py-3">
               <p className="text-xs font-medium text-foreground mb-1">Limitations</p>
               {summary.limitations.map((l, i) => (
                 <p key={i} className="text-xs text-muted">{l}</p>
@@ -336,7 +353,7 @@ function OverviewContent() {
           )}
 
           {summary.visibility && (
-            <div className="bg-surface-0 rounded-lg border border-border-subtle p-5">
+            <div className="bg-surface-0 rounded-sm border border-border p-5">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-sm font-medium text-foreground">What this capture could and could not see</h3>
               </div>
@@ -344,10 +361,10 @@ function OverviewContent() {
             </div>
           )}
 
-          <div className="bg-surface-0 rounded-lg border border-border-subtle p-5">
+          <div className="bg-surface-0 rounded-sm border border-border p-5">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-medium text-foreground">Top findings</h3>
-              <Link href={`/findings?capture=${captureId}`} className="text-xs text-brand hover:underline">
+              <Link href={`/findings?capture=${captureId}`} className="text-xs text-foreground underline hover:text-ink font-medium">
                 All findings
               </Link>
             </div>
@@ -358,7 +375,7 @@ function OverviewContent() {
             ) : (
               <div className="space-y-3">
                 {topFindings.map((f) => (
-                  <div key={f.id} className="flex items-start gap-3 py-2 border-b border-border-subtle last:border-0">
+                  <div key={f.id} className="flex items-start gap-3 py-2 border-b border-border last:border-0">
                     <SeverityBadge severity={f.severity} />
                     <div className="min-w-0 flex-1">
                       <p className="text-xs font-medium text-foreground">{f.title}</p>
@@ -376,15 +393,15 @@ function OverviewContent() {
       </div>
 
       {completeCaps.length > 1 && (
-        <div className="bg-surface-0 rounded-lg border border-border-subtle p-5">
+        <div className="bg-surface-0 rounded-sm border border-border p-5">
           <h3 className="text-sm font-medium text-foreground mb-4">Posture trend</h3>
           <PostureTrend captures={completeCaps} />
         </div>
       )}
 
       {custody.length > 0 && (
-        <div className="bg-surface-0 rounded-lg border border-border-subtle p-5">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-border-subtle">
+        <div className="bg-surface-0 rounded-sm border border-border p-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-border">
             <h3 className="text-sm font-medium text-foreground">Integrity record and audit trail</h3>
             {caps.find((c) => c.id === captureId)?.sha256 && (
               <div className="flex items-center gap-2 bg-surface-1 border border-border rounded px-2.5 py-1 text-xs">
@@ -397,7 +414,7 @@ function OverviewContent() {
                   className="text-muted hover:text-foreground p-0.5 transition-colors"
                   title="Copy SHA-256"
                 >
-                  {copied ? <Check size={12} className="text-brand" /> : <Copy size={12} />}
+                  {copied ? <Check size={12} className="text-foreground" /> : <Copy size={12} />}
                 </button>
               </div>
             )}

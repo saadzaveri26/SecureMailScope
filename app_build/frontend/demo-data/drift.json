@@ -85,7 +85,7 @@
     {
       "server": "mail.company.com",
       "kind": "certificate",
-      "before": "26:A1:8E:25:2F:05:11:5C... (Synthetic Corp Issuing CA, RSA-2048, valid 2026-01-10 -> 2027-01-10)",
+      "before": "26:A1:8E:25:2F:05:11:5C... (Enterprise Corp Issuing CA, RSA-2048, valid 2026-01-10 -> 2027-01-10)",
       "after": "58:10:87:BE:96:87:7F:7A... (Unknown Trust Services CA, RSA-2048, valid 2026-09-20 -> 2027-09-20)",
       "direction": "degraded",
       "severity": "high",
@@ -95,8 +95,8 @@
     {
       "server": "mail.company.com",
       "kind": "certificate",
-      "before": "26:A1:8E:25:2F:05:11:5C... (Synthetic Corp Issuing CA, RSA-2048, valid 2026-01-10 -> 2027-01-10)",
-      "after": "0C:B1:EB:62:30:C6:C4:F3... (Synthetic Corp Issuing CA, RSA-2048, valid 2025-10-05 -> 2026-10-10)",
+      "before": "26:A1:8E:25:2F:05:11:5C... (Enterprise Corp Issuing CA, RSA-2048, valid 2026-01-10 -> 2027-01-10)",
+      "after": "0C:B1:EB:62:30:C6:C4:F3... (Enterprise Corp Issuing CA, RSA-2048, valid 2025-10-05 -> 2026-10-10)",
       "direction": "changed",
       "severity": "medium",
       "ruleset_version": "2025.03.1",

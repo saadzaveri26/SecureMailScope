@@ -1,37 +1,33 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: #F6F7F9;
-  --color-foreground: #1c1d1f;
+  --color-ink: #0E1116;
+  --color-ink-2: #171B22;
+  --color-foreground: #0E1116;
+  --color-paper: #F3F2EE;
+  --color-background: #F3F2EE;
+  --color-evidence: #FFD21F;
 
+  --color-surface: #FFFFFF;
   --color-surface-0: #ffffff;
-  --color-surface-1: #f8f9fa;
-  --color-surface-2: #f0f2f5;
-  --color-border: #e2e4e8;
-  --color-border-subtle: #eceef2;
-  --color-muted: #56667a;
-
-  --color-brand: #1974B9;
-  --color-brand-light: #eff6fc;
-  --color-brand-hover: #145e96;
-
-  --color-hero-from: #0A71D6;
-  --color-hero-mid: #173EB8;
-  --color-hero-to: #432BA7;
-  --color-hero-tint: #8ED0FE;
-  --color-panel-footer: #EFF1F5;
+  --color-surface-1: #f8f8f6;
+  --color-surface-2: #f0efeb;
+  --color-hairline: #DAD8D2;
+  --color-border: #DAD8D2;
+  --color-border-subtle: #E5E3DD;
+  --color-muted: #4B5563;
 
   --color-sev-critical: #b91c1c;
   --color-sev-critical-bg: #fef2f2;
   --color-sev-high: #c2410c;
   --color-sev-high-bg: #fff7ed;
-  --color-sev-medium: #a16207;
+  --color-sev-medium: #946005;
   --color-sev-medium-bg: #fefce8;
   --color-sev-low: #475569;
   --color-sev-low-bg: #f1f5f9;
   --color-sev-info: #6b7280;
   --color-sev-info-bg: transparent;
-  --color-sev-pass: #15803d;
+  --color-sev-pass: #147035;
   --color-sev-pass-bg: #f0fdf4;
 
   --color-not-observable: #6b7280;
@@ -52,11 +48,16 @@
 }
 
 body {
-  background: var(--color-background);
+  background: var(--color-paper);
   color: var(--color-foreground);
   font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .tabular-nums {
   font-variant-numeric: tabular-nums;
+}
+
+.hatch-neutral {
+  background-color: var(--color-not-observable-bg);
+  background-image: url("data:image/svg+xml,%3Csvg width='8' height='8' viewBox='0 0 8 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 8L8 0M-1 1L1 -1M7 9L9 7' stroke='%23DAD8D2' stroke-width='1.5'/%3E%3C/svg%3E");
 }

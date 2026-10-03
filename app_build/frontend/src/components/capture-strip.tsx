@@ -56,7 +56,7 @@ export function CaptureStrip() {
   }
 
   return (
-    <div className="bg-surface-0 border-b border-border-subtle">
+    <div className="bg-surface-0 border-b border-border">
       <div className="max-w-[1400px] mx-auto px-4 py-2 flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-3 min-w-0 flex-wrap">
           <div className="flex items-center gap-1.5">
@@ -64,7 +64,7 @@ export function CaptureStrip() {
             <select
               value={current.id}
               onChange={(e) => onSwitch(e.target.value)}
-              className="bg-surface-1 border border-border rounded-md px-2 py-1 font-mono text-xs text-foreground focus:outline-none focus:border-brand"
+              className="bg-surface-1 border border-border rounded-sm px-2 py-1 font-mono text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-ink focus:ring-offset-2 focus:ring-offset-evidence"
             >
               {caps.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -88,7 +88,7 @@ export function CaptureStrip() {
               className="p-1 hover:bg-surface-2 rounded text-muted hover:text-foreground transition-colors"
               title="Copy SHA-256"
             >
-              {copied ? <Check size={12} className="text-brand" /> : <Copy size={12} />}
+              {copied ? <Check size={12} className="text-sev-pass" /> : <Copy size={12} />}
             </button>
           </div>
 

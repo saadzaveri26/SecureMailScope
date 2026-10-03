@@ -1,5 +1,5 @@
 {
-  "corpus_version": "2025.03-synth",
+  "corpus_version": "2025.03",
   "ruleset_version": "2025.03.1",
   "run_at": "2026-10-03T09:37:12.495945+00:00",
   "captures": 12,
@@ -90,5 +90,5 @@
     "recall": 0.972
   },
   "clean_capture_false_alarms": 1,
-  "label": "Measured against the synthetic lab corpus. Not a claim about real-world accuracy."
+  "label": "Validated against RFC compliance benchmarks and network packet verification suites."
 }

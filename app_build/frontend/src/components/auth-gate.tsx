@@ -26,7 +26,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 backdrop-blur-sm">
       <form
         onSubmit={submit}
-        className="bg-surface-0 border border-border rounded-lg p-6 w-full max-w-sm space-y-4 shadow-drawer"
+        className="bg-surface-0 border border-border rounded-sm p-6 w-full max-w-sm space-y-4 shadow-drawer"
       >
         <div>
           <h2 className="text-base font-semibold text-foreground">Sign in to SecureMailScope</h2>
@@ -42,7 +42,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
               type="password"
               value={t}
               onChange={(e) => { setT(e.target.value); setErr(""); }}
-              className="w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand"
+              className="w-full rounded-sm border border-border bg-surface-1 px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-ink focus:ring-offset-2 focus:ring-offset-evidence"
               placeholder="Paste your token"
               autoFocus
             />
@@ -54,7 +54,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
               value={a}
               onChange={(e) => { setA(e.target.value); setErr(""); }}
               maxLength={64}
-              className="w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand"
+              className="w-full rounded-sm border border-border bg-surface-1 px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-ink focus:ring-offset-2 focus:ring-offset-evidence"
               placeholder="e.g. jdoe"
             />
             <span className="text-[11px] text-muted">Self-asserted. Recorded in audit trail, not proof of identity.</span>
@@ -62,7 +62,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
         </div>
         <button
           type="submit"
-          className="w-full rounded-md bg-brand hover:bg-brand-hover text-white text-sm font-semibold py-2 transition-colors"
+          className="w-full rounded-sm bg-ink hover:bg-ink-2 text-white text-sm font-semibold py-2 transition-colors"
         >
           Continue
         </button>

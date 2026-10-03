@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import type { Session, Protocol, Transport, PaginatedSessions, Asset } from "@/types";
 import { getSessions, getSession, getAssets } from "@/data";
+import { EvidenceTag } from "@/components/evidence-tag";
 import { X, Copy, Check } from "@phosphor-icons/react";
 
 export default function SessionsPage() {
@@ -24,10 +25,10 @@ function SessionsSkeleton() {
         </div>
         <div className="h-8 w-48 bg-surface-2 rounded" />
       </div>
-      <div className="bg-surface-0 rounded-lg border border-border-subtle overflow-hidden">
-        <div className="h-10 bg-surface-1 border-b border-border-subtle" />
+      <div className="bg-surface-0 rounded-sm border border-border overflow-hidden">
+        <div className="h-10 bg-surface-1 border-b border-border" />
         {[...Array(6)].map((_, i) => (
-          <div key={i} className="h-10 border-b border-border-subtle flex items-center px-4 gap-4">
+          <div key={i} className="h-10 border-b border-border flex items-center px-4 gap-4">
             <div className="h-4 w-28 bg-surface-2 rounded" />
             <div className="h-4 w-16 bg-surface-2 rounded" />
             <div className="h-4 w-20 bg-surface-2 rounded" />
@@ -154,13 +155,13 @@ function SessionsContent() {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex rounded-md border border-border p-0.5 bg-surface-1">
+          <div className="flex rounded-sm border border-border p-0.5 bg-surface-1">
             <button
               onClick={() => setView("sessions")}
               className={[
                 "px-3 py-1.5 text-xs font-medium rounded transition-colors",
                 view === "sessions"
-                  ? "bg-surface-0 text-foreground shadow-sm"
+                  ? "bg-surface-0 text-foreground"
                   : "text-muted hover:text-foreground",
               ].join(" ")}
             >
@@ -171,7 +172,7 @@ function SessionsContent() {
               className={[
                 "px-3 py-1.5 text-xs font-medium rounded transition-colors",
                 view === "endpoint"
-                  ? "bg-surface-0 text-foreground shadow-sm"
+                  ? "bg-surface-0 text-foreground"
                   : "text-muted hover:text-foreground",
               ].join(" ")}
             >
@@ -184,7 +185,7 @@ function SessionsContent() {
               <select
                 value={proto}
                 onChange={(e) => { setProto(e.target.value); setPage(1); }}
-                className="text-xs bg-surface-0 border border-border rounded-md px-3 py-1.5 focus:outline-none focus:border-brand"
+                className="text-xs bg-surface-0 border border-border rounded-sm px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-ink"
               >
                 <option value="">All protocols</option>
                 <option value="smtp">SMTP</option>
@@ -194,7 +195,7 @@ function SessionsContent() {
               <select
                 value={trans}
                 onChange={(e) => { setTrans(e.target.value); setPage(1); }}
-                className="text-xs bg-surface-0 border border-border rounded-md px-3 py-1.5 focus:outline-none focus:border-brand"
+                className="text-xs bg-surface-0 border border-border rounded-sm px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-ink"
               >
                 <option value="">All transports</option>
                 <option value="implicit_tls">Implicit TLS</option>
@@ -206,7 +207,7 @@ function SessionsContent() {
             <select
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value)}
-              className="text-xs bg-surface-0 border border-border rounded-md px-3 py-1.5 focus:outline-none focus:border-brand"
+              className="text-xs bg-surface-0 border border-border rounded-sm px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-ink"
             >
               <option value="all">All roles</option>
               <option value="submission">Submission</option>
@@ -221,7 +222,7 @@ function SessionsContent() {
         loading ? (
           <SessionsSkeleton />
         ) : error ? (
-          <div className="bg-sev-critical-bg border border-sev-critical/20 rounded-md p-4 space-y-2">
+          <div className="bg-sev-critical-bg border border-sev-critical/20 rounded-sm p-4 space-y-2">
             <p className="text-xs font-semibold text-sev-critical">Failed to load sessions</p>
             <p className="text-xs text-sev-critical/90">{error}</p>
             <button
@@ -232,12 +233,12 @@ function SessionsContent() {
             </button>
           </div>
         ) : data.items.length === 0 ? (
-          <div className="text-center py-16 bg-surface-0 rounded-lg border border-border-subtle text-muted">
+          <div className="text-center py-16 bg-surface-0 rounded-sm border border-border text-muted">
             <p className="text-xs font-medium text-foreground">No sessions match current filters</p>
             <p className="text-xs text-muted mt-1">Try adjusting the protocol or transport filter</p>
           </div>
         ) : (
-          <div className="bg-surface-0 rounded-lg border border-border-subtle overflow-hidden">
+          <div className="bg-surface-0 rounded-sm border border-border overflow-hidden">
             <div className="overflow-x-auto max-h-[750px] overflow-y-auto">
               <table className="w-full text-xs">
                 <thead className="sticky top-0 bg-surface-1 z-10 border-b border-border shadow-none">
@@ -256,16 +257,16 @@ function SessionsContent() {
                     <tr
                       key={s.id}
                       onClick={() => getSession(capId, s.id).then((sess) => setSelSession(sess))}
-                      className="border-b border-border-subtle last:border-0 hover:bg-surface-1 cursor-pointer transition-colors h-10"
+                      className="border-b border-border last:border-0 hover:bg-surface-1 cursor-pointer transition-colors h-10"
                     >
-                      <td className="px-4 py-2">
+                      <td className={`px-4 py-2 border-l-[3px] ${s.transport === "plaintext" ? "border-l-sev-critical" : "border-l-transparent"}`}>
                         <div className="font-mono text-xs font-medium text-foreground">{s.id}</div>
                         <div className="text-[11px] text-muted font-mono truncate max-w-xs">
                           {s.client} → {s.server}:{s.server_port}
                         </div>
                       </td>
                       <td className="px-4 py-2">
-                        <span className="uppercase text-xs font-mono font-medium px-1.5 py-0.5 bg-surface-2 rounded-[3px] border border-border-subtle">
+                        <span className="uppercase text-xs font-mono font-medium px-1.5 py-0.5 bg-surface-2 rounded-[3px] border border-border">
                           {s.protocol}
                         </span>
                       </td>
@@ -283,11 +284,11 @@ function SessionsContent() {
                             <span className="text-[11px] text-muted block truncate max-w-[200px] font-mono">{s.tls.cipher_suite}</span>
                           </div>
                         ) : (
-                          <span className="text-xs text-muted">—</span>
+                          <span className="text-xs text-muted font-mono">—</span>
                         )}
                       </td>
-                      <td className="px-4 py-2 font-mono text-muted tabular-nums">
-                        #{s.first_frame}–#{s.last_frame}
+                      <td className="px-4 py-2 font-mono">
+                        <EvidenceTag>#{s.first_frame}–#{s.last_frame}</EvidenceTag>
                       </td>
                       <td className="px-4 py-2 text-right">
                         {s.findings_count > 0 ? (
@@ -301,7 +302,7 @@ function SessionsContent() {
                       <td className="px-4 py-2 text-right">
                         <button
                           onClick={(e) => { e.stopPropagation(); getSession(capId, s.id).then((sess) => setSelSession(sess)); }}
-                          className="text-xs font-medium text-brand hover:underline"
+                          className="text-xs font-medium text-foreground underline hover:text-ink"
                         >
                           Inspect
                         </button>
@@ -312,7 +313,7 @@ function SessionsContent() {
               </table>
             </div>
 
-            <div className="flex items-center justify-between px-4 py-2.5 border-t border-border-subtle bg-surface-1 text-xs text-muted">
+            <div className="flex items-center justify-between px-4 py-2.5 border-t border-border bg-surface-1 text-xs text-muted">
               <span className="tabular-nums">
                 Showing {data.items.length} of {data.total} sessions
               </span>
@@ -320,7 +321,7 @@ function SessionsContent() {
                 <button
                   disabled={page <= 1}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="px-2.5 py-1 border border-border rounded-md bg-surface-0 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-surface-2 text-foreground"
+                  className="px-2.5 py-1 border border-border rounded-sm bg-surface-0 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-surface-2 text-foreground"
                 >
                   Previous
                 </button>
@@ -328,7 +329,7 @@ function SessionsContent() {
                 <button
                   disabled={page * data.page_size >= data.total}
                   onClick={() => setPage((p) => p + 1)}
-                  className="px-2.5 py-1 border border-border rounded-md bg-surface-0 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-surface-2 text-foreground"
+                  className="px-2.5 py-1 border border-border rounded-sm bg-surface-0 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-surface-2 text-foreground"
                 >
                   Next
                 </button>
@@ -340,7 +341,7 @@ function SessionsContent() {
         assetsLoading ? (
           <SessionsSkeleton />
         ) : filteredAssets.length === 0 ? (
-          <div className="text-center py-16 bg-surface-0 rounded-lg border border-border-subtle text-muted">
+          <div className="text-center py-16 bg-surface-0 rounded-sm border border-border text-muted">
             <p className="text-xs font-medium text-foreground">No endpoints observed</p>
           </div>
         ) : (
@@ -353,9 +354,9 @@ function SessionsContent() {
                     key={asset.id}
                     onClick={() => setSelAsset(asset)}
                     className={[
-                      "p-4 rounded-lg border transition-all cursor-pointer",
+                      "p-4 rounded-sm border transition-all cursor-pointer",
                       active
-                        ? "bg-surface-0 border-brand shadow-sm ring-1 ring-brand"
+                        ? "bg-surface-0 border-ink ring-1 ring-ink"
                         : "bg-surface-0 border-border hover:border-slate-300",
                     ].join(" ")}
                   >
@@ -410,7 +411,7 @@ function SessionsContent() {
 
             <div className="lg:col-span-7">
               {selAsset ? (
-                <div className="bg-surface-0 rounded-lg border border-border p-5 space-y-5">
+                <div className="bg-surface-0 rounded-sm border border-border p-5 space-y-5">
                   <div className="flex items-start justify-between border-b border-border pb-4">
                     <div>
                       <div className="flex items-center gap-2">
@@ -533,7 +534,7 @@ function SessionsContent() {
                   </div>
                 </div>
               ) : (
-                <div className="p-8 text-center text-xs text-muted border border-dashed border-border rounded-lg">
+                <div className="p-8 text-center text-xs text-muted border border-dashed border-border rounded-sm">
                   Select an observed endpoint to view details
                 </div>
               )}
@@ -549,7 +550,7 @@ function SessionsContent() {
               <div>
                 <div className="flex items-center gap-2">
                   <h2 className="text-base font-semibold font-mono">{selSession.id}</h2>
-                  <span className="uppercase text-xs font-mono font-medium px-1.5 py-0.5 bg-surface-2 rounded-[3px] border border-border-subtle">
+                  <span className="uppercase text-xs font-mono font-medium px-1.5 py-0.5 bg-surface-2 rounded-[3px] border border-border">
                     {selSession.protocol}
                   </span>
                   <TransportBadge transport={selSession.transport} />
@@ -560,29 +561,29 @@ function SessionsContent() {
               </div>
               <button
                 onClick={() => setSelSession(null)}
-                className="p-1.5 rounded-md hover:bg-surface-2 text-muted hover:text-foreground"
+                className="p-1.5 rounded-sm hover:bg-surface-2 text-muted hover:text-foreground"
               >
                 <X size={18} />
               </button>
             </div>
 
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
-              <div className="bg-surface-1 rounded-md p-4 border border-border-subtle">
+              <div className="bg-surface-1 rounded-sm p-4 border border-border">
                 <h3 className="text-xs font-medium text-muted mb-3">
                   Wireshark display filter
                 </h3>
                 <div className="flex items-center justify-between gap-2 bg-surface-0 border border-border rounded px-3 py-2">
-                  <code className="text-xs font-mono text-brand truncate">{selSession.wireshark_filter}</code>
+                  <code className="text-xs font-mono text-foreground truncate">{selSession.wireshark_filter}</code>
                   <button
                     onClick={() => copyText(selSession.wireshark_filter)}
                     className="p-1 rounded hover:bg-surface-2 text-muted hover:text-foreground shrink-0 transition-colors"
                   >
-                    {copied ? <Check size={14} className="text-brand" /> : <Copy size={14} />}
+                    {copied ? <Check size={14} className="text-sev-pass" /> : <Copy size={14} />}
                   </button>
                 </div>
               </div>
 
-              <div className="bg-surface-1 rounded-md p-4 border border-border-subtle">
+              <div className="bg-surface-1 rounded-sm p-4 border border-border">
                 <h3 className="text-xs font-medium text-muted mb-3">
                   Handshake & transport
                 </h3>
@@ -592,8 +593,8 @@ function SessionsContent() {
                     <span className="font-mono capitalize font-medium">{selSession.protocol_confidence}</span>
                   </div>
                   <div>
-                    <span className="text-muted block">Associated frames</span>
-                    <span className="font-mono font-medium tabular-nums">#{selSession.first_frame}–#{selSession.last_frame}</span>
+                    <span className="text-muted block mb-0.5">Associated frames</span>
+                    <EvidenceTag>#{selSession.first_frame}–#{selSession.last_frame}</EvidenceTag>
                   </div>
                   <div>
                     <span className="text-muted block">STARTTLS advertised</span>
@@ -614,7 +615,7 @@ function SessionsContent() {
               </div>
 
               {selSession.tls && (
-                <div className="bg-surface-1 rounded-md p-4 border border-border-subtle">
+                <div className="bg-surface-1 rounded-sm p-4 border border-border">
                   <h3 className="text-xs font-medium text-muted mb-3">
                     TLS configuration
                   </h3>
@@ -641,7 +642,7 @@ function SessionsContent() {
                 </div>
               )}
 
-              <div className="bg-surface-1 rounded-md p-4 border border-border-subtle">
+              <div className="bg-surface-1 rounded-sm p-4 border border-border">
                 <h3 className="text-xs font-medium text-muted mb-3">
                   Certificate chain
                 </h3>
@@ -675,9 +676,11 @@ function SessionsContent() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-xs text-muted italic">
-                    {selSession.certificate_note ?? "Certificate not observable"}
-                  </p>
+                  <div className="hatch-neutral p-3 rounded border border-border">
+                    <p className="text-xs font-mono text-muted">
+                      {selSession.certificate_note ?? "Certificate not observable"}
+                    </p>
+                  </div>
                 )}
               </div>
             </div>
@@ -691,20 +694,20 @@ function SessionsContent() {
 function TransportBadge({ transport }: { transport: Transport }) {
   if (transport === "implicit_tls") {
     return (
-      <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+      <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-sev-pass-bg text-sev-pass border border-sev-pass/30">
         Implicit TLS
       </span>
     );
   }
   if (transport === "starttls") {
     return (
-      <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-blue-50 text-brand border border-blue-200">
+      <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-surface-2 text-foreground border border-border">
         STARTTLS
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-rose-50 text-rose-700 border border-rose-200">
+    <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-sev-critical-bg text-sev-critical border border-sev-critical/30">
       Plaintext
     </span>
   );

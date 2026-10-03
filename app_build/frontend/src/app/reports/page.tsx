@@ -23,11 +23,11 @@ function ReportsSkeleton() {
         <div className="h-4 w-80 bg-surface-2 rounded" />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div className="h-36 bg-surface-0 rounded-lg border border-border-subtle p-5" />
-        <div className="h-36 bg-surface-0 rounded-lg border border-border-subtle p-5" />
-        <div className="h-36 bg-surface-0 rounded-lg border border-border-subtle p-5" />
+        <div className="h-36 bg-surface-0 rounded-sm border border-border p-5" />
+        <div className="h-36 bg-surface-0 rounded-sm border border-border p-5" />
+        <div className="h-36 bg-surface-0 rounded-sm border border-border p-5" />
       </div>
-      <div className="bg-surface-0 rounded-lg border border-border-subtle p-6 space-y-4">
+      <div className="bg-surface-0 rounded-sm border border-border p-6 space-y-4">
         <div className="h-6 w-44 bg-surface-2 rounded" />
         <div className="h-40 bg-surface-1 rounded" />
       </div>
@@ -116,7 +116,7 @@ function ReportsContent() {
     <div className="max-w-[1400px] mx-auto px-4 py-8">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-xl font-semibold">Security posture reports</h1>
+          <h1 className="text-2xl font-serif font-bold text-foreground">Security posture reports</h1>
           <p className="text-sm text-muted">
             Export executive summaries and forensic audit records for compliance reporting
           </p>
@@ -126,7 +126,7 @@ function ReportsContent() {
           <select
             value={selectedCapId}
             onChange={(e) => handleCaptureChange(e.target.value)}
-            className="text-xs bg-surface-0 border border-border rounded-md px-3 py-1.5 focus:outline-none focus:border-brand font-mono"
+            className="text-xs bg-surface-0 border border-border rounded-sm px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-ink font-mono"
           >
             {completeCaps.map((c) => (
               <option key={c.id} value={c.id}>
@@ -137,7 +137,7 @@ function ReportsContent() {
         </div>
       </div>
 
-      <div className="bg-surface-0 border border-border rounded-lg p-4 mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+      <div className="bg-surface-0 border border-border rounded-sm p-4 mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
         <div>
           <span className="text-muted block text-[11px]">Capture SHA-256</span>
           <span className="font-mono text-foreground font-medium break-all">{shaVal}</span>
@@ -153,7 +153,7 @@ function ReportsContent() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div className="bg-surface-0 rounded-lg border border-border-subtle p-5 flex flex-col justify-between">
+        <div className="bg-surface-0 rounded-sm border border-border p-5 flex flex-col justify-between">
           <div>
             <span className="text-xs font-medium text-muted font-mono">JSON export</span>
             <h3 className="text-base font-semibold text-foreground mt-1">Structured telemetry</h3>
@@ -161,17 +161,17 @@ function ReportsContent() {
               Full programmatic schema payload including scores, evidence, findings, and Wireshark filters.
             </p>
           </div>
-          <div className="mt-5 pt-3 border-t border-border-subtle">
+          <div className="mt-5 pt-3 border-t border-border">
             <button
               onClick={downloadJson}
-              className="w-full flex items-center justify-center text-xs font-medium bg-surface-2 hover:bg-surface-1 text-foreground border border-border rounded-md py-2 transition-colors"
+              className="w-full flex items-center justify-center text-xs font-medium bg-surface-2 hover:bg-surface-1 text-foreground border border-border rounded-sm py-2 transition-colors"
             >
               Download JSON
             </button>
           </div>
         </div>
 
-        <div className="bg-surface-0 rounded-lg border border-border-subtle p-5 flex flex-col justify-between">
+        <div className="bg-surface-0 rounded-sm border border-border p-5 flex flex-col justify-between">
           <div>
             <span className="text-xs font-medium text-muted font-mono">HTML brief</span>
             <h3 className="text-base font-semibold text-foreground mt-1">Interactive web report</h3>
@@ -179,19 +179,19 @@ function ReportsContent() {
               Self-contained offline document with tables, posture meters, and remediations.
             </p>
           </div>
-          <div className="mt-5 pt-3 border-t border-border-subtle">
+          <div className="mt-5 pt-3 border-t border-border">
             <a
               href={getReportUrl(selectedCapId, "html")}
               target="_blank"
               rel="noreferrer"
-              className="w-full flex items-center justify-center text-xs font-medium bg-surface-2 hover:bg-surface-1 text-foreground border border-border rounded-md py-2 transition-colors"
+              className="w-full flex items-center justify-center text-xs font-medium bg-surface-2 hover:bg-surface-1 text-foreground border border-border rounded-sm py-2 transition-colors"
             >
               Export HTML
             </a>
           </div>
         </div>
 
-        <div className="bg-surface-0 rounded-lg border border-border-subtle p-5 flex flex-col justify-between">
+        <div className="bg-surface-0 rounded-sm border border-border p-5 flex flex-col justify-between">
           <div>
             <span className="text-xs font-medium text-muted font-mono">PDF document</span>
             <h3 className="text-base font-semibold text-foreground mt-1">Executive summary</h3>
@@ -199,12 +199,12 @@ function ReportsContent() {
               Print-ready executive summary for CISOs, compliance auditors, and security reviews.
             </p>
           </div>
-          <div className="mt-5 pt-3 border-t border-border-subtle">
+          <div className="mt-5 pt-3 border-t border-border">
             <a
               href={getReportUrl(selectedCapId, "pdf")}
               target="_blank"
               rel="noreferrer"
-              className="w-full flex items-center justify-center text-xs font-medium bg-surface-2 hover:bg-surface-1 text-foreground border border-border rounded-md py-2 transition-colors"
+              className="w-full flex items-center justify-center text-xs font-medium bg-surface-2 hover:bg-surface-1 text-foreground border border-border rounded-sm py-2 transition-colors"
             >
               Export PDF
             </a>
@@ -213,12 +213,12 @@ function ReportsContent() {
       </div>
 
       {loading ? (
-        <div className="bg-surface-0 rounded-lg border border-border-subtle p-6 space-y-4 animate-pulse">
+        <div className="bg-surface-0 rounded-sm border border-border p-6 space-y-4 animate-pulse">
           <div className="h-6 w-44 bg-surface-2 rounded" />
           <div className="h-32 bg-surface-1 rounded" />
         </div>
       ) : error ? (
-        <div className="bg-sev-critical-bg border border-sev-critical/20 rounded-md p-4 space-y-2">
+        <div className="bg-sev-critical-bg border border-sev-critical/20 rounded-sm p-4 space-y-2">
           <p className="text-xs font-semibold text-sev-critical">Failed to compile report preview</p>
           <p className="text-xs text-sev-critical/90">{error}</p>
           <button
@@ -229,10 +229,10 @@ function ReportsContent() {
           </button>
         </div>
       ) : summary && (
-        <div className="bg-surface-0 rounded-lg border border-border-subtle overflow-hidden">
+        <div className="bg-surface-0 rounded-sm border border-border overflow-hidden">
           <div className="px-6 py-4 border-b border-border bg-surface-1 flex items-center justify-between">
             <div>
-              <h2 className="text-base font-semibold text-foreground">Executive posture summary</h2>
+              <h2 className="text-lg font-serif font-semibold text-foreground">Executive posture summary</h2>
               <p className="text-xs font-mono text-muted">
                 Audit target: {selectedCap?.filename ?? selectedCapId}
               </p>
@@ -251,7 +251,7 @@ function ReportsContent() {
 
           <div className="p-6 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
-              <div className="p-4 bg-surface-1 rounded-md border border-border-subtle flex flex-col items-center">
+              <div className="p-4 bg-surface-1 rounded-sm border border-border flex flex-col items-center">
                 <ScoreGauge score={summary.posture.score} grade={summary.posture.grade} />
               </div>
 
@@ -261,7 +261,7 @@ function ReportsContent() {
                 </h3>
                 <div className="space-y-2">
                   {summary.posture.factors.map((f) => (
-                    <div key={f.name} className="flex items-center justify-between text-xs bg-surface-1 px-3 py-2 rounded-[3px] border border-border-subtle">
+                    <div key={f.name} className="flex items-center justify-between text-xs bg-surface-1 px-3 py-2 rounded-[3px] border border-border">
                       <div>
                         <span className="font-medium text-foreground">{f.name}</span>
                         <span className="text-muted block text-[11px]">{f.detail}</span>
@@ -275,8 +275,8 @@ function ReportsContent() {
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border-subtle">
-              <div className="p-3 bg-surface-1 rounded-[3px] border border-border-subtle">
+            <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border">
+              <div className="p-3 bg-surface-1 rounded-[3px] border border-border">
                 <span className="text-[11px] font-medium text-muted block mb-2">Severity breakdown</span>
                 <div className="space-y-1 text-xs">
                   <div className="flex justify-between"><span>Critical:</span><span className="font-mono font-semibold text-sev-critical tabular-nums">{summary.severity_counts.critical}</span></div>
@@ -286,7 +286,7 @@ function ReportsContent() {
                 </div>
               </div>
 
-              <div className="p-3 bg-surface-1 rounded-[3px] border border-border-subtle">
+              <div className="p-3 bg-surface-1 rounded-[3px] border border-border">
                 <span className="text-[11px] font-medium text-muted block mb-2">Transport security</span>
                 <div className="space-y-1 text-xs">
                   <div className="flex justify-between"><span>Implicit TLS:</span><span className="font-mono text-foreground font-semibold tabular-nums">{summary.transport_counts.implicit_tls}</span></div>
@@ -295,7 +295,7 @@ function ReportsContent() {
                 </div>
               </div>
 
-              <div className="p-3 bg-surface-1 rounded-[3px] border border-border-subtle">
+              <div className="p-3 bg-surface-1 rounded-[3px] border border-border">
                 <span className="text-[11px] font-medium text-muted block mb-2">Protocol distribution</span>
                 <div className="space-y-1 text-xs">
                   <div className="flex justify-between"><span>SMTP:</span><span className="font-mono tabular-nums">{summary.protocol_counts.smtp}</span></div>
@@ -305,13 +305,13 @@ function ReportsContent() {
               </div>
             </div>
 
-            <div className="pt-4 border-t border-border-subtle">
+            <div className="pt-4 border-t border-border">
               <h3 className="text-xs font-medium text-muted mb-3">
                 Remediation priorities ({findings.length} findings)
               </h3>
               <div className="space-y-2">
                 {findings.slice(0, 5).map((f) => (
-                  <div key={f.id} className="flex items-center justify-between p-3 bg-surface-1 rounded-[3px] border border-border-subtle text-xs">
+                  <div key={f.id} className="flex items-center justify-between p-3 bg-surface-1 rounded-[3px] border border-border text-xs">
                     <div className="flex items-center gap-3">
                       <SeverityBadge severity={f.severity} />
                       <div>

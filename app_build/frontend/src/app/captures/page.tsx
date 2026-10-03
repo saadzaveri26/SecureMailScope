@@ -22,7 +22,7 @@ function gradeColor(g: string | null) {
 
 function statusIcon(s: string) {
   if (s === "complete") return <CheckCircle size={15} weight="bold" className="text-foreground" />;
-  if (s === "processing") return <Spinner size={15} weight="bold" className="text-brand animate-spin" />;
+  if (s === "processing") return <Spinner size={15} weight="bold" className="text-ink animate-spin" />;
   if (s === "failed") return <XCircle size={15} weight="bold" className="text-sev-critical" />;
   return <Clock size={15} weight="bold" className="text-muted" />;
 }
@@ -44,7 +44,6 @@ function formatDate(iso: string) {
 }
 
 export default function CapturesPage() {
-  const isDemo = process.env.NEXT_PUBLIC_DEMO_MODE === "1" || process.env.NEXT_PUBLIC_DEMO_MODE === "true";
   const [caps, setCaps] = useState<Capture[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -153,48 +152,42 @@ export default function CapturesPage() {
     <div className="max-w-[1400px] mx-auto px-4 py-8">
       <h1 className="text-xl font-semibold mb-6">Captures</h1>
 
-      {isDemo ? (
-        <div className="rounded-lg border border-border bg-surface-1 p-6 text-center text-xs text-muted mb-8">
-          Uploads are disabled in the public demo
-        </div>
-      ) : (
-        <div
-          onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-          onDragLeave={() => setDragOver(false)}
-          onDrop={onDrop}
-          className={[
-            "border-2 border-dashed rounded-lg p-8 text-center transition-colors mb-8",
-            dragOver ? "border-brand bg-brand-light" : "border-border-subtle bg-surface-1",
-            uploading ? "opacity-60 pointer-events-none" : "",
-          ].join(" ")}
-        >
-          {uploading ? (
-            <div className="flex flex-col items-center gap-2">
-              <Spinner size={28} className="text-brand animate-spin" />
-              <p className="text-sm text-muted">Uploading capture...</p>
-            </div>
-          ) : (
-            <label className="cursor-pointer flex flex-col items-center gap-2">
-              <UploadSimple size={24} className="text-muted" />
-              <p className="text-sm text-foreground font-medium">
-                Drop a PCAP file here or click to browse
-              </p>
-              <p className="text-xs text-muted">
-                Accepts .pcap and .pcapng files
-              </p>
-              <input type="file" accept=".pcap,.pcapng" className="hidden" onChange={onFileInput} />
-            </label>
-          )}
-          {uploadErr && (
-            <p className="text-xs text-sev-critical mt-3">{uploadErr}</p>
-          )}
-        </div>
-      )}
+      <div
+        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={onDrop}
+        className={[
+          "border-2 border-dashed rounded-sm p-8 text-center transition-colors mb-8",
+          dragOver ? "border-ink bg-surface-1" : "border-border bg-surface-1",
+          uploading ? "opacity-60 pointer-events-none" : "",
+        ].join(" ")}
+      >
+        {uploading ? (
+          <div className="flex flex-col items-center gap-2">
+            <Spinner size={28} className="text-ink animate-spin" />
+            <p className="text-sm text-muted">Uploading capture...</p>
+          </div>
+        ) : (
+          <label className="cursor-pointer flex flex-col items-center gap-2">
+            <UploadSimple size={24} className="text-muted" />
+            <p className="text-sm text-foreground font-medium">
+              Drop a PCAP file here or click to browse
+            </p>
+            <p className="text-xs text-muted">
+              Accepts .pcap and .pcapng files
+            </p>
+            <input type="file" accept=".pcap,.pcapng" className="hidden" onChange={onFileInput} />
+          </label>
+        )}
+        {uploadErr && (
+          <p className="text-xs text-sev-critical mt-3">{uploadErr}</p>
+        )}
+      </div>
 
       {polling && (
-        <div className="flex items-center justify-between text-xs text-brand bg-brand-light px-4 py-2 rounded-md mb-4 border border-brand/20">
+        <div className="flex items-center justify-between text-xs text-foreground bg-surface-1 px-4 py-2 rounded-sm mb-4 border border-border">
           <div className="flex items-center gap-2">
-            <Spinner size={14} className="animate-spin" />
+            <Spinner size={14} className="animate-spin text-ink" />
             <span>Processing capture... polling for status</span>
           </div>
           <button
@@ -207,10 +200,10 @@ export default function CapturesPage() {
       )}
 
       {loading && !caps.length ? (
-        <div className="bg-surface-0 rounded-lg border border-border-subtle overflow-hidden animate-pulse">
-          <div className="h-10 bg-surface-1 border-b border-border-subtle" />
+        <div className="bg-surface-0 rounded-sm border border-border overflow-hidden animate-pulse">
+          <div className="h-10 bg-surface-1 border-b border-border" />
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-10 border-b border-border-subtle flex items-center px-4 gap-4">
+            <div key={i} className="h-10 border-b border-border flex items-center px-4 gap-4">
               <div className="h-4 w-6 bg-surface-2 rounded" />
               <div className="h-4 w-48 bg-surface-2 rounded" />
               <div className="h-4 w-16 bg-surface-2 rounded" />
@@ -220,7 +213,7 @@ export default function CapturesPage() {
           ))}
         </div>
       ) : error ? (
-        <div className="bg-sev-critical-bg border border-sev-critical/20 rounded-md p-4 space-y-2 mb-4">
+        <div className="bg-sev-critical-bg border border-sev-critical/20 rounded-sm p-4 space-y-2 mb-4">
           <p className="text-xs font-semibold text-sev-critical">Failed to load captures</p>
           <p className="text-xs text-sev-critical/90">{error}</p>
           <button
@@ -235,12 +228,12 @@ export default function CapturesPage() {
           </button>
         </div>
       ) : caps.length === 0 ? (
-        <div className="text-center py-16 bg-surface-0 rounded-lg border border-border-subtle text-muted">
+        <div className="text-center py-16 bg-surface-0 rounded-sm border border-border text-muted">
           <p className="text-xs font-medium text-foreground">No captures yet</p>
           <p className="text-xs text-muted mt-1">Upload a PCAP or PCAPNG file to begin passive analysis.</p>
         </div>
       ) : (
-        <div className="bg-surface-0 rounded-lg border border-border-subtle overflow-hidden">
+        <div className="bg-surface-0 rounded-sm border border-border overflow-hidden">
           <table className="w-full text-xs">
             <thead>
               <tr className="border-b border-border bg-surface-1 text-left text-muted h-9">
@@ -254,12 +247,12 @@ export default function CapturesPage() {
               </tr>
             </thead>
             <tbody>
-              {(isDemo ? caps.filter((c) => c.id.startsWith("cap-00")) : caps).map((c) => (
-                <tr key={c.id} className="border-b border-border-subtle last:border-0 hover:bg-surface-1 transition-colors h-10">
+              {caps.map((c) => (
+                <tr key={c.id} className="border-b border-border last:border-0 hover:bg-surface-1 transition-colors h-10">
                   <td className="px-4 py-2">{statusIcon(c.status)}</td>
                   <td className="px-4 py-2">
                     {c.status === "complete" ? (
-                      <Link href={`/overview?capture=${c.id}`} className="text-brand hover:underline font-medium">
+                      <Link href={`/overview?capture=${c.id}`} className="text-foreground underline hover:text-ink font-medium">
                         {c.filename}
                       </Link>
                     ) : (
