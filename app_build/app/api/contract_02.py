@@ -4,31 +4,52 @@ Exposes /api endpoints specified in Contract_0.2_spec.md.
 from __future__ import annotations
 import hashlib
 import json
+import logging
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Body, Request, UploadFile, File
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 from .. import config, storage
 from ..analysis.rule_catalog import RULES
+from ..reports import html_report, json_report, pdf_report
 from .deps import require_token, require_actor
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="", dependencies=[Depends(require_token)])
 
 RULESET_VERSION = "2025.03.1"
-RULESET_SHA256 = "abc123def456abc123def456abc123def456abc123def456abc123def456abc1"
+_RULE_CATALOG_PATH = Path(__file__).resolve().parents[1] / "analysis" / "rule_catalog.py"
+RULESET_SHA256 = (
+    hashlib.sha256(_RULE_CATALOG_PATH.read_bytes()).hexdigest()
+    if _RULE_CATALOG_PATH.exists()
+    else "50cc2f2cddcc0a8fa7b5aa0eb2d6ef619bc069e13b8b2ceacd5240eedec0ad42"
+)
 
 DEMO_DATA_DIR = Path(__file__).resolve().parents[2] / "frontend" / "demo-data"
+MEDIA = {"json": "application/json", "html": "text/html", "pdf": "application/pdf"}
+
 _CAPTURES: dict[str, dict] = {}
 _SUMMARIES: dict[str, dict] = {}
 _SESSIONS: dict[str, list] = {}
 _FINDINGS: dict[str, list] = {}
-_PINNED_BASELINE = {"baseline_capture_id": "cap-002"}
+_EVIDENCE: dict[str, list] = {}
+_INCIDENTS: dict[str, list] = {}
+_ASSETS: dict[str, list] = {}
+_DRIFT: dict[str, dict] = {}
 _CUSTODY_EVENTS: dict[str, list[dict]] = {}
-_INCIDENTS: dict[str, list[dict]] = {}
 _TRIAGE_HISTORY: dict[str, list[dict]] = {}
+_PINNED_BASELINE = {"baseline_capture_id": "cap-002"}
+
+_CID_TO_AID: dict[str, str] = {
+    "cap-001": "A-20261003-093717-aed045",
+    "cap-002": "A-20261003-093713-1b7023",
+}
+_ANALYSIS_DOCS: dict[str, dict] = {}
 
 
 def _init_captures():
@@ -39,21 +60,27 @@ def _init_captures():
                 data = json.loads(caps_file.read_text(encoding="utf-8"))
                 for c in data.get("items", []):
                     _CAPTURES[c["id"]] = c
-            except Exception:
-                pass
+            except Exception as e:
+                logger.warning("Failed to load captures.json: %s", e)
+
         for cid in ["cap-001", "cap-002"]:
+            # Load summaries
             sum_file = DEMO_DATA_DIR / f"{cid}_summary.json"
             if sum_file.exists():
                 try:
                     _SUMMARIES[cid] = json.loads(sum_file.read_text(encoding="utf-8"))
                 except Exception:
                     pass
+
+            # Load sessions
             sess_file = DEMO_DATA_DIR / f"{cid}_sessions.json"
             if sess_file.exists():
                 try:
                     _SESSIONS[cid] = json.loads(sess_file.read_text(encoding="utf-8")).get("items", [])
                 except Exception:
                     pass
+
+            # Load findings
             find_file = DEMO_DATA_DIR / f"{cid}_findings.json"
             if find_file.exists():
                 try:
@@ -61,18 +88,66 @@ def _init_captures():
                 except Exception:
                     pass
 
+            # Load evidence
+            ev_file = DEMO_DATA_DIR / f"{cid}_evidence.json"
+            if ev_file.exists():
+                try:
+                    _EVIDENCE[cid] = json.loads(ev_file.read_text(encoding="utf-8")).get("items", [])
+                except Exception:
+                    pass
+
+            # Load incidents
+            inc_file = DEMO_DATA_DIR / f"{cid}_incidents.json"
+            if inc_file.exists():
+                try:
+                    inc_data = json.loads(inc_file.read_text(encoding="utf-8"))
+                    _INCIDENTS[cid] = inc_data.get("items", []) if isinstance(inc_data, dict) else inc_data
+                except Exception:
+                    pass
+
+            # Load assets
+            asset_file = DEMO_DATA_DIR / f"{cid}_assets.json"
+            if asset_file.exists():
+                try:
+                    asset_data = json.loads(asset_file.read_text(encoding="utf-8"))
+                    _ASSETS[cid] = asset_data.get("items", []) if isinstance(asset_data, dict) else asset_data
+                except Exception:
+                    pass
+
+            # Load custody
+            cust_file = DEMO_DATA_DIR / f"{cid}_custody.json"
+            if cust_file.exists():
+                try:
+                    cust_data = json.loads(cust_file.read_text(encoding="utf-8"))
+                    _CUSTODY_EVENTS[cid] = cust_data.get("items", []) if isinstance(cust_data, dict) else cust_data
+                except Exception:
+                    pass
+
+            # Load drift
+            drift_file = DEMO_DATA_DIR / f"{cid}_drift.json"
+            if drift_file.exists():
+                try:
+                    _DRIFT[cid] = json.loads(drift_file.read_text(encoding="utf-8"))
+                except Exception:
+                    pass
+
 
 def _get_custody_events(capture_id: str) -> list[dict]:
+    _init_captures()
     if capture_id not in _CUSTODY_EVENTS:
+        cap = _CAPTURES.get(capture_id, {})
+        fn = cap.get("filename", f"{capture_id}.pcap")
+        sz = cap.get("size_bytes", 0)
+        ts = cap.get("created_at", datetime.now(timezone.utc).isoformat())
         _CUSTODY_EVENTS[capture_id] = [
-            {"id": "ce-001", "ts": "2025-03-15T09:22:00Z", "actor": "jdoe", "action": "uploaded", "detail": f"capture {capture_id} uploaded"},
-            {"id": "ce-002", "ts": "2025-03-15T09:22:05Z", "actor": "system", "action": "analysis_started", "detail": f"Ruleset {RULESET_VERSION}, mode: passive"},
-            {"id": "ce-003", "ts": "2025-03-15T09:23:12Z", "actor": "system", "action": "analysis_completed", "detail": "analysis completed successfully"},
-            {"id": "ce-004", "ts": "2025-03-15T09:25:00Z", "actor": "jdoe", "action": "report_exported", "detail": "Format: PDF"},
+            {"id": "ce-001", "ts": ts, "actor": "analyst", "action": "uploaded", "detail": f"{fn} ({sz} bytes)", "ruleset_version": RULESET_VERSION, "run_at": ts},
+            {"id": "ce-002", "ts": ts, "actor": "system", "action": "analysis_started", "detail": f"Ruleset {RULESET_VERSION}, mode: passive", "ruleset_version": RULESET_VERSION, "run_at": ts},
+            {"id": "ce-003", "ts": ts, "actor": "system", "action": "analysis_completed", "detail": "analysis completed successfully", "ruleset_version": RULESET_VERSION, "run_at": ts},
         ]
     return _CUSTODY_EVENTS[capture_id]
 
 
+# ---------------------------------------------------------------- Captures (§1)
 @router.get("/captures", tags=["captures"])
 def list_captures():
     _init_captures()
@@ -93,43 +168,16 @@ def get_capture_summary(cid: str):
     if cid in _SUMMARIES:
         return _SUMMARIES[cid]
     if cid in _CAPTURES:
-        cap = _CAPTURES[cid]
-        score = cap.get("posture_score", 85)
-        grade = cap.get("grade", "B")
-        penalty = 100 - score
-        tp = int(penalty * 0.45)
-        cp = int(penalty * 0.35)
-        pp = penalty - tp - cp
-        return {
-            "posture": {
-                "score": score,
-                "grade": grade,
-                "triaged_score": score,
-                "triage_adjustments": [],
-                "factors": [
-                    {"name": "Transport Security", "weight": 0.35, "impact": -tp, "detail": "Observed transport status", "finding_ids": []},
-                    {"name": "Certificate Hygiene", "weight": 0.25, "impact": -cp, "detail": "Observed certificate status", "finding_ids": []},
-                    {"name": "Protocol Configuration", "weight": 0.20, "impact": -pp, "detail": "Observed protocol configuration", "finding_ids": []},
-                    {"name": "Cipher Strength", "weight": 0.15, "impact": 0, "detail": "Modern ciphers accepted", "finding_ids": []},
-                    {"name": "Message Layer", "weight": 0.05, "impact": 0, "detail": "Transport security active", "finding_ids": []},
-                ],
-            },
-            "severity_counts": {"critical": 1 if score < 60 else 0, "high": 1 if score < 80 else 0, "medium": 2, "low": 1, "info": 1},
-            "protocol_counts": {"smtp": 5, "imap": 2, "pop3": 1, "unknown": 0},
-            "transport_counts": {"implicit_tls": 3, "starttls": 3, "plaintext": 2 if score < 70 else 0},
-            "limitations": ["TLS 1.3 sessions encrypt certificates on the wire"],
-            "baseline_status": "ok",
-            "visibility": {"sessions_total": 8, "handshake_complete": 7, "handshake_partial": 1, "certificate_observable": 4, "certificate_hidden_tls13": 3, "certificate_resumed": 0, "message_layer_observable": 1, "plaintext_sessions": 2 if score < 70 else 0, "checks_not_performed": []},
-            "ruleset_version": RULESET_VERSION,
-            "run_at": datetime.now(timezone.utc).isoformat(),
-        }
-    raise HTTPException(404, f"Summary for capture {cid} not found")
+        raise HTTPException(404, f"Summary record for capture {cid} is missing or still processing")
+    raise HTTPException(404, f"Capture {cid} not found")
 
 
 @router.get("/captures/{cid}/sessions", tags=["captures"])
 def get_capture_sessions(cid: str, protocol: str | None = None, transport: str | None = None, page: int = 1, page_size: int = 25):
     _init_captures()
-    items = _SESSIONS.get(cid) or _SESSIONS.get("cap-001", [])
+    if cid not in _CAPTURES and cid not in _SESSIONS:
+        raise HTTPException(404, f"Capture {cid} not found")
+    items = _SESSIONS.get(cid, [])
     if protocol:
         items = [s for s in items if s.get("protocol") == protocol]
     if transport:
@@ -141,7 +189,9 @@ def get_capture_sessions(cid: str, protocol: str | None = None, transport: str |
 @router.get("/captures/{cid}/findings", tags=["captures"])
 def get_capture_findings(cid: str, severity: str | None = None, category: str | None = None, protocol: str | None = None):
     _init_captures()
-    items = _FINDINGS.get(cid) or _FINDINGS.get("cap-001", [])
+    if cid not in _CAPTURES and cid not in _FINDINGS:
+        raise HTTPException(404, f"Capture {cid} not found")
+    items = _FINDINGS.get(cid, [])
     if severity:
         items = [f for f in items if f.get("severity", "").lower() == severity.lower()]
     if category:
@@ -153,11 +203,17 @@ def get_capture_findings(cid: str, severity: str | None = None, category: str | 
 async def upload_capture(file: UploadFile = File(...)):
     _init_captures()
     content = await file.read()
+    if not content:
+        raise HTTPException(400, "Uploaded PCAP file is empty (0 bytes).")
+
     cid = f"cap-{int(datetime.now(timezone.utc).timestamp()*1000)}"
+    sha256_hash = hashlib.sha256(content).hexdigest()
+
     import tempfile
     with tempfile.NamedTemporaryFile(suffix=".pcap", delete=False) as tmp:
         tmp.write(content)
         tmp_path = Path(tmp.name)
+
     try:
         import sys
         root_dir = Path(__file__).resolve().parents[3]
@@ -166,78 +222,128 @@ async def upload_capture(file: UploadFile = File(...)):
         app_build_dir = Path(__file__).resolve().parents[2]
         if str(app_build_dir) not in sys.path:
             sys.path.insert(0, str(app_build_dir))
+
         from ..analysis.pipeline import analyze_pcap
-        doc = analyze_pcap(tmp_path, filename=file.filename, sha256=hashlib.sha256(content).hexdigest(), size=len(content), compare_baseline=True)
         from scripts.export_demo_snapshot import build_models
-        models = build_models(cid, doc, datetime.now(timezone.utc).isoformat(), baseline_cid="cap-002")
+
+        doc = analyze_pcap(
+            tmp_path,
+            filename=file.filename or "upload.pcap",
+            sha256=sha256_hash,
+            size=len(content),
+            compare_baseline=True,
+        )
+        run_at = datetime.now(timezone.utc).isoformat()
+        models = build_models(cid, doc, run_at, baseline_cid=_PINNED_BASELINE.get("baseline_capture_id", "cap-002"))
+
         _CAPTURES[cid] = models["capture"]
         _SUMMARIES[cid] = models["summary"]
         _SESSIONS[cid] = models["sessions"]["items"]
         _FINDINGS[cid] = models["findings"]["items"]
+        _EVIDENCE[cid] = models["evidence"]["items"]
+        _INCIDENTS[cid] = models["incidents"]
+        _ASSETS[cid] = models["assets"]
+        _DRIFT[cid] = models["drift"]
         _CUSTODY_EVENTS[cid] = models["custody"]
-    except Exception:
-        fn = (file.filename or "").lower()
-        if "incident" in fn or "drift" in fn or "leak" in fn:
-            score = 40
-        elif "clean" in fn or "baseline" in fn:
-            score = 100
-        else:
-            h = sum(ord(c) for c in (file.filename or "cap"))
-            score = 70 + (h % 25)
-        grade = "A" if score >= 90 else "B" if score >= 80 else "C" if score >= 70 else "D" if score >= 60 else "F"
-        _CAPTURES[cid] = {
-            "id": cid,
-            "filename": file.filename or "upload.pcap",
-            "sha256": hashlib.sha256(content).hexdigest(),
-            "size_bytes": len(content),
-            "packet_count": 1420,
-            "duration_s": 60.0,
-            "status": "complete",
-            "error": None,
-            "created_at": datetime.now(timezone.utc).isoformat(),
-            "posture_score": score,
-            "grade": grade,
-        }
-        penalty = 100 - score
-        tp = int(penalty * 0.35)
-        cp = int(penalty * 0.25)
-        pp = int(penalty * 0.20)
-        ciph = int(penalty * 0.15)
-        msg = penalty - tp - cp - pp - ciph
-        _SUMMARIES[cid] = {
-            "posture": {
-                "score": score,
-                "grade": grade,
-                "triaged_score": score,
-                "triage_adjustments": [],
-                "factors": [
-                    {"name": "Transport Security", "weight": 0.35, "impact": -tp, "detail": "Observed transport status", "finding_ids": []},
-                    {"name": "Certificate Hygiene", "weight": 0.25, "impact": -cp, "detail": "Observed certificate status", "finding_ids": []},
-                    {"name": "Protocol Configuration", "weight": 0.20, "impact": -pp, "detail": "Observed protocol status", "finding_ids": []},
-                    {"name": "Cipher Strength", "weight": 0.15, "impact": -ciph, "detail": "Observed cipher status", "finding_ids": []},
-                    {"name": "Message Layer", "weight": 0.05, "impact": -msg, "detail": "Observed message layer status", "finding_ids": []},
-                ],
-            },
-            "severity_counts": {"critical": 1 if score < 60 else 0, "high": 2 if score < 75 else 0, "medium": 3 if score < 90 else 0, "low": 1, "info": 2},
-            "protocol_counts": {"smtp": 8, "imap": 4, "pop3": 2, "unknown": 0},
-            "transport_counts": {"implicit_tls": 6, "starttls": 5, "plaintext": 3 if score < 70 else 0},
-            "limitations": ["TLS 1.3 sessions encrypt certificates on the wire"],
-            "baseline_status": "ok",
-            "visibility": {"sessions_total": 14, "handshake_complete": 13, "handshake_partial": 1, "certificate_observable": 8, "certificate_hidden_tls13": 6, "certificate_resumed": 0, "message_layer_observable": 2, "plaintext_sessions": 3 if score < 70 else 0, "checks_not_performed": []},
-            "ruleset_version": RULESET_VERSION,
-            "run_at": datetime.now(timezone.utc).isoformat(),
-        }
+        _CID_TO_AID[cid] = doc["analysis_id"]
+        _ANALYSIS_DOCS[cid] = doc
+
+        return {"capture_id": cid, "status": "complete"}
+    except Exception as e:
+        logger.exception("PCAP analysis failed for upload %s", file.filename)
+        raise HTTPException(
+            status_code=400,
+            detail=f"Failed to analyze packet capture '{file.filename}': {str(e)}",
+        )
     finally:
         tmp_path.unlink(missing_ok=True)
-    return {"capture_id": cid, "status": "complete"}
 
 
 @router.delete("/captures/{cid}", tags=["captures"])
 def delete_capture(cid: str):
     _init_captures()
-    if cid in _CAPTURES:
-        del _CAPTURES[cid]
+    _CAPTURES.pop(cid, None)
+    _SUMMARIES.pop(cid, None)
+    _SESSIONS.pop(cid, None)
+    _FINDINGS.pop(cid, None)
+    _EVIDENCE.pop(cid, None)
+    _INCIDENTS.pop(cid, None)
+    _ASSETS.pop(cid, None)
+    _DRIFT.pop(cid, None)
+    _CUSTODY_EVENTS.pop(cid, None)
+    aid = _CID_TO_AID.pop(cid, None)
+    if aid:
+        storage.delete_analysis(aid)
+    _ANALYSIS_DOCS.pop(cid, None)
     return {"status": "deleted"}
+
+
+# ---------------------------------------------------------------- Report Export (§6)
+@router.get("/captures/{cid}/report", summary="Download forensic report for capture (json | html | pdf)", tags=["captures"])
+def get_capture_report(cid: str, format: str = Query("html", pattern="^(json|html|pdf)$"), download: bool = Query(False)):
+    _init_captures()
+    if format not in MEDIA:
+        raise HTTPException(400, "Format must be json, html, or pdf")
+
+    doc = _ANALYSIS_DOCS.get(cid)
+    if not doc:
+        aid = _CID_TO_AID.get(cid)
+        if aid:
+            try:
+                doc = storage.load_analysis(aid)
+            except KeyError:
+                pass
+
+    if not doc:
+        cap_meta = _CAPTURES.get(cid)
+        if cap_meta:
+            fn = cap_meta.get("filename")
+            sha = cap_meta.get("sha256")
+            for summary_item in storage.list_summaries():
+                if (fn and summary_item.get("filename") == fn) or (sha and summary_item.get("sha256") == sha):
+                    try:
+                        doc = storage.load_analysis(summary_item["analysis_id"])
+                        _CID_TO_AID[cid] = summary_item["analysis_id"]
+                        break
+                    except KeyError:
+                        continue
+
+    if not doc:
+        if cid == "cap-001":
+            try:
+                doc = storage.load_analysis("A-20261003-093717-aed045")
+            except Exception:
+                pass
+        elif cid == "cap-002":
+            try:
+                doc = storage.load_analysis("A-20261003-093713-1b7023")
+            except Exception:
+                pass
+
+    if not doc:
+        raise HTTPException(404, f"No detailed forensic analysis record found for capture '{cid}'. Report cannot be generated.")
+
+    out_dir = config.REPORTS_DIR
+    out_dir.mkdir(parents=True, exist_ok=True)
+    path = out_dir / f"SecureMailScope_{cid}.{format}"
+
+    try:
+        if format == "pdf":
+            path.write_bytes(pdf_report.render(doc))
+        elif format == "html":
+            path.write_text(html_report.render(doc), encoding="utf-8")
+        else:
+            path.write_text(json_report.render(doc), encoding="utf-8")
+    except Exception as e:
+        logger.exception("Failed to render report for capture %s in format %s", cid, format)
+        raise HTTPException(500, f"Report generation failed: {str(e)}")
+
+    filename = f"SecureMailScope_{cid}.{format}"
+    return FileResponse(
+        path,
+        media_type=MEDIA[format],
+        filename=filename if (download or format != "html") else None,
+    )
 
 
 # ---------------------------------------------------------------- Rules (§4)
@@ -321,38 +427,10 @@ def get_capture_custody(cid: str):
 # ---------------------------------------------------------------- Evidence (§3)
 @router.get("/captures/{cid}/evidence", tags=["evidence"])
 def get_capture_evidence(cid: str):
-    return [
-        {
-            "id": "EV-3f8a1b2c",
-            "capture_id": cid,
-            "type": "starttls_exchange",
-            "session_id": "s-002",
-            "frames": [290, 295, 302],
-            "summary": "STARTTLS initiated but handshake did not complete; session continued in plaintext",
-            "wireshark_filter": "tcp.stream eq 1 && (smtp.req.command == STARTTLS || ssl.handshake)",
-            "certificate_sha256": None,
-        },
-        {
-            "id": "EV-7d4e5f6a",
-            "capture_id": cid,
-            "type": "cleartext_auth",
-            "session_id": "s-003",
-            "frames": [530, 535],
-            "summary": "IMAP LOGIN command sent over plaintext connection",
-            "wireshark_filter": 'tcp.stream eq 2 && imap.request contains "LOGIN"',
-            "certificate_sha256": None,
-        },
-        {
-            "id": "EV-9b8c7d6e",
-            "capture_id": cid,
-            "type": "certificate",
-            "session_id": "s-005",
-            "frames": [960, 965],
-            "summary": "Certificate expired 425 days ago, self-signed, 1024-bit RSA, SHA-1 signature",
-            "wireshark_filter": "tcp.stream eq 4 && ssl.handshake.certificate",
-            "certificate_sha256": "11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff:00:11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff:00",
-        },
-    ]
+    _init_captures()
+    if cid not in _CAPTURES and cid not in _EVIDENCE:
+        raise HTTPException(404, f"Capture {cid} not found")
+    return _EVIDENCE.get(cid, [])
 
 
 @router.get("/captures/{cid}/evidence/{eid}", tags=["evidence"])
@@ -366,50 +444,10 @@ def get_single_evidence(cid: str, eid: str):
 # ---------------------------------------------------------------- Assets (§9 & §12)
 @router.get("/captures/{cid}/assets", tags=["assets"])
 def get_capture_assets(cid: str):
-    return [
-        {
-            "id": "mail.example.com:465",
-            "server": "mail.example.com",
-            "port": 465,
-            "protocols": ["smtp"],
-            "server_role": "submission",
-            "tls_versions_observed": ["TLS 1.3"],
-            "cipher_suites_observed": ["TLS_AES_256_GCM_SHA384"],
-            "key_exchange_groups_observed": ["X25519", "X25519MLKEM768"],
-            "forward_secrecy": "all",
-            "starttls_support": "not_applicable",
-            "certificates": [],
-            "sessions_observed": 1,
-            "clients_observed": 1,
-            "first_seen": "2025-03-15T09:22:01Z",
-            "last_seen": "2025-03-15T09:22:15Z",
-            "pqc": {
-                "hybrid_groups_offered_by_clients": True,
-                "hybrid_group_negotiated": True,
-                "groups_seen": ["X25519MLKEM768", "X25519"],
-                "classical_public_key_in_chain": True,
-                "note": "Post-quantum hybrid key exchange negotiated (X25519MLKEM768). Long-term mail retention protected against retrospective decryption.",
-            },
-        },
-        {
-            "id": "relay.example.net:25",
-            "server": "relay.example.net",
-            "port": 25,
-            "protocols": ["smtp"],
-            "server_role": "inbound_relay",
-            "tls_versions_observed": [],
-            "cipher_suites_observed": [],
-            "key_exchange_groups_observed": [],
-            "forward_secrecy": "none",
-            "starttls_support": "sometimes",
-            "certificates": [],
-            "sessions_observed": 1,
-            "clients_observed": 1,
-            "first_seen": "2025-03-15T09:22:30Z",
-            "last_seen": "2025-03-15T09:22:45Z",
-            "pqc": None,
-        },
-    ]
+    _init_captures()
+    if cid not in _CAPTURES and cid not in _ASSETS:
+        raise HTTPException(404, f"Capture {cid} not found")
+    return _ASSETS.get(cid, [])
 
 
 # ---------------------------------------------------------------- Incidents & Triage (§10)
@@ -420,55 +458,10 @@ class StateChangeRequest(BaseModel):
 
 @router.get("/captures/{cid}/incidents", tags=["incidents"])
 def get_capture_incidents(cid: str, state: str | None = None, severity: str | None = None):
-    items = _INCIDENTS.get(cid)
-    if items is None:
-        items = [
-            {
-                "id": "INC-3f8a1b2c",
-                "rule_id": "STARTTLS-001",
-                "title": "STARTTLS downgrade suspected",
-                "server": "relay.example.net:25",
-                "server_role": "inbound_relay",
-                "severity": "critical",
-                "confidence": "high",
-                "sessions_affected": 1,
-                "clients_affected": 1,
-                "first_seen": "2025-03-15T09:22:30Z",
-                "last_seen": "2025-03-15T09:22:45Z",
-                "finding_ids": ["f-001"],
-                "evidence_ids": ["EV-3f8a1b2c"],
-                "state": "open",
-                "priority_rank": 1,
-                "remediation": {
-                    "summary": "Investigate why STARTTLS negotiation fails on this relay and enforce mandatory TLS.",
-                    "steps": ["Check the relay TLS configuration", "Enable mandatory TLS"],
-                    "references": ["https://datatracker.ietf.org/doc/html/rfc3207"],
-                },
-            },
-            {
-                "id": "INC-7d4e5f6a",
-                "rule_id": "TRANSPORT-001",
-                "title": "Plaintext IMAP session with credentials",
-                "server": "mailbox.example.org:143",
-                "server_role": "mailbox",
-                "severity": "high",
-                "confidence": "high",
-                "sessions_affected": 1,
-                "clients_affected": 1,
-                "first_seen": "2025-03-15T09:22:50Z",
-                "last_seen": "2025-03-15T09:22:58Z",
-                "finding_ids": ["f-002"],
-                "evidence_ids": ["EV-7d4e5f6a"],
-                "state": "under_investigation",
-                "priority_rank": 2,
-                "remediation": {
-                    "summary": "Configure the IMAP server to require TLS and disable plaintext authentication.",
-                    "steps": ["Set disable_plaintext_auth = yes", "Set ssl = required"],
-                    "references": ["https://doc.dovecot.org/configuration_manual/ssl/"],
-                },
-            },
-        ]
-        _INCIDENTS[cid] = items
+    _init_captures()
+    if cid not in _CAPTURES and cid not in _INCIDENTS:
+        raise HTTPException(404, f"Capture {cid} not found")
+    items = _INCIDENTS.get(cid, [])
 
     res = items
     if state:
@@ -495,27 +488,7 @@ def patch_incident_state(iid: str, req: StateChangeRequest, actor: str | None = 
             break
 
     if not found:
-        # Create a mock incident so it can be updated
-        found = {
-            "id": iid,
-            "rule_id": "STARTTLS-001",
-            "title": "STARTTLS downgrade",
-            "server": "relay.example.net:25",
-            "server_role": "inbound_relay",
-            "severity": "critical",
-            "confidence": "high",
-            "sessions_affected": 1,
-            "clients_affected": 1,
-            "first_seen": "2025-03-15T09:22:30Z",
-            "last_seen": "2025-03-15T09:22:45Z",
-            "finding_ids": ["f-001"],
-            "evidence_ids": ["EV-3f8a1b2c"],
-            "state": "open",
-            "priority_rank": 1,
-            "remediation": {"summary": "Investigate relay", "steps": [], "references": []},
-        }
-        target_cid = "cap-001"
-        _INCIDENTS.setdefault(target_cid, []).append(found)
+        raise HTTPException(404, f"Incident {iid} not found")
 
     from_state = found["state"]
     found["state"] = req.state
@@ -539,6 +512,8 @@ def patch_incident_state(iid: str, req: StateChangeRequest, actor: str | None = 
             "actor": actor or "analyst",
             "action": "triage_changed",
             "detail": f"{iid}: {from_state} → {req.state}",
+            "ruleset_version": RULESET_VERSION,
+            "run_at": datetime.now(timezone.utc).isoformat(),
         }
         _get_custody_events(target_cid).append(custody_ev)
 
@@ -548,7 +523,7 @@ def patch_incident_state(iid: str, req: StateChangeRequest, actor: str | None = 
 @router.get("/incidents/{iid}/history", tags=["incidents"])
 def get_incident_history(iid: str):
     return _TRIAGE_HISTORY.get(iid, [
-        {"id": "te-001", "ts": "2025-03-15T09:25:00Z", "actor": "system", "from_state": "open", "to_state": "open", "note": "Incident created from finding"}
+        {"id": "te-001", "ts": datetime.now(timezone.utc).isoformat(), "actor": "system", "from_state": "open", "to_state": "open", "note": "Incident created from finding"}
     ])
 
 
@@ -570,15 +545,35 @@ def get_baseline():
 
 @router.get("/drift", tags=["baselines"])
 def get_drift(baseline: str | None = None, current: str | None = None):
+    _init_captures()
     b_id = baseline or _PINNED_BASELINE.get("baseline_capture_id")
+    c_id = current or "cap-001"
     if not b_id:
         raise HTTPException(404, "No baseline capture specified or pinned")
+
+    if c_id == b_id:
+        return {
+            "baseline_capture_id": b_id,
+            "current_capture_id": c_id,
+            "changes": [],
+            "ruleset_version": RULESET_VERSION,
+            "run_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    if c_id in _DRIFT:
+        return _DRIFT[c_id]
+
+    drift_file = DEMO_DATA_DIR / f"{c_id}_drift.json"
+    if drift_file.exists():
+        try:
+            return json.loads(drift_file.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+
     return {
         "baseline_capture_id": b_id,
-        "current_capture_id": current or "cap-001",
-        "changes": [
-            {"server": "relay.example.net", "kind": "starttls", "before": "succeeded", "after": "failed (downgrade suspected)", "direction": "degraded", "severity": "critical"},
-            {"server": "legacy.example.net", "kind": "issuer", "before": "SyntheticCorpRootCA", "after": "legacy.example.net (self-signed)", "direction": "degraded", "severity": "medium"},
-            {"server": "legacy.example.net", "kind": "key_size", "before": "2048", "after": "1024", "direction": "degraded", "severity": "medium"},
-        ],
+        "current_capture_id": c_id,
+        "changes": [],
+        "ruleset_version": RULESET_VERSION,
+        "run_at": datetime.now(timezone.utc).isoformat(),
     }

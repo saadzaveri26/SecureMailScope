@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "app_build"))
 
 from app.analysis.pipeline import analyze_pcap
-from app.api.contract_02 import RULESET_VERSION, RULESET_SHA256, get_evaluation
+from app.api.contract_02 import RULESET_VERSION, RULESET_SHA256
 
 ROLE_MAP = {
     25: "inbound_relay",
@@ -121,12 +121,14 @@ def build_models(cid: str, doc: dict, run_at: str, baseline_cid: str | None = No
     cert_hidden_tls13 = sum(1 for s in sessions_raw if ((s.get("tls") or {}).get("negotiated") or {}).get("version") == "TLS 1.3")
     cert_obs = sum(1 for s in sessions_raw if s.get("chain") and (s["chain"].get("certificates") or s["chain"].get("fingerprints")))
 
+    p_score = posture_raw.get("score")
+    p_grade = posture_raw.get("grade")
     summary = {
         "posture": {
-            "score": posture_raw.get("score", 100),
-            "grade": posture_raw.get("grade", "A"),
-            "factors": factors,
-            "triaged_score": posture_raw.get("score", 100),
+            "score": p_score,
+            "grade": p_grade,
+            "factors": factors if p_score is not None else [],
+            "triaged_score": p_score,
             "triage_adjustments": [],
         },
         "severity_counts": {
@@ -147,9 +149,13 @@ def build_models(cid: str, doc: dict, run_at: str, baseline_cid: str | None = No
             "starttls": trans_raw.get("starttls", 0),
             "plaintext": trans_raw.get("plaintext", 0),
         },
-        "limitations": [
-            "TLS 1.3 sessions encrypt certificates on the wire; chain validation relies on observed SNI/negotiation",
-        ] if cert_hidden_tls13 > 0 else [],
+        "limitations": (
+            ["No SMTP, IMAP, or POP3 sessions detected in packet capture; posture cannot be evaluated."]
+            if len(sessions_raw) == 0
+            else ([
+                "TLS 1.3 sessions encrypt certificates on the wire; chain validation relies on observed SNI/negotiation",
+            ] if cert_hidden_tls13 > 0 else [])
+        ),
         "baseline_status": "ok" if drift_raw.get("baseline_compared") else "not_configured",
         "visibility": {
             "sessions_total": len(sessions_raw),

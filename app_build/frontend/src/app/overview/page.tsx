@@ -132,8 +132,9 @@ function OverviewContent() {
   const currentCap = caps.find((c) => c.id === captureId) || caps[0];
   const score = summary.posture.score;
   const grade = summary.posture.grade;
-  const isHealthy = score >= 80;
-  const isCritical = score < 60;
+  const hasNoTraffic = score == null || (summary.visibility?.sessions_total ?? 0) === 0;
+  const isHealthy = !hasNoTraffic && score >= 80;
+  const isCritical = !hasNoTraffic && score < 60;
 
   const totalSev =
     summary.severity_counts.critical +
@@ -153,9 +154,18 @@ function OverviewContent() {
     summary.transport_counts.starttls +
     summary.transport_counts.plaintext;
 
-  const cleartextCreds = isCritical ? 2 : 0;
-  const downgradeAttempts = isCritical ? 5 : 0;
-  const nonPfsPercent = isCritical ? "35%" : "0%";
+  const cleartextCreds = findings
+    .filter((f) => f.rule_id === "TR-001" || f.title.toLowerCase().includes("cleartext") || f.description.toLowerCase().includes("cleartext"))
+    .reduce((acc, f) => acc + (f.context?.sessions_affected || 1), 0);
+
+  const downgradeAttempts = findings
+    .filter((f) => f.rule_id === "STARTTLS-001" || f.title.toLowerCase().includes("downgrade"))
+    .reduce((acc, f) => acc + (f.context?.sessions_affected || 1), 0);
+
+  const nonPfsCount = findings.filter(
+    (f) => f.rule_id === "CIPHER-001" || f.title.toLowerCase().includes("forward secrecy") || f.title.toLowerCase().includes("pfs")
+  ).length;
+  const nonPfsPercent = nonPfsCount > 0 ? `${Math.min(100, nonPfsCount * 20)}%` : "0%";
 
   const postfixConfig = `# SecureMailScope Hardened Postfix Configuration (main.cf)
 # Generated for: ${currentCap?.filename || "mail_service"}
@@ -198,6 +208,18 @@ ssl_dh = </etc/dovecot/dh.pem`;
 
   return (
     <div className="max-w-[1600px] mx-auto px-4 py-4 space-y-4 select-none font-mono">
+      {hasNoTraffic && (
+        <div className="bg-amber-100 border-2 border-black p-4 brutal-shadow">
+          <div className="flex items-center gap-2 text-black font-bold text-sm">
+            <span>⚠️</span>
+            <span>NO EMAIL SESSIONS DETECTED IN THIS CAPTURE</span>
+          </div>
+          <p className="text-xs text-black/80 mt-1">
+            This packet capture contains no SMTP, IMAP, or POP3 exchanges. Passive cryptographic posture assessment requires active email protocol traffic.
+          </p>
+        </div>
+      )}
+
       {/* 3-Column Priority Operations Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         {/* ================= COLUMN 1: SCORE & CUSTODY (3 cols) ================= */}
@@ -216,36 +238,42 @@ ssl_dh = </etc/dovecot/dh.pem`;
             <div className="flex items-center gap-3">
               <div
                 className={`w-16 h-16 flex flex-col items-center justify-center shrink-0 border-2 border-black font-bold brutal-shadow-sm ${
-                  isHealthy
+                  hasNoTraffic
+                    ? "bg-surface-2 text-muted"
+                    : isHealthy
                     ? "bg-emerald-400 text-black"
                     : isCritical
                     ? "bg-red-500 text-white"
                     : "bg-accent text-black"
                 }`}
               >
-                <span className="text-3xl leading-none tabular-nums">{score}</span>
+                <span className="text-3xl leading-none tabular-nums">{score ?? "—"}</span>
                 <span className="text-[10px] tracking-wider mt-0.5">/ 100</span>
               </div>
 
               <div>
                 <div className="flex items-center gap-1.5">
                   <span className="text-base font-bold text-black">
-                    Grade {grade}
+                    {hasNoTraffic ? "No Traffic" : `Grade ${grade}`}
                   </span>
                   <span
                     className={`px-1.5 py-0.2 border border-black text-[10px] font-bold uppercase ${
-                      isHealthy
+                      hasNoTraffic
+                        ? "bg-surface-2 text-muted"
+                        : isHealthy
                         ? "bg-emerald-100 text-emerald-900"
                         : isCritical
                         ? "bg-red-100 text-red-900"
                         : "bg-yellow-100 text-yellow-900"
                     }`}
                   >
-                    {isHealthy ? "Secure" : isCritical ? "Critical" : "Degraded"}
+                    {hasNoTraffic ? "N/A" : isHealthy ? "Secure" : isCritical ? "Critical" : "Degraded"}
                   </span>
                 </div>
                 <span className="text-xs text-muted block mt-0.5 font-medium">
-                  {summary.severity_counts.critical > 0
+                  {hasNoTraffic
+                    ? "0 mail sessions observed"
+                    : summary.severity_counts.critical > 0
                     ? `${summary.severity_counts.critical} critical flaws found`
                     : "No critical flaws"}
                 </span>

@@ -1,7 +1,7 @@
 import type {
   Capture, Summary, Session, Finding, Drift, PaginatedSessions,
   CustodyEvent, Evidence, Rule, RulesetVersion, Evaluation,
-  Asset, Incident, TriageEvent, IncidentState,
+  Asset, Incident, TriageEvent, IncidentState, Grade,
 } from "@/types";
 import {
   captures as capFixtures,
@@ -99,8 +99,38 @@ const evidenceMap: Record<string, Evidence[]> = {
 };
 
 function createAndRegisterFallbackSummary(cap: Capture): Summary {
-  const score = cap.posture_score ?? 85;
-  const grade = cap.grade ?? (score >= 90 ? "A" : score >= 80 ? "B" : score >= 70 ? "C" : score >= 60 ? "D" : "F");
+  if (cap.posture_score == null || cap.grade == null) {
+    const emptySummary: Summary = {
+      posture: {
+        score: null as unknown as number,
+        grade: null as unknown as Grade,
+        triaged_score: undefined,
+        triage_adjustments: [],
+        factors: [],
+      },
+      severity_counts: { critical: 0, high: 0, medium: 0, low: 0, info: 0 },
+      protocol_counts: { smtp: 0, imap: 0, pop3: 0, unknown: 0 },
+      transport_counts: { implicit_tls: 0, starttls: 0, plaintext: 0 },
+      limitations: ["No SMTP, IMAP, or POP3 sessions detected in packet capture; posture cannot be evaluated."],
+      baseline_status: "not_configured",
+      visibility: {
+        sessions_total: 0,
+        handshake_complete: 0,
+        handshake_partial: 0,
+        certificate_observable: 0,
+        certificate_hidden_tls13: 0,
+        certificate_resumed: 0,
+        message_layer_observable: 0,
+        plaintext_sessions: 0,
+        checks_not_performed: [],
+      },
+    };
+    summariesMap[cap.id] = emptySummary;
+    return emptySummary;
+  }
+
+  const score = cap.posture_score;
+  const grade = cap.grade;
   const penalty = 100 - score;
   const tp = Math.floor(penalty * 0.35);
   const cp = Math.floor(penalty * 0.25);
@@ -167,48 +197,35 @@ export async function getCapture(id: string): Promise<Capture> {
 
 export async function uploadCapture(file: File): Promise<{ capture_id: string; status: string }> {
   if (!USE_FIXTURES) {
-    try {
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await mutate<{ capture_id: string; status: string }>("POST", "/api/captures", fd);
-      if (res?.capture_id) {
-        try {
-          const cap = await mutate<Capture>("GET", `/api/captures/${res.capture_id}`);
-          if (cap?.id) inMemoryCaps = [cap, ...inMemoryCaps];
-        } catch {
-          // ignore
-        }
-        return res;
+    const fd = new FormData();
+    fd.append("file", file);
+    const res = await mutate<{ capture_id: string; status: string }>("POST", "/api/captures", fd);
+    if (res?.capture_id) {
+      try {
+        const cap = await mutate<Capture>("GET", `/api/captures/${res.capture_id}`);
+        if (cap?.id) inMemoryCaps = [cap, ...inMemoryCaps];
+      } catch {
+        // ignore
       }
-    } catch (e) {
-      console.warn("API upload failed, using local simulation", e);
+      return res;
     }
+    throw new Error("Upload succeeded but no capture ID was returned by the server.");
   }
 
+  // Only in demo fixture mode:
   const newId = `cap-${Date.now()}`;
-  const fn = (file.name || "").toLowerCase();
-  let score = 82;
-  if (fn.includes("incident") || fn.includes("drift") || fn.includes("leak")) {
-    score = 40;
-  } else if (fn.includes("clean") || fn.includes("baseline")) {
-    score = 100;
-  } else {
-    const h = file.name.split("").reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
-    score = 70 + (h % 25);
-  }
-  const grade = score >= 90 ? "A" : score >= 80 ? "B" : score >= 70 ? "C" : score >= 60 ? "D" : "F";
   const newCap: Capture = {
     id: newId,
     filename: file.name,
     sha256: "1b1e124d39a73119081ae284e2a7a9fb8b069de8222e32bc4b54c34682e7a0d3",
     size_bytes: file.size || 1048576,
-    packet_count: 3450,
-    duration_s: 120.0,
+    packet_count: 100,
+    duration_s: 10.0,
     status: "complete",
     error: null,
     created_at: new Date().toISOString(),
-    posture_score: score,
-    grade,
+    posture_score: null,
+    grade: null,
     custody: null,
     analysis: null,
   };

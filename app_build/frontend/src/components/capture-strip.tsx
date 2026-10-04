@@ -96,7 +96,7 @@ export function CaptureStrip() {
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
-          {current.posture_score !== null && (
+          {current.posture_score !== null ? (
             <div className={`px-2 py-0.5 border border-black font-mono font-bold text-xs flex items-center gap-1.5 ${
               isCritical ? "bg-sev-critical text-white" : isHealthy ? "bg-sev-pass text-white" : "bg-accent text-black"
             }`}>
@@ -106,6 +106,10 @@ export function CaptureStrip() {
               <span className="text-[10px]">
                 [{current.grade}]
               </span>
+            </div>
+          ) : (
+            <div className="px-2 py-0.5 border border-black bg-surface-2 text-muted font-mono font-bold text-xs">
+              <span>NO TRAFFIC [N/A]</span>
             </div>
           )}
         </div>

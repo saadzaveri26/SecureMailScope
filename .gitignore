@@ -9,7 +9,11 @@ production_artifacts/uploads/*
 production_artifacts/analyses/*
 production_artifacts/baselines/*
 production_artifacts/models/*
+production_artifacts/reports/*
 !production_artifacts/**/.gitkeep
+
+# Tooling
+.kombai/
 
 # Node / Frontend
 node_modules/

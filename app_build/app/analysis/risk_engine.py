@@ -14,7 +14,9 @@ def level_for(score: float) -> str:
     return next(name for th, name in LEVELS if score >= th)
 
 
-def grade_for(score: float) -> str:
+def grade_for(score: float | None) -> str | None:
+    if score is None:
+        return None
     return "A" if score >= 90 else "B" if score >= 80 else "C" if score >= 65 else "D" if score >= 50 else "F"
 
 
@@ -56,11 +58,30 @@ def compute_posture(sessions: list[dict], findings: list[dict]) -> dict:
             "message_layer": {"pgp_sessions": sum(1 for x in ss if x["message_security"]["pgp"]["detected"]),
                               "smime_sessions": sum(1 for x in ss if x["message_security"]["smime"]["detected"])},
         }
-    total_sessions = sum(e["sessions"] for e in eps.values()) or 1
-    overall = round(sum(e["score"] * e["sessions"] for e in eps.values()) / total_sessions) if eps else 100
-    worst = min(eps.items(), key=lambda kv: kv[1]["score"])[0] if eps else None
-    return {"overall": {"score": overall, "grade": grade_for(overall), "worst_endpoint": worst,
-                        "sessions": sum(e["sessions"] for e in eps.values())}, "endpoints": eps}
+    total_sessions = sum(e["sessions"] for e in eps.values())
+    if not eps or total_sessions == 0:
+        return {
+            "overall": {
+                "score": None,
+                "grade": None,
+                "worst_endpoint": None,
+                "sessions": 0,
+                "status": "no_mail_traffic",
+                "message": "No email sessions detected in capture file",
+            },
+            "endpoints": {},
+        }
+    overall = round(sum(e["score"] * e["sessions"] for e in eps.values()) / total_sessions)
+    worst = min(eps.items(), key=lambda kv: kv[1]["score"])[0]
+    return {
+        "overall": {
+            "score": overall,
+            "grade": grade_for(overall),
+            "worst_endpoint": worst,
+            "sessions": total_sessions,
+        },
+        "endpoints": eps,
+    }
 
 
 # ---------------------------------------------------------------- explainability card

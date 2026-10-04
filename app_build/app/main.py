@@ -11,8 +11,6 @@ from .api import analyses, baselines, dashboard, meta, reports, contract_02
 from .api.deps import require_token
 from .core.cert_analyzer import get_trust_store
 
-warnings.filterwarnings("ignore")
-
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
