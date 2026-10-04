@@ -24,18 +24,19 @@ export function PostureTrend({ captures }: { captures: Capture[] }) {
   if (data.length < 2) return null;
 
   return (
-    <div className="h-48">
+    <div className="h-48" role="img" aria-label="Posture score trend over time">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data} margin={{ top: 4, right: 12, bottom: 4, left: 12 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#DAD8D2" />
-          <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#4B5563" }} />
-          <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: "#4B5563" }} width={32} />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+          <XAxis dataKey="name" tick={{ fontSize: 11, fill: "var(--color-muted)" }} />
+          <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: "var(--color-muted)" }} width={32} />
           <Tooltip
             contentStyle={{
-              fontSize: 12,
-              borderRadius: 4,
-              border: "1px solid #DAD8D2",
-              boxShadow: "none",
+              fontSize: "var(--font-size-md)",
+              borderRadius: "var(--radius-md)",
+              border: "1px solid var(--color-border)",
+              boxShadow: "var(--shadow-subtle)",
+              backgroundColor: "var(--color-surface-0)",
             }}
             formatter={(v: unknown, _n: unknown, p: unknown) => {
               const entry = p as { payload?: { grade?: string } };
@@ -45,9 +46,9 @@ export function PostureTrend({ captures }: { captures: Capture[] }) {
           <Line
             type="monotone"
             dataKey="score"
-            stroke="#0E1116"
+            stroke="var(--color-accent)"
             strokeWidth={2}
-            dot={{ r: 4, fill: "#0E1116" }}
+            dot={{ r: 4, fill: "var(--color-accent)" }}
             activeDot={{ r: 6 }}
           />
         </LineChart>

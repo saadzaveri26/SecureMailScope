@@ -19,7 +19,7 @@ export default function EvaluationPage() {
     return (
       <div className="max-w-[1400px] mx-auto px-4 py-8 space-y-4 animate-pulse">
         <div className="h-6 w-32 bg-surface-2 rounded" />
-        <div className="h-64 bg-surface-0 rounded-sm border border-border" />
+        <div className="h-64 bg-surface-0 rounded-[var(--radius-sm)] border border-border" />
       </div>
     );
   }
@@ -39,7 +39,7 @@ export default function EvaluationPage() {
         <span className="text-xs text-muted font-mono">Suite {ev.corpus_version.replace("-synth", "")}</span>
       </div>
 
-      <div className="bg-not-observable-bg border border-border rounded-sm px-4 py-3">
+      <div className="bg-not-observable-bg border border-border rounded-[var(--radius-sm)] px-4 py-3">
         <p className="text-xs text-muted">
           {ev.label?.includes("synthetic lab corpus")
             ? "Validated against standard RFC compliance benchmarks and protocol verification suites."
@@ -48,23 +48,23 @@ export default function EvaluationPage() {
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-surface-0 rounded-sm border border-border p-4">
+        <div className="bg-surface-0 rounded-[var(--radius-sm)] border border-border p-4">
           <span className="text-[11px] text-muted block">Overall precision</span>
           <span className="text-2xl font-bold font-mono tabular-nums text-foreground">
             {(ev.overall.precision * 100).toFixed(1)}%
           </span>
         </div>
-        <div className="bg-surface-0 rounded-sm border border-border p-4">
+        <div className="bg-surface-0 rounded-[var(--radius-sm)] border border-border p-4">
           <span className="text-[11px] text-muted block">Overall recall</span>
           <span className="text-2xl font-bold font-mono tabular-nums text-foreground">
             {(ev.overall.recall * 100).toFixed(1)}%
           </span>
         </div>
-        <div className="bg-surface-0 rounded-sm border border-border p-4">
+        <div className="bg-surface-0 rounded-[var(--radius-sm)] border border-border p-4">
           <span className="text-[11px] text-muted block">Captures evaluated</span>
           <span className="text-2xl font-bold font-mono tabular-nums text-foreground">{ev.captures}</span>
         </div>
-        <div className="bg-surface-0 rounded-sm border border-border p-4">
+        <div className="bg-surface-0 rounded-[var(--radius-sm)] border border-border p-4">
           <span className="text-[11px] text-muted block">Clean capture false alarms</span>
           <span className={`text-2xl font-bold font-mono tabular-nums ${ev.clean_capture_false_alarms > 0 ? "text-sev-medium" : "text-foreground"}`}>
             {ev.clean_capture_false_alarms}
@@ -72,7 +72,7 @@ export default function EvaluationPage() {
         </div>
       </div>
 
-      <div className="bg-surface-0 rounded-sm border border-border overflow-hidden">
+      <div className="bg-surface-0 rounded-[var(--radius-sm)] border border-border overflow-hidden">
         <div className="px-4 py-3 border-b border-border bg-surface-1">
           <h3 className="text-xs font-medium text-foreground">Per-rule results</h3>
           <p className="text-[11px] text-muted mt-0.5">

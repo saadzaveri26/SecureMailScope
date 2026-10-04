@@ -14,15 +14,15 @@ import {
 
 function gradeColor(g: string | null) {
   if (!g) return "text-muted";
-  if (g === "A" || g === "B") return "text-foreground";
+  if (g === "A" || g === "B") return "text-sev-pass";
   if (g === "C") return "text-sev-medium";
   if (g === "D") return "text-sev-high";
   return "text-sev-critical";
 }
 
 function statusIcon(s: string) {
-  if (s === "complete") return <CheckCircle size={15} weight="bold" className="text-foreground" />;
-  if (s === "processing") return <Spinner size={15} weight="bold" className="text-ink animate-spin" />;
+  if (s === "complete") return <CheckCircle size={15} weight="bold" className="text-sev-pass" />;
+  if (s === "processing") return <Spinner size={15} weight="bold" className="text-accent animate-spin" />;
   if (s === "failed") return <XCircle size={15} weight="bold" className="text-sev-critical" />;
   return <Clock size={15} weight="bold" className="text-muted" />;
 }
@@ -150,49 +150,52 @@ export default function CapturesPage() {
 
   return (
     <div className="max-w-[1400px] mx-auto px-4 py-8">
-      <h1 className="text-xl font-semibold mb-6">Captures</h1>
+      <h1 className="text-[var(--font-size-4xl)] font-bold mb-6 text-foreground">Captures</h1>
 
       <div
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={onDrop}
         className={[
-          "border-2 border-dashed rounded-sm p-8 text-center transition-colors mb-8",
-          dragOver ? "border-ink bg-surface-1" : "border-border bg-surface-1",
+          "border-2 border-dashed rounded-[var(--radius-md)] p-8 text-center mb-8",
+          `transition-all duration-[var(--motion-normal)]`,
+          dragOver ? "border-accent bg-accent-soft" : "border-border bg-surface-1",
           uploading ? "opacity-60 pointer-events-none" : "",
         ].join(" ")}
+        role="region"
+        aria-label="PCAP file upload zone"
       >
         {uploading ? (
           <div className="flex flex-col items-center gap-2">
-            <Spinner size={28} className="text-ink animate-spin" />
-            <p className="text-sm text-muted">Uploading capture...</p>
+            <Spinner size={28} className="text-accent animate-spin" />
+            <p className="text-[var(--font-size-md)] text-muted">Uploading capture...</p>
           </div>
         ) : (
-          <label className="cursor-pointer flex flex-col items-center gap-2">
+          <label className="cursor-pointer flex flex-col items-center gap-2 focus-ring rounded-[var(--radius-md)]">
             <UploadSimple size={24} className="text-muted" />
-            <p className="text-sm text-foreground font-medium">
+            <p className="text-[var(--font-size-xl)] text-foreground font-medium">
               Drop a PCAP file here or click to browse
             </p>
-            <p className="text-xs text-muted">
+            <p className="text-[var(--font-size-md)] text-muted">
               Accepts .pcap and .pcapng files
             </p>
             <input type="file" accept=".pcap,.pcapng" className="hidden" onChange={onFileInput} />
           </label>
         )}
         {uploadErr && (
-          <p className="text-xs text-sev-critical mt-3">{uploadErr}</p>
+          <p className="text-[var(--font-size-md)] text-sev-critical mt-3 font-medium" role="alert">{uploadErr}</p>
         )}
       </div>
 
       {polling && (
-        <div className="flex items-center justify-between text-xs text-foreground bg-surface-1 px-4 py-2 rounded-sm mb-4 border border-border">
+        <div className="flex items-center justify-between text-[var(--font-size-md)] text-foreground bg-surface-1 px-4 py-2 rounded-[var(--radius-sm)] mb-4 border border-border">
           <div className="flex items-center gap-2">
-            <Spinner size={14} className="animate-spin text-ink" />
+            <Spinner size={14} className="animate-spin text-accent" />
             <span>Processing capture... polling for status</span>
           </div>
           <button
             onClick={() => { setPolling(null); load(); }}
-            className="text-xs text-muted hover:text-foreground underline ml-4 cursor-pointer"
+            className="text-[var(--font-size-md)] text-muted hover:text-foreground underline ml-4 cursor-pointer focus-ring rounded-[var(--radius-xs)]"
           >
             Dismiss
           </button>
@@ -200,59 +203,59 @@ export default function CapturesPage() {
       )}
 
       {loading && !caps.length ? (
-        <div className="bg-surface-0 rounded-sm border border-border overflow-hidden animate-pulse">
+        <div className="bg-surface-0 rounded-[var(--radius-md)] border border-border overflow-hidden animate-pulse xcor-shadow">
           <div className="h-10 bg-surface-1 border-b border-border" />
           {[...Array(4)].map((_, i) => (
             <div key={i} className="h-10 border-b border-border flex items-center px-4 gap-4">
-              <div className="h-4 w-6 bg-surface-2 rounded" />
-              <div className="h-4 w-48 bg-surface-2 rounded" />
-              <div className="h-4 w-16 bg-surface-2 rounded" />
-              <div className="h-4 w-16 bg-surface-2 rounded" />
-              <div className="h-4 w-12 bg-surface-2 rounded" />
+              <div className="h-4 w-6 bg-surface-2 rounded-[var(--radius-xs)]" />
+              <div className="h-4 w-48 bg-surface-2 rounded-[var(--radius-xs)]" />
+              <div className="h-4 w-16 bg-surface-2 rounded-[var(--radius-xs)]" />
+              <div className="h-4 w-16 bg-surface-2 rounded-[var(--radius-xs)]" />
+              <div className="h-4 w-12 bg-surface-2 rounded-[var(--radius-xs)]" />
             </div>
           ))}
         </div>
       ) : error ? (
-        <div className="bg-sev-critical-bg border border-sev-critical/20 rounded-sm p-4 space-y-2 mb-4">
-          <p className="text-xs font-semibold text-sev-critical">Failed to load captures</p>
-          <p className="text-xs text-sev-critical/90">{error}</p>
+        <div className="bg-sev-critical-bg border border-border rounded-[var(--radius-md)] p-4 space-y-2 mb-4" role="alert">
+          <p className="text-[var(--font-size-md)] font-bold text-sev-critical">Failed to load captures</p>
+          <p className="text-[var(--font-size-md)] text-sev-critical/90">{error}</p>
           <button
             onClick={() => {
               setLoading(true);
               setError(null);
               load();
             }}
-            className="text-xs font-medium text-sev-critical underline"
+            className="text-[var(--font-size-md)] font-medium text-text-tertiary underline cursor-pointer focus-ring rounded-[var(--radius-xs)]"
           >
             Retry
           </button>
         </div>
       ) : caps.length === 0 ? (
-        <div className="text-center py-16 bg-surface-0 rounded-sm border border-border text-muted">
-          <p className="text-xs font-medium text-foreground">No captures yet</p>
-          <p className="text-xs text-muted mt-1">Upload a PCAP or PCAPNG file to begin passive analysis.</p>
+        <div className="text-center py-16 bg-surface-0 rounded-[var(--radius-md)] border border-border text-muted xcor-shadow">
+          <p className="text-[var(--font-size-xl)] font-medium text-foreground">No captures yet</p>
+          <p className="text-[var(--font-size-md)] text-muted mt-1">Upload a PCAP or PCAPNG file to begin passive analysis.</p>
         </div>
       ) : (
-        <div className="bg-surface-0 rounded-sm border border-border overflow-hidden">
-          <table className="w-full text-xs">
+        <div className="bg-surface-0 rounded-[var(--radius-md)] border border-border overflow-hidden xcor-shadow">
+          <table className="w-full text-[var(--font-size-md)]">
             <thead>
               <tr className="border-b border-border bg-surface-1 text-left text-muted h-9">
-                <th className="px-4 py-2 font-medium">Status</th>
-                <th className="px-4 py-2 font-medium">Filename</th>
-                <th className="px-4 py-2 font-medium">Size</th>
-                <th className="px-4 py-2 font-medium">Packets</th>
-                <th className="px-4 py-2 font-medium text-right">Score</th>
-                <th className="px-4 py-2 font-medium text-right">Grade</th>
-                <th className="px-4 py-2 font-medium">Date</th>
+                <th scope="col" className="px-4 py-2 font-medium">Status</th>
+                <th scope="col" className="px-4 py-2 font-medium">Filename</th>
+                <th scope="col" className="px-4 py-2 font-medium">Size</th>
+                <th scope="col" className="px-4 py-2 font-medium">Packets</th>
+                <th scope="col" className="px-4 py-2 font-medium text-right">Score</th>
+                <th scope="col" className="px-4 py-2 font-medium text-right">Grade</th>
+                <th scope="col" className="px-4 py-2 font-medium">Date</th>
               </tr>
             </thead>
             <tbody>
               {caps.map((c) => (
-                <tr key={c.id} className="border-b border-border last:border-0 hover:bg-surface-1 transition-colors h-10">
+                <tr key={c.id} className="border-b border-border last:border-0 hover:bg-accent-soft transition-colors duration-[var(--motion-fast)] h-10">
                   <td className="px-4 py-2">{statusIcon(c.status)}</td>
                   <td className="px-4 py-2">
                     {c.status === "complete" ? (
-                      <Link href={`/overview?capture=${c.id}`} className="text-foreground underline hover:text-ink font-medium">
+                      <Link href={`/overview?capture=${c.id}`} className="text-text-tertiary hover:text-accent font-medium focus-ring rounded-[var(--radius-xs)]">
                         {c.filename}
                       </Link>
                     ) : (
@@ -271,8 +274,8 @@ export default function CapturesPage() {
                       <span className="text-not-observable">—</span>
                     )}
                   </td>
-                  <td className={`px-4 py-2 text-right font-mono ${gradeColor(c.grade)}`}>
-                    {c.grade ?? <span className="text-not-observable font-normal text-xs">—</span>}
+                  <td className={`px-4 py-2 text-right font-mono font-bold ${gradeColor(c.grade)}`}>
+                    {c.grade ?? <span className="text-not-observable font-normal">—</span>}
                   </td>
                   <td className="px-4 py-2 text-muted tabular-nums">{formatDate(c.created_at)}</td>
                 </tr>

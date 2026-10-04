@@ -19,7 +19,7 @@ function Skeleton() {
   return (
     <div className="max-w-[1600px] mx-auto px-4 py-4 space-y-4 animate-pulse">
       <div className="h-4 w-44 bg-surface-2" />
-      <div className="border-2 border-black bg-surface-0 h-96 brutal-shadow" />
+      <div className="border border-border bg-surface-0 h-96 xcor-shadow" />
     </div>
   );
 }
@@ -84,21 +84,21 @@ function Content() {
       {/* Header */}
       <div className="flex items-center justify-between text-xs font-mono">
         <div className="flex items-center gap-2 font-bold text-foreground">
-          <span className="uppercase tracking-wider text-black">posture drift</span>
-          <span className="text-black/40">·</span>
+          <span className="uppercase tracking-wider text-foreground">posture drift</span>
+          <span className="text-muted">·</span>
           <span className="text-muted font-semibold">{filtered.length} changes detected</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex border-2 border-black bg-surface-0 brutal-shadow-sm">
+          <div className="flex border border-border bg-surface-0 xcor-shadow-subtle">
             <button
               onClick={() => setDiffMode("unified")}
-              className={`px-3 py-1 text-xs font-mono font-bold cursor-pointer transition-colors ${diffMode === "unified" ? "bg-accent text-black" : "text-muted hover:text-black"}`}
+              className={`px-3 py-1 text-xs font-mono font-bold cursor-pointer transition-colors ${diffMode === "unified" ? "bg-accent text-foreground" : "text-muted hover:text-foreground"}`}
             >
               unified
             </button>
             <button
               onClick={() => setDiffMode("split")}
-              className={`px-3 py-1 text-xs font-mono font-bold cursor-pointer transition-colors border-l-2 border-black ${diffMode === "split" ? "bg-accent text-black" : "text-muted hover:text-black"}`}
+              className={`px-3 py-1 text-xs font-mono font-bold cursor-pointer transition-colors border-l border-border ${diffMode === "split" ? "bg-accent text-foreground" : "text-muted hover:text-foreground"}`}
             >
               side-by-side
             </button>
@@ -106,7 +106,7 @@ function Content() {
           <select
             value={filterDir}
             onChange={(e) => setFilterDir(e.target.value)}
-            className="px-2.5 py-1 bg-surface-0 border-2 border-black text-xs font-mono font-bold text-black focus:outline-none cursor-pointer brutal-shadow-sm"
+            className="px-2.5 py-1 bg-surface-0 border border-border text-xs font-mono font-bold text-foreground focus:outline-none cursor-pointer xcor-shadow-subtle"
           >
             <option value="">all directions</option>
             <option value="degraded">degraded</option>
@@ -118,27 +118,27 @@ function Content() {
 
       {/* Capture comparison selectors */}
       <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-3 items-center text-xs font-mono">
-        <div className="border-2 border-black bg-surface-0 p-2.5 space-y-1 brutal-shadow-sm">
-          <div className="text-[11px] text-red-600 font-bold uppercase">--- baseline capture</div>
+        <div className="border border-border bg-surface-0 p-2.5 space-y-1 xcor-shadow-subtle">
+          <div className="text-[11px] text-sev-critical font-bold uppercase">--- baseline capture</div>
           <select
             value={baselineId}
             onChange={(e) => handleCompare(e.target.value, currentId)}
-            className="w-full bg-surface-1 border border-black p-1 text-foreground font-bold focus:outline-none cursor-pointer"
+            className="w-full bg-surface-1 border border-border p-1 text-foreground font-bold focus:outline-none cursor-pointer"
           >
             {caps.map((c) => (
               <option key={c.id} value={c.id} className="bg-surface-0">{c.filename} [{c.id}] score:{c.posture_score ?? "—"}</option>
             ))}
           </select>
         </div>
-        <div className="flex items-center justify-center p-2 bg-accent border-2 border-black brutal-shadow-sm">
-          <ArrowsLeftRight size={16} weight="bold" className="text-black" />
+        <div className="flex items-center justify-center p-2 bg-accent border border-border xcor-shadow-subtle">
+          <ArrowsLeftRight size={16} weight="bold" className="text-foreground" />
         </div>
-        <div className="border-2 border-black bg-surface-0 p-2.5 space-y-1 brutal-shadow-sm">
+        <div className="border border-border bg-surface-0 p-2.5 space-y-1 xcor-shadow-subtle">
           <div className="text-[11px] text-emerald-600 font-bold uppercase">+++ current capture</div>
           <select
             value={currentId}
             onChange={(e) => handleCompare(baselineId, e.target.value)}
-            className="w-full bg-surface-1 border border-black p-1 text-foreground font-bold focus:outline-none cursor-pointer"
+            className="w-full bg-surface-1 border border-border p-1 text-foreground font-bold focus:outline-none cursor-pointer"
           >
             {caps.map((c) => (
               <option key={c.id} value={c.id} className="bg-surface-0">{c.filename} [{c.id}] score:{c.posture_score ?? "—"}</option>
@@ -148,15 +148,15 @@ function Content() {
       </div>
 
       {/* Stats strip */}
-      <div className="flex items-center gap-4 text-xs font-mono border-2 border-black bg-surface-0 px-3 py-2 brutal-shadow-sm font-bold">
-        <span className="text-red-600 tabular-nums bg-red-100 px-2 py-0.5 border border-black">{degradedCount} degraded</span>
-        <span className="text-emerald-700 tabular-nums bg-emerald-100 px-2 py-0.5 border border-black">{improvedCount} improved</span>
+      <div className="flex items-center gap-4 text-xs font-mono border border-border bg-surface-0 px-3 py-2 xcor-shadow-subtle font-bold">
+        <span className="text-sev-critical tabular-nums bg-sev-critical-bg px-2 py-0.5 border border-border">{degradedCount} degraded</span>
+        <span className="text-sev-pass tabular-nums bg-sev-pass-bg px-2 py-0.5 border border-border">{improvedCount} improved</span>
         <span className="tabular-nums text-muted">{otherCount} other changes</span>
         {baselineCap && currentCap && baselineCap.posture_score !== null && currentCap.posture_score !== null && (
           <>
-            <span className="text-black/40">│</span>
-            <span className={`tabular-nums px-2 py-0.5 border border-black ${
-              (currentCap.posture_score - baselineCap.posture_score) < 0 ? "bg-red-500 text-white" : "bg-emerald-400 text-black"
+            <span className="text-muted">│</span>
+            <span className={`tabular-nums px-2 py-0.5 border border-border ${
+              (currentCap.posture_score - baselineCap.posture_score) < 0 ? "bg-sev-critical text-white" : "bg-sev-pass text-foreground"
             }`}>
               Δ {currentCap.posture_score - baselineCap.posture_score} pts posture change
             </span>
@@ -168,33 +168,33 @@ function Content() {
       {loading ? (
         <Skeleton />
       ) : error ? (
-        <div className="text-xs font-mono font-bold text-sev-critical border-2 border-black bg-sev-critical-bg px-3 py-2 brutal-shadow-sm">{error}</div>
+        <div className="text-xs font-mono font-bold text-sev-critical border border-border bg-sev-critical-bg px-3 py-2 xcor-shadow-subtle">{error}</div>
       ) : baselineId === currentId ? (
-        <div className="text-xs font-mono text-muted border-2 border-black bg-surface-0 px-3 py-8 text-center brutal-shadow font-bold">identical captures — select different targets</div>
+        <div className="text-xs font-mono text-muted border border-border bg-surface-0 px-3 py-8 text-center xcor-shadow font-bold">identical captures — select different targets</div>
       ) : filtered.length === 0 ? (
-        <div className="text-xs font-mono text-muted border-2 border-black bg-surface-0 px-3 py-8 text-center brutal-shadow font-bold">no drift detected</div>
+        <div className="text-xs font-mono text-muted border border-border bg-surface-0 px-3 py-8 text-center xcor-shadow font-bold">no drift detected</div>
       ) : diffMode === "unified" ? (
-        <div className="border-2 border-black bg-surface-0 font-mono text-xs divide-y-2 divide-black/20 overflow-hidden max-h-[700px] overflow-y-auto brutal-shadow">
+        <div className="border border-border bg-surface-0 font-mono text-xs divide-y-2 divide-border overflow-hidden max-h-[700px] overflow-y-auto xcor-shadow">
           {filtered.map((ch, idx) => {
             const isDeg = ch.direction === "degraded";
             const isImp = ch.direction === "improved";
             return (
               <div key={idx}>
-                <div className="bg-surface-1 px-3 py-1.5 flex items-center justify-between text-[11px] font-bold text-black border-b border-black/20">
+                <div className="bg-surface-1 px-3 py-1.5 flex items-center justify-between text-[11px] font-bold text-foreground border-b border-border">
                   <span className="font-bold">@@ {ch.server} [{ch.kind}] @@</span>
                   <div className="flex items-center gap-2">
                     <DirLabel dir={ch.direction} />
                     <SeverityBadge severity={ch.severity} />
                   </div>
                 </div>
-                <div className="px-3 py-1.5 bg-red-100 text-red-950 flex items-start gap-2 text-[11px] font-medium leading-tight">
-                  <span className="text-red-600 font-bold select-none shrink-0">-</span>
+                <div className="px-3 py-1.5 bg-sev-critical-bg text-red-950 flex items-start gap-2 text-[11px] font-medium leading-tight">
+                  <span className="text-sev-critical font-bold select-none shrink-0">-</span>
                   <span className="break-all">{ch.before}</span>
                 </div>
                 <div className={`px-3 py-1.5 flex items-start gap-2 text-[11px] font-medium leading-tight ${
-                  isDeg ? "bg-orange-100 text-orange-950" : isImp ? "bg-emerald-100 text-emerald-950" : "bg-neutral-100 text-neutral-900"
+                  isDeg ? "bg-sev-high-bg text-orange-950" : isImp ? "bg-sev-pass-bg text-emerald-950" : "bg-neutral-100 text-neutral-900"
                 }`}>
-                  <span className={`select-none shrink-0 font-bold ${isDeg ? "text-orange-600" : isImp ? "text-emerald-600" : "text-neutral-600"}`}>+</span>
+                  <span className={`select-none shrink-0 font-bold ${isDeg ? "text-sev-high" : isImp ? "text-emerald-600" : "text-neutral-600"}`}>+</span>
                   <span className="break-all">{ch.after}</span>
                 </div>
               </div>
@@ -202,26 +202,26 @@ function Content() {
           })}
         </div>
       ) : (
-        <div className="border-2 border-black bg-surface-0 overflow-hidden max-h-[700px] overflow-y-auto brutal-shadow">
+        <div className="border border-border bg-surface-0 overflow-hidden max-h-[700px] overflow-y-auto xcor-shadow">
           <table className="w-full text-xs font-mono text-left">
-            <thead className="sticky top-0 bg-surface-1 border-b-2 border-black text-[11px] font-bold text-black uppercase z-10">
+            <thead className="sticky top-0 bg-surface-1 border-b border-border text-[11px] font-bold text-foreground uppercase z-10">
               <tr>
                 <th className="py-2 px-3 w-36">server</th>
                 <th className="py-2 px-3 w-28">kind</th>
-                <th className="py-2 px-3 text-red-600 border-r-2 border-black">- baseline</th>
-                <th className="py-2 px-3 text-emerald-700">+ current</th>
+                <th className="py-2 px-3 text-sev-critical border-r-2 border-border">- baseline</th>
+                <th className="py-2 px-3 text-sev-pass">+ current</th>
                 <th className="py-2 px-3 w-28 text-center">shift</th>
                 <th className="py-2 px-3 w-20 text-right">sev</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-black/20">
+            <tbody className="divide-y divide-border">
               {filtered.map((ch, idx) => (
-                <tr key={idx} className="hover:bg-accent/10 transition-colors">
-                  <td className="py-2 px-3 text-black font-bold">{ch.server}</td>
+                <tr key={idx} className="hover:bg-accent-soft transition-colors">
+                  <td className="py-2 px-3 text-foreground font-bold">{ch.server}</td>
                   <td className="py-2 px-3 text-muted text-[10px] uppercase font-bold">{ch.kind}</td>
-                  <td className="py-2 px-3 text-red-950 bg-red-50 border-r-2 border-black break-all font-medium">{ch.before}</td>
+                  <td className="py-2 px-3 text-red-950 bg-red-50 border-r-2 border-border break-all font-medium">{ch.before}</td>
                   <td className={`py-2 px-3 break-all font-medium ${
-                    ch.direction === "degraded" ? "text-orange-950 bg-orange-50" : ch.direction === "improved" ? "text-emerald-950 bg-emerald-50" : "text-black"
+                    ch.direction === "degraded" ? "text-orange-950 bg-orange-50" : ch.direction === "improved" ? "text-emerald-950 bg-emerald-50" : "text-foreground"
                   }`}>
                     {ch.after}
                   </td>
@@ -238,7 +238,7 @@ function Content() {
 }
 
 function DirLabel({ dir }: { dir: DriftDirection }) {
-  if (dir === "degraded") return <span className="text-[10px] font-mono font-bold bg-red-500 text-white border border-black px-1.5 py-0.5 shadow-[1px_1px_0_#000]">▼ degraded</span>;
-  if (dir === "improved") return <span className="text-[10px] font-mono font-bold bg-emerald-400 text-black border border-black px-1.5 py-0.5 shadow-[1px_1px_0_#000]">▲ improved</span>;
-  return <span className="text-[10px] font-mono font-bold bg-neutral-200 text-black border border-black px-1.5 py-0.5">{dir}</span>;
+  if (dir === "degraded") return <span className="text-[10px] font-mono font-bold bg-sev-critical text-white border border-border px-1.5 py-0.5 xcor-shadow-subtle">▼ degraded</span>;
+  if (dir === "improved") return <span className="text-[10px] font-mono font-bold bg-sev-pass text-foreground border border-border px-1.5 py-0.5 xcor-shadow-subtle">▲ improved</span>;
+  return <span className="text-[10px] font-mono font-bold bg-neutral-200 text-foreground border border-border px-1.5 py-0.5">{dir}</span>;
 }

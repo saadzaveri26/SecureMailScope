@@ -3,24 +3,38 @@
 import type { Severity } from "@/types";
 
 const cfg: Record<Severity | "pass", { bg: string; text: string; label: string }> = {
-  critical: { bg: "bg-red-500 text-white border-black", text: "text-red-600", label: "CRIT" },
-  high: { bg: "bg-orange-400 text-black border-black", text: "text-orange-600", label: "HIGH" },
-  medium: { bg: "bg-yellow-300 text-black border-black", text: "text-yellow-700", label: "MED" },
-  low: { bg: "bg-neutral-200 text-black border-black", text: "text-neutral-700", label: "LOW" },
-  info: { bg: "bg-sky-200 text-black border-black", text: "text-sky-700", label: "INFO" },
-  pass: { bg: "bg-emerald-400 text-black border-black", text: "text-emerald-700", label: "PASS" },
+  critical: { bg: "bg-sev-critical text-white", text: "text-sev-critical", label: "CRIT" },
+  high: { bg: "bg-sev-high text-white", text: "text-sev-high", label: "HIGH" },
+  medium: { bg: "bg-sev-medium-bg text-sev-medium border-sev-medium/30", text: "text-sev-medium", label: "MED" },
+  low: { bg: "bg-surface-2 text-text-secondary", text: "text-muted", label: "LOW" },
+  info: { bg: "bg-surface-1 text-muted", text: "text-muted", label: "INFO" },
+  pass: { bg: "bg-sev-pass text-white", text: "text-sev-pass", label: "PASS" },
 };
 
 export function SeverityBadge({ severity }: { severity: Severity | "pass" }) {
   const c = cfg[severity];
   return (
-    <span className={`inline-block px-1.5 py-0.5 text-[10px] font-mono font-bold border leading-none shadow-[1px_1px_0_#000] ${c.bg}`}>
+    <span
+      className={`inline-block px-1.5 py-0.5 text-[var(--font-size-sm)] font-mono font-bold rounded-[var(--radius-sm)] leading-none ${c.bg}`}
+      aria-label={`${severity} severity`}
+    >
       {c.label}
     </span>
   );
 }
 
 export function SeverityDot({ severity }: { severity: Severity }) {
-  const c = cfg[severity];
-  return <span className={`inline-block w-2 h-2 border border-black ${c.bg}`} />;
+  const dotColors: Record<Severity, string> = {
+    critical: "bg-sev-critical",
+    high: "bg-sev-high",
+    medium: "bg-sev-medium",
+    low: "bg-muted",
+    info: "bg-muted",
+  };
+  return (
+    <span
+      className={`inline-block w-2 h-2 rounded-full ${dotColors[severity]}`}
+      aria-hidden="true"
+    />
+  );
 }

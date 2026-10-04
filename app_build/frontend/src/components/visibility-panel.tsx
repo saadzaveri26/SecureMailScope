@@ -23,7 +23,7 @@ export function VisibilityPanel({ v }: { v: VisibilitySummary }) {
         <div className="space-y-1.5 pt-2 border-t border-border">
           <span className="text-[11px] font-medium text-muted block">Checks not performed</span>
           {v.checks_not_performed.map((c, i) => (
-            <div key={i} className="flex items-start justify-between gap-2 text-xs">
+            <div key={i} className="flex items-start justify-between gap-2 text-[var(--font-size-md)]">
               <div className="min-w-0">
                 <span className="font-medium text-foreground">{c.check}</span>
                 <span className="text-muted ml-1.5">— {c.reason}</span>

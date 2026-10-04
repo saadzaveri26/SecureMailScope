@@ -33,8 +33,8 @@ function SessionsSkeleton() {
     <div className="max-w-[1600px] mx-auto px-4 py-4 space-y-4 animate-pulse select-none">
       <div className="h-5 w-40 bg-surface-2" />
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-        <div className="lg:col-span-7 bg-surface-0 border-2 border-black h-[650px] brutal-shadow" />
-        <div className="lg:col-span-5 bg-surface-0 border-2 border-black h-[650px] brutal-shadow" />
+        <div className="lg:col-span-7 bg-surface-0 border border-border h-[650px] xcor-shadow" />
+        <div className="lg:col-span-5 bg-surface-0 border border-border h-[650px] xcor-shadow" />
       </div>
     </div>
   );
@@ -167,21 +167,21 @@ C: STARTTLS
   return (
     <div className="max-w-[1600px] mx-auto px-4 py-4 space-y-4 select-none font-mono text-xs">
       {/* Control Header & Filters */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-surface-0 border-2 border-black p-3 brutal-shadow">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-surface-0 border border-border p-3 xcor-shadow">
         <div className="flex items-center gap-3 flex-wrap">
-          <div className="flex items-center gap-2 font-bold uppercase text-black">
-            <span className="p-1 bg-accent border border-black">
+          <div className="flex items-center gap-2 font-bold uppercase text-foreground">
+            <span className="p-1 bg-accent border border-border">
               <Terminal size={14} weight="bold" />
             </span>
             <span className="text-sm">TCP Mail Streams</span>
           </div>
 
-          <div className="flex items-center gap-1.5 bg-surface-1 px-2 py-1 border border-black">
+          <div className="flex items-center gap-1.5 bg-surface-1 px-2 py-1 border border-border">
             <span className="text-muted font-bold text-[10px] uppercase">Proto:</span>
             <select
               value={proto}
               onChange={(e) => { setProto(e.target.value); setPage(1); }}
-              className="bg-transparent text-black font-bold focus:outline-none cursor-pointer"
+              className="bg-transparent text-foreground font-bold focus:outline-none cursor-pointer"
             >
               <option value="" className="bg-surface-0">All Protocols</option>
               <option value="smtp" className="bg-surface-0">SMTP</option>
@@ -190,12 +190,12 @@ C: STARTTLS
             </select>
           </div>
 
-          <div className="flex items-center gap-1.5 bg-surface-1 px-2 py-1 border border-black">
+          <div className="flex items-center gap-1.5 bg-surface-1 px-2 py-1 border border-border">
             <span className="text-muted font-bold text-[10px] uppercase">Transport:</span>
             <select
               value={trans}
               onChange={(e) => { setTrans(e.target.value); setPage(1); }}
-              className="bg-transparent text-black font-bold focus:outline-none cursor-pointer"
+              className="bg-transparent text-foreground font-bold focus:outline-none cursor-pointer"
             >
               <option value="" className="bg-surface-0">All Transports</option>
               <option value="implicit_tls" className="bg-surface-0">Implicit TLS</option>
@@ -210,12 +210,12 @@ C: STARTTLS
               placeholder="Search stream, IP, SNI..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="bg-surface-1 border border-black px-2.5 py-1 text-xs text-black placeholder:text-muted focus:outline-none focus:bg-accent/15 w-52 font-mono font-bold"
+              className="bg-surface-1 border border-border px-2.5 py-1 text-xs text-foreground placeholder:text-muted focus:outline-none focus:bg-accent-soft w-52 font-mono font-bold"
             />
           </div>
         </div>
 
-        <div className="flex items-center gap-3 text-black text-[11px] font-bold">
+        <div className="flex items-center gap-3 text-foreground text-[11px] font-bold">
           <span>
             Showing <strong className="tabular-nums underline decoration-2">{filteredSessions.length}</strong> of{" "}
             <strong className="tabular-nums">{data.total}</strong> streams
@@ -224,15 +224,15 @@ C: STARTTLS
             <button
               disabled={page <= 1}
               onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className="px-2.5 py-0.5 border border-black bg-surface-1 disabled:opacity-40 hover:bg-accent text-black font-bold cursor-pointer"
+              className="px-2.5 py-0.5 border border-border bg-surface-1 disabled:opacity-40 hover:bg-accent text-foreground font-bold cursor-pointer"
             >
               Prev
             </button>
-            <span className="px-1.5 text-black font-bold">{page}</span>
+            <span className="px-1.5 text-foreground font-bold">{page}</span>
             <button
               disabled={page * data.page_size >= data.total}
               onClick={() => setPage((p) => p + 1)}
-              className="px-2.5 py-0.5 border border-black bg-surface-1 disabled:opacity-40 hover:bg-accent text-black font-bold cursor-pointer"
+              className="px-2.5 py-0.5 border border-border bg-surface-1 disabled:opacity-40 hover:bg-accent text-foreground font-bold cursor-pointer"
             >
               Next
             </button>
@@ -243,10 +243,10 @@ C: STARTTLS
       {/* Split-Pane Master-Detail Architecture */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         {/* ================= LEFT PANE: SESSIONS MASTER LIST (7 cols) ================= */}
-        <div className="lg:col-span-7 bg-surface-0 border-2 border-black overflow-hidden flex flex-col font-mono text-xs brutal-shadow">
+        <div className="lg:col-span-7 bg-surface-0 border border-border overflow-hidden flex flex-col font-mono text-xs xcor-shadow">
           <div className="overflow-x-auto max-h-[720px] overflow-y-auto">
             <table className="w-full text-left">
-              <thead className="sticky top-0 bg-surface-1 border-b-2 border-black text-[11px] font-bold text-black uppercase z-10">
+              <thead className="sticky top-0 bg-surface-1 border-b border-border text-[11px] font-bold text-foreground uppercase z-10">
                 <tr>
                   <th className="py-2 px-3 w-16">Stream</th>
                   <th className="py-2 px-3 w-22">Crypto</th>
@@ -256,7 +256,7 @@ C: STARTTLS
                   <th className="py-2 px-3 w-24 text-right">Frames</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-black/20">
+              <tbody className="divide-y divide-border">
                 {filteredSessions.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="py-12 text-center text-muted font-bold text-xs">
@@ -277,27 +277,27 @@ C: STARTTLS
                         className={[
                           "cursor-pointer transition-colors text-[11px]",
                           isSelected
-                            ? "bg-accent/25 border-l-4 border-black font-bold text-black"
-                            : "hover:bg-accent/10 text-foreground font-medium",
+                            ? "bg-accent/25 border-l-4 border-border font-bold text-foreground"
+                            : "hover:bg-accent-soft text-foreground font-medium",
                         ].join(" ")}
                       >
-                        <td className="py-2 px-3 font-bold text-black">
+                        <td className="py-2 px-3 font-bold text-foreground">
                           {s.id}
                         </td>
                         <td className="py-2 px-3">
                           {isPlaintext ? (
-                            <span className="inline-flex items-center gap-1 text-[10px] text-white font-bold uppercase bg-red-500 border border-black px-1.5 py-0.2 shadow-[1px_1px_0_#000]">
+                            <span className="inline-flex items-center gap-1 text-[10px] text-white font-bold uppercase bg-sev-critical border border-border px-1.5 py-0.2 xcor-shadow-subtle">
                               <LockKeyOpen size={10} weight="bold" />
                               <span>PLAIN</span>
                             </span>
                           ) : (
                             <span
-                              className={`inline-flex items-center gap-1 text-[10px] font-bold uppercase px-1.5 py-0.2 border border-black shadow-[1px_1px_0_#000] ${
+                              className={`inline-flex items-center gap-1 text-[10px] font-bold uppercase px-1.5 py-0.2 border border-border xcor-shadow-subtle ${
                                 isTls13
-                                  ? "text-black bg-emerald-400"
+                                  ? "text-foreground bg-sev-pass"
                                   : isTls12
-                                  ? "text-black bg-sky-300"
-                                  : "text-black bg-yellow-300"
+                                  ? "text-foreground bg-sky-300"
+                                  : "text-foreground bg-sev-medium"
                               }`}
                             >
                               <Lock size={10} weight="bold" />
@@ -305,17 +305,17 @@ C: STARTTLS
                             </span>
                           )}
                         </td>
-                        <td className="py-2 px-3 uppercase font-bold text-black">
+                        <td className="py-2 px-3 uppercase font-bold text-foreground">
                           {s.protocol}
                         </td>
                         <td className="py-2 px-3 truncate max-w-xs">
                           <span className="text-muted">{s.client}</span>
-                          <span className="text-black/40 mx-1 font-bold">→</span>
-                          <span className="text-black font-bold">{s.server}:{s.server_port}</span>
+                          <span className="text-muted mx-1 font-bold">→</span>
+                          <span className="text-foreground font-bold">{s.server}:{s.server_port}</span>
                         </td>
                         <td className="py-2 px-3 truncate max-w-[130px]">
                           {s.tls?.version ? (
-                            <span className="text-black font-bold">{s.tls.version}</span>
+                            <span className="text-foreground font-bold">{s.tls.version}</span>
                           ) : (
                             <span className="text-muted italic text-[10px]">None</span>
                           )}
@@ -333,47 +333,47 @@ C: STARTTLS
         </div>
 
         {/* ================= RIGHT PANE: DETAIL INSPECTOR DRAWER (5 cols) ================= */}
-        <div className="lg:col-span-5 bg-surface-0 border-2 border-black p-4 space-y-3 font-mono text-xs sticky top-3 brutal-shadow">
+        <div className="lg:col-span-5 bg-surface-0 border border-border p-4 space-y-3 font-mono text-xs sticky top-3 xcor-shadow">
           {selSession ? (
             <>
               {/* Header Info */}
-              <div className="flex items-center justify-between border-b-2 border-black pb-2.5">
+              <div className="flex items-center justify-between border-b border-border pb-2.5">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-base font-bold text-black">{selSession.id}</span>
-                    <span className="text-[10px] font-bold uppercase px-1.5 py-0.5 bg-accent border border-black text-black">
+                    <span className="text-base font-bold text-foreground">{selSession.id}</span>
+                    <span className="text-[10px] font-bold uppercase px-1.5 py-0.5 bg-accent border border-border text-foreground">
                       {selSession.protocol}
                     </span>
-                    <span className={`text-[10px] font-bold uppercase px-1.5 py-0.5 border border-black ${
+                    <span className={`text-[10px] font-bold uppercase px-1.5 py-0.5 border border-border ${
                       selSession.transport === "plaintext"
-                        ? "text-white bg-red-500"
-                        : "text-black bg-emerald-400"
+                        ? "text-white bg-sev-critical"
+                        : "text-foreground bg-sev-pass"
                     }`}>
                       {selSession.transport.toUpperCase()}
                     </span>
                   </div>
                   <p className="text-[11px] text-muted mt-0.5 font-medium">
-                    {selSession.client} <span className="text-black/40 font-bold">→</span> {selSession.server}:{selSession.server_port}
+                    {selSession.client} <span className="text-muted font-bold">→</span> {selSession.server}:{selSession.server_port}
                   </p>
                 </div>
 
                 <div className="text-right">
                   <span className="text-[10px] text-muted block font-bold uppercase">Associated Frames</span>
-                  <span className="text-xs text-black font-bold tabular-nums">#{selSession.first_frame} – #{selSession.last_frame}</span>
+                  <span className="text-xs text-foreground font-bold tabular-nums">#{selSession.first_frame} – #{selSession.last_frame}</span>
                 </div>
               </div>
 
               {/* Wireshark Filter Anchor */}
-              <div className="bg-surface-1 border-2 border-black p-2.5 flex items-center justify-between gap-2 brutal-shadow-sm">
+              <div className="bg-surface-1 border border-border p-2.5 flex items-center justify-between gap-2 xcor-shadow-subtle">
                 <div className="truncate">
-                  <span className="text-[10px] text-black uppercase font-bold block">Wireshark Stream Filter</span>
-                  <code className="text-xs text-black font-bold truncate block select-all font-mono mt-0.5">
+                  <span className="text-[10px] text-foreground uppercase font-bold block">Wireshark Stream Filter</span>
+                  <code className="text-xs text-foreground font-bold truncate block select-all font-mono mt-0.5">
                     {selSession.wireshark_filter}
                   </code>
                 </div>
                 <button
                   onClick={() => copyText(selSession.wireshark_filter, setCopiedFilter)}
-                  className="px-2.5 py-1 bg-accent hover:bg-accent-hover text-black text-xs font-bold border border-black shadow-[1px_1px_0_#000] flex items-center gap-1 shrink-0 cursor-pointer"
+                  className="px-2.5 py-1 bg-accent hover:bg-accent-hover text-foreground text-xs font-bold border border-border xcor-shadow-subtle flex items-center gap-1 shrink-0 cursor-pointer"
                 >
                   {copiedFilter ? <Check size={12} weight="bold" /> : <Copy size={12} weight="bold" />}
                   <span>{copiedFilter ? "Copied" : "Copy"}</span>
@@ -383,54 +383,54 @@ C: STARTTLS
               {/* Reconstructed Raw Stream Transcript */}
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between text-[11px]">
-                  <span className="font-bold text-black uppercase flex items-center gap-1.5">
-                    <FileCode size={14} weight="bold" className="text-black" />
+                  <span className="font-bold text-foreground uppercase flex items-center gap-1.5">
+                    <FileCode size={14} weight="bold" className="text-foreground" />
                     <span>Reassembled Mail Dialog</span>
                   </span>
                   <button
                     onClick={() => copyText(generateTranscript(selSession), setCopiedTranscript)}
-                    className="text-[10px] text-black font-bold hover:underline cursor-pointer"
+                    className="text-[10px] text-foreground font-bold hover:underline cursor-pointer"
                   >
                     {copiedTranscript ? "Copied transcript" : "Copy transcript"}
                   </button>
                 </div>
-                <div className="bg-surface-1 border-2 border-black p-2.5 overflow-x-auto max-h-[170px] brutal-shadow-sm">
-                  <pre className="text-[10px] leading-relaxed text-black font-bold font-mono select-all whitespace-pre-wrap">
+                <div className="bg-surface-1 border border-border p-2.5 overflow-x-auto max-h-[170px] xcor-shadow-subtle">
+                  <pre className="text-[10px] leading-relaxed text-foreground font-bold font-mono select-all whitespace-pre-wrap">
                     {generateTranscript(selSession)}
                   </pre>
                 </div>
               </div>
 
               {/* TLS Handshake Parameters */}
-              <div className="space-y-1.5 pt-2 border-t-2 border-black/20">
-                <span className="text-[11px] font-bold text-black uppercase flex items-center gap-1.5">
-                  <Shield size={14} weight="bold" className="text-black" />
+              <div className="space-y-1.5 pt-2 border-t border-border">
+                <span className="text-[11px] font-bold text-foreground uppercase flex items-center gap-1.5">
+                  <Shield size={14} weight="bold" className="text-foreground" />
                   <span>TLS Handshake Parameters</span>
                 </span>
 
-                <div className="grid grid-cols-2 gap-2 text-[11px] bg-surface-1 p-2.5 border-2 border-black brutal-shadow-sm">
+                <div className="grid grid-cols-2 gap-2 text-[11px] bg-surface-1 p-2.5 border border-border xcor-shadow-subtle">
                   <div>
                     <span className="text-[10px] text-muted font-bold block uppercase">Negotiated Version:</span>
-                    <span className="text-black font-bold">{selSession.tls?.version || "Plaintext (None)"}</span>
+                    <span className="text-foreground font-bold">{selSession.tls?.version || "Plaintext (None)"}</span>
                   </div>
                   <div>
                     <span className="text-[10px] text-muted font-bold block uppercase">Key Exchange:</span>
-                    <span className="text-black font-bold">{selSession.tls?.key_exchange || "N/A"}</span>
+                    <span className="text-foreground font-bold">{selSession.tls?.key_exchange || "N/A"}</span>
                   </div>
                   <div className="col-span-2">
                     <span className="text-[10px] text-muted font-bold block uppercase">Cipher Suite:</span>
-                    <span className="text-black font-bold truncate block">
+                    <span className="text-foreground font-bold truncate block">
                       {selSession.tls?.cipher_suite || "None (Plaintext)"}
                     </span>
                   </div>
                   <div>
                     <span className="text-[10px] text-muted font-bold block uppercase">SNI Host:</span>
-                    <span className="text-black font-bold truncate block">{selSession.tls?.sni || "N/A"}</span>
+                    <span className="text-foreground font-bold truncate block">{selSession.tls?.sni || "N/A"}</span>
                   </div>
                   <div>
                     <span className="text-[10px] text-muted font-bold block uppercase">Forward Secrecy:</span>
-                    <span className={`font-bold px-1 border border-black inline-block ${
-                      selSession.tls?.forward_secrecy ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-800"
+                    <span className={`font-bold px-1 border border-border inline-block ${
+                      selSession.tls?.forward_secrecy ? "bg-sev-pass-bg text-sev-pass" : "bg-sev-critical-bg text-red-800"
                     }`}>
                       {selSession.tls?.forward_secrecy ? "PFS Active" : "No PFS"}
                     </span>
@@ -439,17 +439,17 @@ C: STARTTLS
               </div>
 
               {/* X.509 Certificate Chain Tree */}
-              <div className="space-y-1.5 pt-2 border-t-2 border-black/20">
-                <span className="text-[11px] font-bold text-black uppercase flex items-center gap-1.5">
-                  <Fingerprint size={14} weight="bold" className="text-black" />
+              <div className="space-y-1.5 pt-2 border-t border-border">
+                <span className="text-[11px] font-bold text-foreground uppercase flex items-center gap-1.5">
+                  <Fingerprint size={14} weight="bold" className="text-foreground" />
                   <span>X.509 Certificate Chain</span>
                 </span>
 
                 {selSession.certificate_chain && selSession.certificate_chain.length > 0 ? (
-                  <div className="space-y-1.5 text-[11px] bg-surface-1 p-2.5 border-2 border-black brutal-shadow-sm">
+                  <div className="space-y-1.5 text-[11px] bg-surface-1 p-2.5 border border-border xcor-shadow-subtle">
                     <div>
                       <span className="text-[10px] text-muted font-bold block uppercase">Subject CN:</span>
-                      <span className="text-black font-bold break-all">
+                      <span className="text-foreground font-bold break-all">
                         {selSession.certificate_chain[0].subject}
                       </span>
                     </div>
@@ -459,17 +459,17 @@ C: STARTTLS
                         {selSession.certificate_chain[0].issuer}
                       </span>
                     </div>
-                    <div className="grid grid-cols-2 gap-2 pt-1 border-t border-black/20">
+                    <div className="grid grid-cols-2 gap-2 pt-1 border-t border-border/20">
                       <div>
                         <span className="text-[10px] text-muted font-bold block uppercase">Key Size:</span>
-                        <span className="text-black font-bold">
+                        <span className="text-foreground font-bold">
                           {selSession.certificate_chain[0].key_algorithm} {selSession.certificate_chain[0].key_bits}-bit
                         </span>
                       </div>
                       <div>
                         <span className="text-[10px] text-muted font-bold block uppercase">Expiry:</span>
-                        <span className={`font-bold px-1 border border-black inline-block ${
-                          selSession.certificate_chain[0].expired ? "bg-red-500 text-white" : "bg-emerald-400 text-black"
+                        <span className={`font-bold px-1 border border-border inline-block ${
+                          selSession.certificate_chain[0].expired ? "bg-sev-critical text-white" : "bg-sev-pass text-foreground"
                         }`}>
                           {selSession.certificate_chain[0].expired ? "Expired" : `${selSession.certificate_chain[0].days_to_expiry} days remaining`}
                         </span>
@@ -477,7 +477,7 @@ C: STARTTLS
                     </div>
                   </div>
                 ) : (
-                  <div className="bg-surface-1 p-2.5 border-2 border-black text-[11px] text-muted italic font-medium">
+                  <div className="bg-surface-1 p-2.5 border border-border text-[11px] text-muted italic font-medium">
                     {selSession.transport === "plaintext"
                       ? "No certificate exchanged (unencrypted plaintext session)."
                       : "Certificate encrypted on wire (TLS 1.3 encrypted handshake)."}

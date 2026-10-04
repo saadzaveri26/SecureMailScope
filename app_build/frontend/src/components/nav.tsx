@@ -20,29 +20,34 @@ export function Nav() {
 
   return (
     <>
-      <header className="bg-white border-b-2 border-black select-none h-11">
+      <header className="bg-surface-base select-none h-11" role="banner">
         <div className="max-w-[1600px] mx-auto px-4 flex items-center h-full justify-between gap-4">
           <div className="flex items-center h-full gap-5">
-            <Link href="/" className="flex items-center gap-1.5 text-black font-bold text-sm tracking-tight font-mono shrink-0">
+            <Link
+              href="/"
+              className="flex items-center gap-1.5 text-white font-bold text-sm tracking-tight shrink-0 focus-ring"
+            >
               <span className="text-accent">▸</span>
               <span>SecureMailScope</span>
-              <span className="text-[10px] text-muted font-normal">v1.0</span>
+              <span className="text-[10px] text-white/50 font-normal">v1.0</span>
             </Link>
 
-            <div className="w-0.5 h-5 bg-black" />
+            <div className="w-px h-5 bg-white/20" />
 
-            <nav className="flex items-center h-full gap-0">
+            <nav className="flex items-center h-full gap-0" role="navigation" aria-label="Main navigation">
               {links.map(({ href, label }) => {
                 const active = path.startsWith(href);
                 return (
                   <Link
                     key={href}
                     href={href}
+                    aria-current={active ? "page" : undefined}
                     className={[
-                      "h-11 flex items-center px-2.5 text-xs font-mono border-b-3 transition-colors",
+                      "h-11 flex items-center px-2.5 text-[var(--font-size-md)] font-medium border-b-2 focus-ring",
+                      `transition-colors duration-[var(--motion-fast)]`,
                       active
-                        ? "border-accent text-black font-bold bg-accent/10"
-                        : "border-transparent text-muted hover:text-foreground",
+                        ? "border-accent text-white font-bold"
+                        : "border-transparent text-white/60 hover:text-white",
                     ].join(" ")}
                   >
                     {label}
@@ -54,7 +59,12 @@ export function Nav() {
 
           <Link
             href="/captures"
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-accent hover:bg-accent-hover border-2 border-black text-black text-xs font-mono font-bold transition-all brutal-shadow-sm brutal-shadow-hover shrink-0"
+            className={[
+              "flex items-center gap-1.5 px-3 py-1.5 text-white text-[var(--font-size-md)] font-bold shrink-0",
+              "bg-accent hover:bg-accent-hover rounded-[var(--radius-sm)]",
+              "transition-all duration-[var(--motion-fast)]",
+              "active:scale-[0.97] focus-ring",
+            ].join(" ")}
           >
             <UploadSimple size={12} weight="bold" />
             <span>Ingest PCAP</span>
