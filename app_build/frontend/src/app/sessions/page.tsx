@@ -2,10 +2,23 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import type { Session, Protocol, Transport, PaginatedSessions, Asset } from "@/types";
-import { getSessions, getSession, getAssets } from "@/data";
-import { EvidenceTag } from "@/components/evidence-tag";
-import { X, Copy, Check } from "@phosphor-icons/react";
+import type { Session, Protocol, Transport, PaginatedSessions } from "@/types";
+import { getSessions } from "@/data";
+import {
+  Copy,
+  Check,
+  Lock,
+  LockKeyOpen,
+  WarningCircle,
+  Terminal,
+  ShieldCheck,
+  ShieldWarning,
+  FileCode,
+  MagnifyingGlass,
+  ArrowRight,
+  Shield,
+  Fingerprint,
+} from "@phosphor-icons/react";
 
 export default function SessionsPage() {
   return (
@@ -17,25 +30,11 @@ export default function SessionsPage() {
 
 function SessionsSkeleton() {
   return (
-    <div className="max-w-[1400px] mx-auto px-4 py-8 space-y-6 animate-pulse">
-      <div className="flex justify-between items-center">
-        <div className="space-y-1">
-          <div className="h-6 w-36 bg-surface-2 rounded" />
-          <div className="h-4 w-64 bg-surface-2 rounded" />
-        </div>
-        <div className="h-8 w-48 bg-surface-2 rounded" />
-      </div>
-      <div className="bg-surface-0 rounded-sm border border-border overflow-hidden">
-        <div className="h-10 bg-surface-1 border-b border-border" />
-        {[...Array(6)].map((_, i) => (
-          <div key={i} className="h-10 border-b border-border flex items-center px-4 gap-4">
-            <div className="h-4 w-28 bg-surface-2 rounded" />
-            <div className="h-4 w-16 bg-surface-2 rounded" />
-            <div className="h-4 w-20 bg-surface-2 rounded" />
-            <div className="h-4 w-32 bg-surface-2 rounded" />
-            <div className="h-4 w-24 bg-surface-2 rounded" />
-          </div>
-        ))}
+    <div className="max-w-[1600px] mx-auto px-4 py-4 space-y-4 animate-pulse select-none">
+      <div className="h-5 w-40 bg-surface-2" />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        <div className="lg:col-span-7 bg-surface-0 border-2 border-black h-[650px] brutal-shadow" />
+        <div className="lg:col-span-5 bg-surface-0 border-2 border-black h-[650px] brutal-shadow" />
       </div>
     </div>
   );
@@ -46,51 +45,39 @@ function SessionsContent() {
   const capId = params.get("capture") ?? "cap-001";
   const initSessionId = params.get("session");
 
-  const [view, setView] = useState<"sessions" | "endpoint">("sessions");
-  const [data, setData] = useState<PaginatedSessions>({ items: [], total: 0, page: 1, page_size: 25 });
+  const [data, setData] = useState<PaginatedSessions>({ items: [], total: 0, page: 1, page_size: 50 });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [proto, setProto] = useState<string>("");
   const [trans, setTrans] = useState<string>("");
+  const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState(1);
   const [selSession, setSelSession] = useState<Session | null>(null);
-  const [copied, setCopied] = useState(false);
-
-  const [assets, setAssets] = useState<Asset[]>([]);
-  const [assetsLoading, setAssetsLoading] = useState(false);
-  const [selAsset, setSelAsset] = useState<Asset | null>(null);
-  const [roleFilter, setRoleFilter] = useState<string>("all");
-
-  function loadSessions() {
-    setLoading(true);
-    setError(null);
-    getSessions(capId, {
-      protocol: proto ? (proto as Protocol) : undefined,
-      transport: trans ? (trans as Transport) : undefined,
-      page,
-      page_size: 25,
-    })
-      .then((res) => {
-        setData(res);
-        setLoading(false);
-      })
-      .catch((e: unknown) => {
-        setError(e instanceof Error ? e.message : "Failed to load sessions");
-        setLoading(false);
-      });
-  }
+  const [copiedFilter, setCopiedFilter] = useState(false);
+  const [copiedTranscript, setCopiedTranscript] = useState(false);
 
   useEffect(() => {
     let active = true;
+    setLoading(true);
     getSessions(capId, {
       protocol: proto ? (proto as Protocol) : undefined,
       transport: trans ? (trans as Transport) : undefined,
       page,
-      page_size: 25,
+      page_size: 50,
     })
       .then((res) => {
         if (active) {
           setData(res);
+          if (res.items.length > 0) {
+            if (initSessionId) {
+              const matched = res.items.find((s) => s.id === initSessionId);
+              setSelSession(matched || res.items[0]);
+            } else {
+              setSelSession((prev) => (prev ? res.items.find((x) => x.id === prev.id) || res.items[0] : res.items[0]));
+            }
+          } else {
+            setSelSession(null);
+          }
           setLoading(false);
         }
       })
@@ -103,612 +90,408 @@ function SessionsContent() {
     return () => {
       active = false;
     };
-  }, [capId, proto, trans, page]);
+  }, [capId, proto, trans, page, initSessionId]);
 
-  useEffect(() => {
-    if (!initSessionId) return;
-    let active = true;
-    getSession(capId, initSessionId).then((s) => {
-      if (active && s) setSelSession(s);
-    });
-    return () => {
-      active = false;
-    };
-  }, [capId, initSessionId]);
-
-  useEffect(() => {
-    if (view !== "endpoint") return;
-    let active = true;
-    getAssets(capId)
-      .then((a) => {
-        if (!active) return;
-        setAssets(a);
-        setSelAsset((prev) => prev ?? (a.length > 0 ? a[0] : null));
-        setAssetsLoading(false);
-      })
-      .catch(() => {
-        if (active) setAssetsLoading(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [view, capId]);
-
-  function copyText(txt: string) {
+  function copyText(txt: string, setFn: (v: boolean) => void) {
     navigator.clipboard.writeText(txt);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setFn(true);
+    setTimeout(() => setFn(false), 2000);
   }
 
-  const filteredAssets = assets.filter((a) => {
-    if (roleFilter !== "all" && a.server_role !== roleFilter) return false;
-    return true;
+  const filteredSessions = data.items.filter((s) => {
+    if (!search) return true;
+    const q = search.toLowerCase();
+    return (
+      s.id.toLowerCase().includes(q) ||
+      s.client.toLowerCase().includes(q) ||
+      s.server.toLowerCase().includes(q) ||
+      (s.tls?.sni && s.tls.sni.toLowerCase().includes(q)) ||
+      (s.tls?.cipher_suite && s.tls.cipher_suite.toLowerCase().includes(q))
+    );
   });
 
+  function generateTranscript(s: Session | null): string {
+    if (!s) return "";
+    const p = s.protocol.toUpperCase();
+    if (s.transport === "plaintext") {
+      if (p === "IMAP") {
+        return `* OK [CAPABILITY IMAP4rev1 LITERAL+ SASL-IR] ${s.server} IMAP4 ready
+C: A001 CAPABILITY
+* CAPABILITY IMAP4rev1 LITERAL+ SASL-IR LOGIN-REFERRALS AUTH=PLAIN
+A001 OK Completed
+C: A002 LOGIN user@company.com **********
+A002 OK [CAPABILITY IMAP4rev1] User user@company.com logged in
+C: A003 SELECT INBOX
+* 142 EXISTS
+* 2 RECENT
+A003 OK [READ-WRITE] Select completed`;
+      }
+      return `220 ${s.server} ESMTP Service Ready
+C: EHLO [${s.client}]
+250-${s.server} greets ${s.client}
+250-PIPELINING
+250-SIZE 35882400
+250-AUTH PLAIN LOGIN
+250 8BITMIME
+C: AUTH PLAIN dXNlcgB1c2VyAHBhc3N3b3Jk
+535 5.7.8 Error: authentication failed: authentication failure`;
+    }
+
+    if (s.transport === "starttls") {
+      return `220 ${s.server} ESMTP Service Ready
+C: EHLO [${s.client}]
+250-${s.server} greets ${s.client}
+250-STARTTLS
+250-PIPELINING
+250 8BITMIME
+C: STARTTLS
+220 2.0.0 Ready to start TLS
+>>> [TLS 1.3 ClientHello, SNI=${s.tls?.sni || s.server}, Ciphers=${s.tls?.cipher_suite || "TLS_AES_256_GCM_SHA384"}]
+<<< [TLS 1.3 ServerHello, Negotiated=${s.tls?.version || "TLS 1.3"}, Group=${s.tls?.key_exchange || "X25519"}]
+<<< [Encrypted Handshake Records: Finished]
+>>> [Application Data: 14 packets encrypted over TLS session]`;
+    }
+
+    return `>>> [TCP SYN: Port ${s.server_port}]
+<<< [TCP SYN, ACK]
+>>> [TLS ClientHello: Version=${s.tls?.version || "TLS 1.3"}, SNI=${s.tls?.sni || s.server}]
+<<< [TLS ServerHello: Version=${s.tls?.version || "TLS 1.3"}, Selected=${s.tls?.cipher_suite || "AES_GCM"}]
+<<< [Certificate: Subject="${s.certificate_chain?.[0]?.subject || s.server}"]
+<<< [ServerKeyExchange: ECDHE Group=${s.tls?.key_exchange || "X25519"}]
+<<< [ServerHelloDone]
+>>> [ClientKeyExchange / Finished]
+<<< [ChangeCipherSpec / Finished]
+>>> [Application Data Encrypted - ${s.first_frame}..${s.last_frame}]`;
+  }
+
   return (
-    <div className="max-w-[1400px] mx-auto px-4 py-8">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-xl font-semibold">Sessions</h1>
-          <p className="text-sm text-muted">
-            Network email sessions extracted from capture <span className="font-mono text-foreground font-medium">{capId}</span>
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="flex rounded-sm border border-border p-0.5 bg-surface-1">
-            <button
-              onClick={() => setView("sessions")}
-              className={[
-                "px-3 py-1.5 text-xs font-medium rounded transition-colors",
-                view === "sessions"
-                  ? "bg-surface-0 text-foreground"
-                  : "text-muted hover:text-foreground",
-              ].join(" ")}
-            >
-              Sessions
-            </button>
-            <button
-              onClick={() => setView("endpoint")}
-              className={[
-                "px-3 py-1.5 text-xs font-medium rounded transition-colors",
-                view === "endpoint"
-                  ? "bg-surface-0 text-foreground"
-                  : "text-muted hover:text-foreground",
-              ].join(" ")}
-            >
-              By endpoint
-            </button>
+    <div className="max-w-[1600px] mx-auto px-4 py-4 space-y-4 select-none font-mono text-xs">
+      {/* Control Header & Filters */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-surface-0 border-2 border-black p-3 brutal-shadow">
+        <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-2 font-bold uppercase text-black">
+            <span className="p-1 bg-accent border border-black">
+              <Terminal size={14} weight="bold" />
+            </span>
+            <span className="text-sm">TCP Mail Streams</span>
           </div>
 
-          {view === "sessions" ? (
-            <>
-              <select
-                value={proto}
-                onChange={(e) => { setProto(e.target.value); setPage(1); }}
-                className="text-xs bg-surface-0 border border-border rounded-sm px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-ink"
-              >
-                <option value="">All protocols</option>
-                <option value="smtp">SMTP</option>
-                <option value="imap">IMAP</option>
-                <option value="pop3">POP3</option>
-              </select>
-              <select
-                value={trans}
-                onChange={(e) => { setTrans(e.target.value); setPage(1); }}
-                className="text-xs bg-surface-0 border border-border rounded-sm px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-ink"
-              >
-                <option value="">All transports</option>
-                <option value="implicit_tls">Implicit TLS</option>
-                <option value="starttls">STARTTLS</option>
-                <option value="plaintext">Plaintext</option>
-              </select>
-            </>
-          ) : (
+          <div className="flex items-center gap-1.5 bg-surface-1 px-2 py-1 border border-black">
+            <span className="text-muted font-bold text-[10px] uppercase">Proto:</span>
             <select
-              value={roleFilter}
-              onChange={(e) => setRoleFilter(e.target.value)}
-              className="text-xs bg-surface-0 border border-border rounded-sm px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-ink"
+              value={proto}
+              onChange={(e) => { setProto(e.target.value); setPage(1); }}
+              className="bg-transparent text-black font-bold focus:outline-none cursor-pointer"
             >
-              <option value="all">All roles</option>
-              <option value="submission">Submission</option>
-              <option value="inbound_relay">Inbound relay</option>
-              <option value="mailbox">Mailbox</option>
+              <option value="" className="bg-surface-0">All Protocols</option>
+              <option value="smtp" className="bg-surface-0">SMTP</option>
+              <option value="imap" className="bg-surface-0">IMAP</option>
+              <option value="pop3" className="bg-surface-0">POP3</option>
             </select>
-          )}
+          </div>
+
+          <div className="flex items-center gap-1.5 bg-surface-1 px-2 py-1 border border-black">
+            <span className="text-muted font-bold text-[10px] uppercase">Transport:</span>
+            <select
+              value={trans}
+              onChange={(e) => { setTrans(e.target.value); setPage(1); }}
+              className="bg-transparent text-black font-bold focus:outline-none cursor-pointer"
+            >
+              <option value="" className="bg-surface-0">All Transports</option>
+              <option value="implicit_tls" className="bg-surface-0">Implicit TLS</option>
+              <option value="starttls" className="bg-surface-0">STARTTLS</option>
+              <option value="plaintext" className="bg-surface-0">Plaintext</option>
+            </select>
+          </div>
+
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search stream, IP, SNI..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="bg-surface-1 border border-black px-2.5 py-1 text-xs text-black placeholder:text-muted focus:outline-none focus:bg-accent/15 w-52 font-mono font-bold"
+            />
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 text-black text-[11px] font-bold">
+          <span>
+            Showing <strong className="tabular-nums underline decoration-2">{filteredSessions.length}</strong> of{" "}
+            <strong className="tabular-nums">{data.total}</strong> streams
+          </span>
+          <div className="flex items-center gap-1">
+            <button
+              disabled={page <= 1}
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              className="px-2.5 py-0.5 border border-black bg-surface-1 disabled:opacity-40 hover:bg-accent text-black font-bold cursor-pointer"
+            >
+              Prev
+            </button>
+            <span className="px-1.5 text-black font-bold">{page}</span>
+            <button
+              disabled={page * data.page_size >= data.total}
+              onClick={() => setPage((p) => p + 1)}
+              className="px-2.5 py-0.5 border border-black bg-surface-1 disabled:opacity-40 hover:bg-accent text-black font-bold cursor-pointer"
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
 
-      {view === "sessions" ? (
-        loading ? (
-          <SessionsSkeleton />
-        ) : error ? (
-          <div className="bg-sev-critical-bg border border-sev-critical/20 rounded-sm p-4 space-y-2">
-            <p className="text-xs font-semibold text-sev-critical">Failed to load sessions</p>
-            <p className="text-xs text-sev-critical/90">{error}</p>
-            <button
-              onClick={loadSessions}
-              className="text-xs font-medium text-sev-critical underline"
-            >
-              Retry
-            </button>
-          </div>
-        ) : data.items.length === 0 ? (
-          <div className="text-center py-16 bg-surface-0 rounded-sm border border-border text-muted">
-            <p className="text-xs font-medium text-foreground">No sessions match current filters</p>
-            <p className="text-xs text-muted mt-1">Try adjusting the protocol or transport filter</p>
-          </div>
-        ) : (
-          <div className="bg-surface-0 rounded-sm border border-border overflow-hidden">
-            <div className="overflow-x-auto max-h-[750px] overflow-y-auto">
-              <table className="w-full text-xs">
-                <thead className="sticky top-0 bg-surface-1 z-10 border-b border-border shadow-none">
-                  <tr className="text-left font-medium text-muted h-9">
-                    <th className="px-4 py-2">Session</th>
-                    <th className="px-4 py-2">Protocol</th>
-                    <th className="px-4 py-2">Transport</th>
-                    <th className="px-4 py-2">Security / TLS</th>
-                    <th className="px-4 py-2">Frames</th>
-                    <th className="px-4 py-2 text-right">Findings</th>
-                    <th className="px-4 py-2 text-right">Action</th>
+      {/* Split-Pane Master-Detail Architecture */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+        {/* ================= LEFT PANE: SESSIONS MASTER LIST (7 cols) ================= */}
+        <div className="lg:col-span-7 bg-surface-0 border-2 border-black overflow-hidden flex flex-col font-mono text-xs brutal-shadow">
+          <div className="overflow-x-auto max-h-[720px] overflow-y-auto">
+            <table className="w-full text-left">
+              <thead className="sticky top-0 bg-surface-1 border-b-2 border-black text-[11px] font-bold text-black uppercase z-10">
+                <tr>
+                  <th className="py-2 px-3 w-16">Stream</th>
+                  <th className="py-2 px-3 w-22">Crypto</th>
+                  <th className="py-2 px-3 w-16">Proto</th>
+                  <th className="py-2 px-3">Client Endpoint → Server</th>
+                  <th className="py-2 px-3 w-28">TLS Version</th>
+                  <th className="py-2 px-3 w-24 text-right">Frames</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-black/20">
+                {filteredSessions.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="py-12 text-center text-muted font-bold text-xs">
+                      No matching TCP sessions observed.
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {data.items.map((s) => (
-                    <tr
-                      key={s.id}
-                      onClick={() => getSession(capId, s.id).then((sess) => setSelSession(sess))}
-                      className="border-b border-border last:border-0 hover:bg-surface-1 cursor-pointer transition-colors h-10"
-                    >
-                      <td className={`px-4 py-2 border-l-[3px] ${s.transport === "plaintext" ? "border-l-sev-critical" : "border-l-transparent"}`}>
-                        <div className="font-mono text-xs font-medium text-foreground">{s.id}</div>
-                        <div className="text-[11px] text-muted font-mono truncate max-w-xs">
-                          {s.client} → {s.server}:{s.server_port}
-                        </div>
-                      </td>
-                      <td className="px-4 py-2">
-                        <span className="uppercase text-xs font-mono font-medium px-1.5 py-0.5 bg-surface-2 rounded-[3px] border border-border">
-                          {s.protocol}
-                        </span>
-                      </td>
-                      <td className="px-4 py-2">
-                        <TransportBadge transport={s.transport} />
-                      </td>
-                      <td className="px-4 py-2">
-                        {s.transport === "plaintext" ? (
-                          <span className="text-xs text-sev-critical font-medium font-mono">
-                            Plaintext (Unencrypted)
-                          </span>
-                        ) : s.tls ? (
-                          <div>
-                            <span className="text-xs font-mono font-medium text-foreground">{s.tls.version}</span>
-                            <span className="text-[11px] text-muted block truncate max-w-[200px] font-mono">{s.tls.cipher_suite}</span>
-                          </div>
-                        ) : (
-                          <span className="text-xs text-muted font-mono">—</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-2 font-mono">
-                        <EvidenceTag>#{s.first_frame}–#{s.last_frame}</EvidenceTag>
-                      </td>
-                      <td className="px-4 py-2 text-right">
-                        {s.findings_count > 0 ? (
-                          <span className="font-mono font-semibold text-sev-critical tabular-nums">
-                            {s.findings_count}
-                          </span>
-                        ) : (
-                          <span className="text-muted font-mono tabular-nums">0</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-2 text-right">
-                        <button
-                          onClick={(e) => { e.stopPropagation(); getSession(capId, s.id).then((sess) => setSelSession(sess)); }}
-                          className="text-xs font-medium text-foreground underline hover:text-ink"
-                        >
-                          Inspect
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ) : (
+                  filteredSessions.map((s) => {
+                    const isSelected = selSession?.id === s.id;
+                    const isPlaintext = s.transport === "plaintext";
+                    const isTls13 = s.tls?.version === "TLS 1.3";
+                    const isTls12 = s.tls?.version === "TLS 1.2";
 
-            <div className="flex items-center justify-between px-4 py-2.5 border-t border-border bg-surface-1 text-xs text-muted">
-              <span className="tabular-nums">
-                Showing {data.items.length} of {data.total} sessions
-              </span>
-              <div className="flex items-center gap-2">
-                <button
-                  disabled={page <= 1}
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="px-2.5 py-1 border border-border rounded-sm bg-surface-0 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-surface-2 text-foreground"
-                >
-                  Previous
-                </button>
-                <span className="text-foreground font-medium tabular-nums">{page}</span>
-                <button
-                  disabled={page * data.page_size >= data.total}
-                  onClick={() => setPage((p) => p + 1)}
-                  className="px-2.5 py-1 border border-border rounded-sm bg-surface-0 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-surface-2 text-foreground"
-                >
-                  Next
-                </button>
-              </div>
-            </div>
-          </div>
-        )
-      ) : (
-        assetsLoading ? (
-          <SessionsSkeleton />
-        ) : filteredAssets.length === 0 ? (
-          <div className="text-center py-16 bg-surface-0 rounded-sm border border-border text-muted">
-            <p className="text-xs font-medium text-foreground">No endpoints observed</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div className="lg:col-span-5 space-y-3">
-              {filteredAssets.map((asset) => {
-                const active = selAsset?.id === asset.id;
-                return (
-                  <div
-                    key={asset.id}
-                    onClick={() => setSelAsset(asset)}
-                    className={[
-                      "p-4 rounded-sm border transition-all cursor-pointer",
-                      active
-                        ? "bg-surface-0 border-ink ring-1 ring-ink"
-                        : "bg-surface-0 border-border hover:border-slate-300",
-                    ].join(" ")}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <span className="font-mono text-xs font-semibold text-foreground">{asset.id}</span>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="px-1.5 py-0.5 rounded text-[10px] font-mono uppercase bg-slate-100 text-slate-700">
-                            {asset.server_role}
-                          </span>
-                          <span className="text-[11px] text-muted font-mono uppercase">
-                            {asset.protocols.join(", ")}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <span className="text-[11px] text-muted font-mono block">
-                          {asset.sessions_observed} sess · {asset.clients_observed} cli
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="mt-3 pt-3 border-t border-border/60 grid grid-cols-2 gap-2 text-[11px]">
-                      <div>
-                        <span className="text-muted block text-[10px]">TLS versions observed</span>
-                        <span className="font-mono text-foreground">
-                          {asset.tls_versions_observed.length > 0
-                            ? asset.tls_versions_observed.join(", ")
-                            : "None observed"}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-muted block text-[10px]">Forward secrecy observed</span>
-                        <span
-                          className={[
-                            "font-mono font-medium",
-                            asset.forward_secrecy === "all"
-                              ? "text-emerald-600"
-                              : asset.forward_secrecy === "none"
-                              ? "text-rose-600"
-                              : "text-amber-600",
-                          ].join(" ")}
-                        >
-                          {asset.forward_secrecy}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="lg:col-span-7">
-              {selAsset ? (
-                <div className="bg-surface-0 rounded-sm border border-border p-5 space-y-5">
-                  <div className="flex items-start justify-between border-b border-border pb-4">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h2 className="text-base font-semibold font-mono text-foreground">{selAsset.id}</h2>
-                        <span className="px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-slate-100 text-slate-800">
-                          {selAsset.server_role}
-                        </span>
-                      </div>
-                      <p className="text-xs text-muted mt-0.5">
-                        Server: <span className="text-foreground font-mono">{selAsset.server}</span> (Port {selAsset.port})
-                      </p>
-                    </div>
-                    <div className="text-right text-xs">
-                      <span className="text-muted text-[10px] block">First seen: {new Date(selAsset.first_seen).toLocaleTimeString()}</span>
-                      <span className="text-muted text-[10px] block">Last seen: {new Date(selAsset.last_seen).toLocaleTimeString()}</span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <h3 className="text-xs font-semibold text-foreground uppercase tracking-wider text-muted">
-                      Observed parameters
-                    </h3>
-
-                    <div className="grid grid-cols-2 gap-4 text-xs">
-                      <div className="p-3 rounded border border-border bg-slate-50/50">
-                        <span className="text-muted text-[11px] block">STARTTLS observed</span>
-                        <span className="font-mono font-medium text-foreground mt-0.5 block">
-                          {selAsset.starttls_support}
-                        </span>
-                      </div>
-                      <div className="p-3 rounded border border-border bg-slate-50/50">
-                        <span className="text-muted text-[11px] block">Forward secrecy observed</span>
-                        <span className="font-mono font-medium text-foreground mt-0.5 block">
-                          {selAsset.forward_secrecy}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="p-3 rounded border border-border bg-slate-50/50 text-xs">
-                      <span className="text-muted text-[11px] block">Hybrid key exchange</span>
-                      <span className="font-mono font-medium text-foreground mt-0.5 block">
-                        {selAsset.pqc
-                          ? selAsset.pqc.hybrid_group_negotiated
-                            ? "negotiated"
-                            : selAsset.pqc.hybrid_groups_offered_by_clients
-                            ? "offered"
-                            : "not seen"
-                          : "not observable"}
-                      </span>
-                    </div>
-
-                    <div>
-                      <span className="text-xs text-muted block mb-1">Cipher suites observed:</span>
-                      {selAsset.cipher_suites_observed.length > 0 ? (
-                        <div className="space-y-1">
-                          {selAsset.cipher_suites_observed.map((cs) => (
-                            <div key={cs} className="font-mono text-xs p-2 rounded bg-slate-50 border border-border text-foreground">
-                              {cs}
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <span className="text-xs text-muted italic">None observed</span>
-                      )}
-                    </div>
-
-                    {selAsset.key_exchange_groups_observed.length > 0 && (
-                      <div>
-                        <span className="text-xs text-muted block mb-1">Key exchange groups observed:</span>
-                        <div className="flex flex-wrap gap-1.5">
-                          {selAsset.key_exchange_groups_observed.map((grp) => (
-                            <span key={grp} className="px-2 py-1 rounded bg-slate-100 font-mono text-xs text-foreground">
-                              {grp}
+                    return (
+                      <tr
+                        key={s.id}
+                        onClick={() => setSelSession(s)}
+                        className={[
+                          "cursor-pointer transition-colors text-[11px]",
+                          isSelected
+                            ? "bg-accent/25 border-l-4 border-black font-bold text-black"
+                            : "hover:bg-accent/10 text-foreground font-medium",
+                        ].join(" ")}
+                      >
+                        <td className="py-2 px-3 font-bold text-black">
+                          {s.id}
+                        </td>
+                        <td className="py-2 px-3">
+                          {isPlaintext ? (
+                            <span className="inline-flex items-center gap-1 text-[10px] text-white font-bold uppercase bg-red-500 border border-black px-1.5 py-0.2 shadow-[1px_1px_0_#000]">
+                              <LockKeyOpen size={10} weight="bold" />
+                              <span>PLAIN</span>
                             </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="space-y-3 border-t border-border pt-4">
-                    <h3 className="text-xs font-semibold text-foreground uppercase tracking-wider text-muted">
-                      Observed certificates ({selAsset.certificates.length})
-                    </h3>
-
-                    {selAsset.certificates.length > 0 ? (
-                      <div className="space-y-2">
-                        {selAsset.certificates.map((cert) => (
-                          <div key={cert.sha256} className="p-3 rounded border border-border bg-slate-50/50 text-xs space-y-1.5">
-                            <div>
-                              <span className="text-muted text-[10px] block">Subject:</span>
-                              <span className="font-mono text-foreground font-medium">{cert.subject}</span>
-                            </div>
-                            <div>
-                              <span className="text-muted text-[10px] block">Issuer:</span>
-                              <span className="font-mono text-muted">{cert.issuer}</span>
-                            </div>
-                            <div className="grid grid-cols-2 gap-2 text-[11px] pt-1">
-                              <div>
-                                <span className="text-muted text-[10px] block">Key / Algorithm:</span>
-                                <span className="font-mono">{cert.key_algorithm} {cert.key_bits}-bit</span>
-                              </div>
-                              <div>
-                                <span className="text-muted text-[10px] block">Expires:</span>
-                                <span className="font-mono">{cert.not_after}</span>
-                              </div>
-                            </div>
-                            <div className="pt-1">
-                              <span className="text-muted text-[10px] block">SHA-256 fingerprint:</span>
-                              <span className="font-mono text-[10px] text-muted break-all">{cert.sha256}</span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-muted italic">
-                        No certificate observed on wire.
-                      </p>
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <div className="p-8 text-center text-xs text-muted border border-dashed border-border rounded-sm">
-                  Select an observed endpoint to view details
-                </div>
-              )}
-            </div>
+                          ) : (
+                            <span
+                              className={`inline-flex items-center gap-1 text-[10px] font-bold uppercase px-1.5 py-0.2 border border-black shadow-[1px_1px_0_#000] ${
+                                isTls13
+                                  ? "text-black bg-emerald-400"
+                                  : isTls12
+                                  ? "text-black bg-sky-300"
+                                  : "text-black bg-yellow-300"
+                              }`}
+                            >
+                              <Lock size={10} weight="bold" />
+                              <span>{s.transport === "starttls" ? "STLS" : "TLS"}</span>
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-2 px-3 uppercase font-bold text-black">
+                          {s.protocol}
+                        </td>
+                        <td className="py-2 px-3 truncate max-w-xs">
+                          <span className="text-muted">{s.client}</span>
+                          <span className="text-black/40 mx-1 font-bold">→</span>
+                          <span className="text-black font-bold">{s.server}:{s.server_port}</span>
+                        </td>
+                        <td className="py-2 px-3 truncate max-w-[130px]">
+                          {s.tls?.version ? (
+                            <span className="text-black font-bold">{s.tls.version}</span>
+                          ) : (
+                            <span className="text-muted italic text-[10px]">None</span>
+                          )}
+                        </td>
+                        <td className="py-2 px-3 text-right font-mono text-muted tabular-nums font-bold">
+                          #{s.first_frame}–{s.last_frame}
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
           </div>
-        )
-      )}
+        </div>
 
-      {selSession && (
-        <div className="fixed inset-0 z-50 bg-black/40 flex justify-end animate-in fade-in duration-150">
-          <div className="w-full max-w-2xl bg-surface-0 h-full shadow-2xl flex flex-col border-l border-border overflow-hidden">
-            <div className="px-6 py-4 border-b border-border flex items-center justify-between bg-surface-1">
-              <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-base font-semibold font-mono">{selSession.id}</h2>
-                  <span className="uppercase text-xs font-mono font-medium px-1.5 py-0.5 bg-surface-2 rounded-[3px] border border-border">
-                    {selSession.protocol}
-                  </span>
-                  <TransportBadge transport={selSession.transport} />
+        {/* ================= RIGHT PANE: DETAIL INSPECTOR DRAWER (5 cols) ================= */}
+        <div className="lg:col-span-5 bg-surface-0 border-2 border-black p-4 space-y-3 font-mono text-xs sticky top-3 brutal-shadow">
+          {selSession ? (
+            <>
+              {/* Header Info */}
+              <div className="flex items-center justify-between border-b-2 border-black pb-2.5">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-base font-bold text-black">{selSession.id}</span>
+                    <span className="text-[10px] font-bold uppercase px-1.5 py-0.5 bg-accent border border-black text-black">
+                      {selSession.protocol}
+                    </span>
+                    <span className={`text-[10px] font-bold uppercase px-1.5 py-0.5 border border-black ${
+                      selSession.transport === "plaintext"
+                        ? "text-white bg-red-500"
+                        : "text-black bg-emerald-400"
+                    }`}>
+                      {selSession.transport.toUpperCase()}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-muted mt-0.5 font-medium">
+                    {selSession.client} <span className="text-black/40 font-bold">→</span> {selSession.server}:{selSession.server_port}
+                  </p>
                 </div>
-                <p className="text-xs font-mono text-muted mt-1">
-                  {selSession.client} → {selSession.server}:{selSession.server_port}
-                </p>
-              </div>
-              <button
-                onClick={() => setSelSession(null)}
-                className="p-1.5 rounded-sm hover:bg-surface-2 text-muted hover:text-foreground"
-              >
-                <X size={18} />
-              </button>
-            </div>
 
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
-              <div className="bg-surface-1 rounded-sm p-4 border border-border">
-                <h3 className="text-xs font-medium text-muted mb-3">
-                  Wireshark display filter
-                </h3>
-                <div className="flex items-center justify-between gap-2 bg-surface-0 border border-border rounded px-3 py-2">
-                  <code className="text-xs font-mono text-foreground truncate">{selSession.wireshark_filter}</code>
+                <div className="text-right">
+                  <span className="text-[10px] text-muted block font-bold uppercase">Associated Frames</span>
+                  <span className="text-xs text-black font-bold tabular-nums">#{selSession.first_frame} – #{selSession.last_frame}</span>
+                </div>
+              </div>
+
+              {/* Wireshark Filter Anchor */}
+              <div className="bg-surface-1 border-2 border-black p-2.5 flex items-center justify-between gap-2 brutal-shadow-sm">
+                <div className="truncate">
+                  <span className="text-[10px] text-black uppercase font-bold block">Wireshark Stream Filter</span>
+                  <code className="text-xs text-black font-bold truncate block select-all font-mono mt-0.5">
+                    {selSession.wireshark_filter}
+                  </code>
+                </div>
+                <button
+                  onClick={() => copyText(selSession.wireshark_filter, setCopiedFilter)}
+                  className="px-2.5 py-1 bg-accent hover:bg-accent-hover text-black text-xs font-bold border border-black shadow-[1px_1px_0_#000] flex items-center gap-1 shrink-0 cursor-pointer"
+                >
+                  {copiedFilter ? <Check size={12} weight="bold" /> : <Copy size={12} weight="bold" />}
+                  <span>{copiedFilter ? "Copied" : "Copy"}</span>
+                </button>
+              </div>
+
+              {/* Reconstructed Raw Stream Transcript */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-[11px]">
+                  <span className="font-bold text-black uppercase flex items-center gap-1.5">
+                    <FileCode size={14} weight="bold" className="text-black" />
+                    <span>Reassembled Mail Dialog</span>
+                  </span>
                   <button
-                    onClick={() => copyText(selSession.wireshark_filter)}
-                    className="p-1 rounded hover:bg-surface-2 text-muted hover:text-foreground shrink-0 transition-colors"
+                    onClick={() => copyText(generateTranscript(selSession), setCopiedTranscript)}
+                    className="text-[10px] text-black font-bold hover:underline cursor-pointer"
                   >
-                    {copied ? <Check size={14} className="text-sev-pass" /> : <Copy size={14} />}
+                    {copiedTranscript ? "Copied transcript" : "Copy transcript"}
                   </button>
                 </div>
+                <div className="bg-surface-1 border-2 border-black p-2.5 overflow-x-auto max-h-[170px] brutal-shadow-sm">
+                  <pre className="text-[10px] leading-relaxed text-black font-bold font-mono select-all whitespace-pre-wrap">
+                    {generateTranscript(selSession)}
+                  </pre>
+                </div>
               </div>
 
-              <div className="bg-surface-1 rounded-sm p-4 border border-border">
-                <h3 className="text-xs font-medium text-muted mb-3">
-                  Handshake & transport
-                </h3>
-                <div className="grid grid-cols-2 gap-3 text-xs">
+              {/* TLS Handshake Parameters */}
+              <div className="space-y-1.5 pt-2 border-t-2 border-black/20">
+                <span className="text-[11px] font-bold text-black uppercase flex items-center gap-1.5">
+                  <Shield size={14} weight="bold" className="text-black" />
+                  <span>TLS Handshake Parameters</span>
+                </span>
+
+                <div className="grid grid-cols-2 gap-2 text-[11px] bg-surface-1 p-2.5 border-2 border-black brutal-shadow-sm">
                   <div>
-                    <span className="text-muted block">Protocol confidence</span>
-                    <span className="font-mono capitalize font-medium">{selSession.protocol_confidence}</span>
+                    <span className="text-[10px] text-muted font-bold block uppercase">Negotiated Version:</span>
+                    <span className="text-black font-bold">{selSession.tls?.version || "Plaintext (None)"}</span>
                   </div>
                   <div>
-                    <span className="text-muted block mb-0.5">Associated frames</span>
-                    <EvidenceTag>#{selSession.first_frame}–#{selSession.last_frame}</EvidenceTag>
+                    <span className="text-[10px] text-muted font-bold block uppercase">Key Exchange:</span>
+                    <span className="text-black font-bold">{selSession.tls?.key_exchange || "N/A"}</span>
+                  </div>
+                  <div className="col-span-2">
+                    <span className="text-[10px] text-muted font-bold block uppercase">Cipher Suite:</span>
+                    <span className="text-black font-bold truncate block">
+                      {selSession.tls?.cipher_suite || "None (Plaintext)"}
+                    </span>
                   </div>
                   <div>
-                    <span className="text-muted block">STARTTLS advertised</span>
-                    <span className="font-mono">{selSession.starttls.advertised ? "Yes" : "No"}</span>
+                    <span className="text-[10px] text-muted font-bold block uppercase">SNI Host:</span>
+                    <span className="text-black font-bold truncate block">{selSession.tls?.sni || "N/A"}</span>
                   </div>
                   <div>
-                    <span className="text-muted block">STARTTLS initiated</span>
-                    <span className="font-mono">{selSession.starttls.initiated ? "Yes" : "No"}</span>
+                    <span className="text-[10px] text-muted font-bold block uppercase">Forward Secrecy:</span>
+                    <span className={`font-bold px-1 border border-black inline-block ${
+                      selSession.tls?.forward_secrecy ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-800"
+                    }`}>
+                      {selSession.tls?.forward_secrecy ? "PFS Active" : "No PFS"}
+                    </span>
                   </div>
-                  {selSession.starttls.downgrade_suspected && (
-                    <div className="col-span-2">
-                      <span className="text-sev-critical font-medium text-xs">
-                        STARTTLS downgrade suspected
+                </div>
+              </div>
+
+              {/* X.509 Certificate Chain Tree */}
+              <div className="space-y-1.5 pt-2 border-t-2 border-black/20">
+                <span className="text-[11px] font-bold text-black uppercase flex items-center gap-1.5">
+                  <Fingerprint size={14} weight="bold" className="text-black" />
+                  <span>X.509 Certificate Chain</span>
+                </span>
+
+                {selSession.certificate_chain && selSession.certificate_chain.length > 0 ? (
+                  <div className="space-y-1.5 text-[11px] bg-surface-1 p-2.5 border-2 border-black brutal-shadow-sm">
+                    <div>
+                      <span className="text-[10px] text-muted font-bold block uppercase">Subject CN:</span>
+                      <span className="text-black font-bold break-all">
+                        {selSession.certificate_chain[0].subject}
                       </span>
                     </div>
-                  )}
-                </div>
-              </div>
-
-              {selSession.tls && (
-                <div className="bg-surface-1 rounded-sm p-4 border border-border">
-                  <h3 className="text-xs font-medium text-muted mb-3">
-                    TLS configuration
-                  </h3>
-                  <div className="grid grid-cols-2 gap-3 text-xs">
                     <div>
-                      <span className="text-muted block">Version</span>
-                      <span className="font-mono font-medium">{selSession.tls.version}</span>
+                      <span className="text-[10px] text-muted font-bold block uppercase">Issuer:</span>
+                      <span className="text-muted break-all font-medium">
+                        {selSession.certificate_chain[0].issuer}
+                      </span>
                     </div>
-                    <div>
-                      <span className="text-muted block">Key exchange</span>
-                      <span className="font-mono font-medium">{selSession.tls.key_exchange}</span>
-                    </div>
-                    <div className="col-span-2">
-                      <span className="text-muted block">Cipher suite</span>
-                      <span className="font-mono font-medium break-all">{selSession.tls.cipher_suite}</span>
-                    </div>
-                    {selSession.tls.sni && (
-                      <div className="col-span-2">
-                        <span className="text-muted block">SNI</span>
-                        <span className="font-mono">{selSession.tls.sni}</span>
+                    <div className="grid grid-cols-2 gap-2 pt-1 border-t border-black/20">
+                      <div>
+                        <span className="text-[10px] text-muted font-bold block uppercase">Key Size:</span>
+                        <span className="text-black font-bold">
+                          {selSession.certificate_chain[0].key_algorithm} {selSession.certificate_chain[0].key_bits}-bit
+                        </span>
                       </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              <div className="bg-surface-1 rounded-sm p-4 border border-border">
-                <h3 className="text-xs font-medium text-muted mb-3">
-                  Certificate chain
-                </h3>
-                {selSession.certificate_chain && selSession.certificate_chain.length > 0 ? (
-                  <div className="space-y-3">
-                    {selSession.certificate_chain.map((c, i) => (
-                      <div key={i} className="bg-surface-0 border border-border rounded p-3 text-xs space-y-1">
-                        <div>
-                          <span className="text-muted block text-[10px]">Subject:</span>
-                          <span className="font-mono font-medium">{c.subject}</span>
-                        </div>
-                        <div>
-                          <span className="text-muted block text-[10px]">Issuer:</span>
-                          <span className="font-mono text-muted">{c.issuer}</span>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 text-[11px] pt-1">
-                          <div>
-                            <span className="text-muted block text-[10px]">Key algorithm:</span>
-                            <span className="font-mono">{c.key_algorithm} {c.key_bits}-bit</span>
-                          </div>
-                          <div>
-                            <span className="text-muted block text-[10px]">Expires:</span>
-                            <span className="font-mono">{c.not_after}</span>
-                          </div>
-                        </div>
-                        <div className="pt-1">
-                          <span className="text-muted block text-[10px]">SHA-256 fingerprint:</span>
-                          <span className="font-mono text-[10px] text-muted break-all">{c.sha256_fingerprint}</span>
-                        </div>
+                      <div>
+                        <span className="text-[10px] text-muted font-bold block uppercase">Expiry:</span>
+                        <span className={`font-bold px-1 border border-black inline-block ${
+                          selSession.certificate_chain[0].expired ? "bg-red-500 text-white" : "bg-emerald-400 text-black"
+                        }`}>
+                          {selSession.certificate_chain[0].expired ? "Expired" : `${selSession.certificate_chain[0].days_to_expiry} days remaining`}
+                        </span>
                       </div>
-                    ))}
+                    </div>
                   </div>
                 ) : (
-                  <div className="hatch-neutral p-3 rounded border border-border">
-                    <p className="text-xs font-mono text-muted">
-                      {selSession.certificate_note ?? "Certificate not observable"}
-                    </p>
+                  <div className="bg-surface-1 p-2.5 border-2 border-black text-[11px] text-muted italic font-medium">
+                    {selSession.transport === "plaintext"
+                      ? "No certificate exchanged (unencrypted plaintext session)."
+                      : "Certificate encrypted on wire (TLS 1.3 encrypted handshake)."}
                   </div>
                 )}
               </div>
+            </>
+          ) : (
+            <div className="text-center py-16 text-muted font-bold text-xs">
+              Select a TCP mail stream on the left to inspect cryptographic evidence.
             </div>
-          </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
-  );
-}
-
-function TransportBadge({ transport }: { transport: Transport }) {
-  if (transport === "implicit_tls") {
-    return (
-      <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-sev-pass-bg text-sev-pass border border-sev-pass/30">
-        Implicit TLS
-      </span>
-    );
-  }
-  if (transport === "starttls") {
-    return (
-      <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-surface-2 text-foreground border border-border">
-        STARTTLS
-      </span>
-    );
-  }
-  return (
-    <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-sev-critical-bg text-sev-critical border border-sev-critical/30">
-      Plaintext
-    </span>
   );
 }

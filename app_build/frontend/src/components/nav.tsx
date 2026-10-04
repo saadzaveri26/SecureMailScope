@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CaptureStrip } from "./capture-strip";
+import { UploadSimple } from "@phosphor-icons/react";
 
 const links = [
   { href: "/captures", label: "Captures" },
@@ -19,14 +20,18 @@ export function Nav() {
 
   return (
     <>
-      <header className="bg-ink">
-        <div className="max-w-[1400px] mx-auto px-4 flex items-center h-12 justify-between gap-6">
-          <div className="flex items-center h-full gap-8">
-            <Link href="/" className="text-evidence font-semibold text-sm tracking-tight shrink-0">
-              SecureMailScope
+      <header className="bg-white border-b-2 border-black select-none h-11">
+        <div className="max-w-[1600px] mx-auto px-4 flex items-center h-full justify-between gap-4">
+          <div className="flex items-center h-full gap-5">
+            <Link href="/" className="flex items-center gap-1.5 text-black font-bold text-sm tracking-tight font-mono shrink-0">
+              <span className="text-accent">▸</span>
+              <span>SecureMailScope</span>
+              <span className="text-[10px] text-muted font-normal">v1.0</span>
             </Link>
 
-            <nav className="flex items-center h-full gap-0.5">
+            <div className="w-0.5 h-5 bg-black" />
+
+            <nav className="flex items-center h-full gap-0">
               {links.map(({ href, label }) => {
                 const active = path.startsWith(href);
                 return (
@@ -34,10 +39,10 @@ export function Nav() {
                     key={href}
                     href={href}
                     className={[
-                      "h-12 flex items-center px-3 text-xs transition-colors border-b-2",
+                      "h-11 flex items-center px-2.5 text-xs font-mono border-b-3 transition-colors",
                       active
-                        ? "border-evidence text-white font-medium"
-                        : "border-transparent text-white/60 hover:text-white/90",
+                        ? "border-accent text-black font-bold bg-accent/10"
+                        : "border-transparent text-muted hover:text-foreground",
                     ].join(" ")}
                   >
                     {label}
@@ -49,9 +54,10 @@ export function Nav() {
 
           <Link
             href="/captures"
-            className="px-3.5 py-1.5 rounded-sm bg-evidence hover:bg-evidence/90 text-ink text-xs font-bold transition-colors shrink-0 focus:outline-none focus:ring-2 focus:ring-ink focus:ring-offset-2 focus:ring-offset-evidence"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-accent hover:bg-accent-hover border-2 border-black text-black text-xs font-mono font-bold transition-all brutal-shadow-sm brutal-shadow-hover shrink-0"
           >
-            Upload PCAP
+            <UploadSimple size={12} weight="bold" />
+            <span>Ingest PCAP</span>
           </Link>
         </div>
       </header>

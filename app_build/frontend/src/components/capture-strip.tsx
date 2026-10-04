@@ -55,65 +55,58 @@ export function CaptureStrip() {
     setTimeout(() => setCopied(false), 2000);
   }
 
+  const isCritical = current.posture_score !== null && current.posture_score < 60;
+  const isHealthy = current.posture_score !== null && current.posture_score >= 80;
+
   return (
-    <div className="bg-surface-0 border-b border-border">
-      <div className="max-w-[1400px] mx-auto px-4 py-2 flex flex-wrap items-center justify-between gap-3 text-xs">
-        <div className="flex items-center gap-3 min-w-0 flex-wrap">
-          <div className="flex items-center gap-1.5">
-            <span className="text-muted">Capture:</span>
-            <select
-              value={current.id}
-              onChange={(e) => onSwitch(e.target.value)}
-              className="bg-surface-1 border border-border rounded-sm px-2 py-1 font-mono text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-ink focus:ring-offset-2 focus:ring-offset-evidence"
-            >
-              {caps.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.filename} ({c.id})
-                </option>
-              ))}
-            </select>
-          </div>
+    <div className="bg-surface-1 border-b border-black text-xs select-none">
+      <div className="max-w-[1600px] mx-auto px-4 h-7 flex items-center justify-between gap-3 font-mono text-[11px]">
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="text-muted font-bold">capture:</span>
+          <select
+            value={current.id}
+            onChange={(e) => onSwitch(e.target.value)}
+            className="bg-surface-0 border border-black px-1 font-mono text-xs text-foreground focus:outline-none cursor-pointer font-bold"
+          >
+            {caps.map((c) => (
+              <option key={c.id} value={c.id} className="bg-surface-0 text-foreground">
+                {c.filename} [{c.id}]
+              </option>
+            ))}
+          </select>
 
-          <span className="text-border">|</span>
+          <span className="text-black/40">│</span>
 
-          <span className="font-mono font-medium text-foreground truncate max-w-xs">{current.filename}</span>
+          <span className="text-muted">sha256:</span>
+          <span className="text-foreground font-bold select-all">{current.sha256.slice(0, 12)}…</span>
+          <button
+            onClick={onCopy}
+            className="p-0.5 text-muted hover:text-foreground transition-colors cursor-pointer"
+          >
+            {copied ? <Check size={11} weight="bold" className="text-sev-pass" /> : <Copy size={11} weight="bold" />}
+          </button>
 
-          <span className="text-border">|</span>
+          <span className="text-black/40">│</span>
 
-          <div className="flex items-center gap-1 text-muted text-xs">
-            <span>SHA-256:</span>
-            <span className="font-mono text-foreground">{current.sha256.slice(0, 12)}</span>
-            <button
-              onClick={onCopy}
-              className="p-1 hover:bg-surface-2 rounded text-muted hover:text-foreground transition-colors"
-              title="Copy SHA-256"
-            >
-              {copied ? <Check size={12} className="text-sev-pass" /> : <Copy size={12} />}
-            </button>
-          </div>
+          <span className="text-foreground font-semibold">{current.packet_count.toLocaleString()} pkts</span>
 
-          <span className="text-border">|</span>
+          <span className="text-black/40">│</span>
 
-          <span className="tabular-nums text-muted text-xs">
-            {current.packet_count.toLocaleString()} packets
-          </span>
-
-          <span className="text-border">|</span>
-
-          <span className="text-muted capitalize text-xs">
-            Status: <span className="font-medium text-foreground">{current.status}</span>
-          </span>
+          <span className="text-muted uppercase font-bold">{current.status}</span>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0 text-xs">
-          <span className="text-muted">Score:</span>
-          {current.posture_score !== null ? (
-            <span className="font-medium text-foreground">
-              <strong className="tabular-nums font-semibold">{current.posture_score}</strong>
-              <span className="text-muted ml-1">({current.grade})</span>
-            </span>
-          ) : (
-            <span className="text-muted">—</span>
+        <div className="flex items-center gap-2 shrink-0">
+          {current.posture_score !== null && (
+            <div className={`px-2 py-0.5 border border-black font-mono font-bold text-xs flex items-center gap-1.5 ${
+              isCritical ? "bg-sev-critical text-white" : isHealthy ? "bg-sev-pass text-white" : "bg-accent text-black"
+            }`}>
+              <span className="tabular-nums">
+                {current.posture_score}/100
+              </span>
+              <span className="text-[10px]">
+                [{current.grade}]
+              </span>
+            </div>
           )}
         </div>
       </div>
