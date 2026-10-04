@@ -17,7 +17,7 @@ export default function DriftPage() {
 
 function Skeleton() {
   return (
-    <div className="max-w-[1600px] mx-auto px-4 py-4 space-y-4 animate-pulse">
+    <div className="w-full space-y-3 animate-pulse">
       <div className="h-4 w-44 bg-surface-2" />
       <div className="border border-border bg-surface-0 h-96 xcor-shadow" />
     </div>
@@ -80,83 +80,83 @@ function Content() {
   const otherCount = changes.filter((c) => !["degraded", "improved"].includes(c.direction)).length;
 
   return (
-    <div className="max-w-[1600px] mx-auto px-4 py-4 space-y-3 font-mono text-xs select-none">
+    <div className="w-full px-4 2xl:px-6 py-4 space-y-3 select-none text-[13px]">
       {/* Header */}
-      <div className="flex items-center justify-between text-xs font-mono">
-        <div className="flex items-center gap-2 font-bold text-foreground">
-          <span className="uppercase tracking-wider text-foreground">posture drift</span>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <h1 className="text-[20px] font-semibold text-foreground">Posture drift</h1>
           <span className="text-muted">·</span>
-          <span className="text-muted font-semibold">{filtered.length} changes detected</span>
+          <span className="text-muted text-[13px] font-medium">{filtered.length} changes detected</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex border border-border bg-surface-0 xcor-shadow-subtle">
+          <div className="flex border border-border bg-surface-0 rounded-[var(--radius-xs)] overflow-hidden">
             <button
               onClick={() => setDiffMode("unified")}
-              className={`px-3 py-1 text-xs font-mono font-bold cursor-pointer transition-colors ${diffMode === "unified" ? "bg-accent text-foreground" : "text-muted hover:text-foreground"}`}
+              className={`px-2.5 py-1 text-[12px] font-medium cursor-pointer transition-colors ${diffMode === "unified" ? "bg-accent text-white" : "text-muted hover:text-foreground"}`}
             >
-              unified
+              Unified
             </button>
             <button
               onClick={() => setDiffMode("split")}
-              className={`px-3 py-1 text-xs font-mono font-bold cursor-pointer transition-colors border-l border-border ${diffMode === "split" ? "bg-accent text-foreground" : "text-muted hover:text-foreground"}`}
+              className={`px-2.5 py-1 text-[12px] font-medium cursor-pointer transition-colors border-l border-border ${diffMode === "split" ? "bg-accent text-white" : "text-muted hover:text-foreground"}`}
             >
-              side-by-side
+              Side-by-side
             </button>
           </div>
           <select
             value={filterDir}
             onChange={(e) => setFilterDir(e.target.value)}
-            className="px-2.5 py-1 bg-surface-0 border border-border text-xs font-mono font-bold text-foreground focus:outline-none cursor-pointer xcor-shadow-subtle"
+            className="px-2.5 py-1 bg-surface-0 border border-border text-[12px] font-medium text-foreground rounded-[var(--radius-xs)] focus-ring cursor-pointer"
           >
-            <option value="">all directions</option>
-            <option value="degraded">degraded</option>
-            <option value="improved">improved</option>
-            <option value="changed">changed</option>
+            <option value="">All directions</option>
+            <option value="degraded">Degraded</option>
+            <option value="improved">Improved</option>
+            <option value="changed">Changed</option>
           </select>
         </div>
       </div>
 
       {/* Capture comparison selectors */}
-      <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-3 items-center text-xs font-mono">
-        <div className="border border-border bg-surface-0 p-2.5 space-y-1 xcor-shadow-subtle">
-          <div className="text-[11px] text-sev-critical font-bold uppercase">--- baseline capture</div>
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-3 items-center text-[13px]">
+        <div className="border border-border bg-surface-0 p-3 rounded-[var(--radius-md)] space-y-1 xcor-shadow-subtle">
+          <div className="text-[12px] text-sev-critical font-medium">Baseline capture</div>
           <select
             value={baselineId}
             onChange={(e) => handleCompare(e.target.value, currentId)}
-            className="w-full bg-surface-1 border border-border p-1 text-foreground font-bold focus:outline-none cursor-pointer"
+            className="w-full bg-surface-1 border border-border p-1.5 rounded-[var(--radius-xs)] text-foreground font-medium text-[13px] focus-ring cursor-pointer"
           >
             {caps.map((c) => (
-              <option key={c.id} value={c.id} className="bg-surface-0">{c.filename} [{c.id}] score:{c.posture_score ?? "—"}</option>
+              <option key={c.id} value={c.id} className="bg-surface-0 font-sans">{c.filename} [{c.id}] score: {c.posture_score ?? "—"}</option>
             ))}
           </select>
         </div>
-        <div className="flex items-center justify-center p-2 bg-accent border border-border xcor-shadow-subtle">
-          <ArrowsLeftRight size={16} weight="bold" className="text-foreground" />
+        <div className="flex items-center justify-center p-2 bg-accent rounded-[var(--radius-sm)] text-white">
+          <ArrowsLeftRight size={16} weight="bold" />
         </div>
-        <div className="border border-border bg-surface-0 p-2.5 space-y-1 xcor-shadow-subtle">
-          <div className="text-[11px] text-emerald-600 font-bold uppercase">+++ current capture</div>
+        <div className="border border-border bg-surface-0 p-3 rounded-[var(--radius-md)] space-y-1 xcor-shadow-subtle">
+          <div className="text-[12px] text-sev-pass font-medium">Current capture</div>
           <select
             value={currentId}
             onChange={(e) => handleCompare(baselineId, e.target.value)}
-            className="w-full bg-surface-1 border border-border p-1 text-foreground font-bold focus:outline-none cursor-pointer"
+            className="w-full bg-surface-1 border border-border p-1.5 rounded-[var(--radius-xs)] text-foreground font-medium text-[13px] focus-ring cursor-pointer"
           >
             {caps.map((c) => (
-              <option key={c.id} value={c.id} className="bg-surface-0">{c.filename} [{c.id}] score:{c.posture_score ?? "—"}</option>
+              <option key={c.id} value={c.id} className="bg-surface-0 font-sans">{c.filename} [{c.id}] score: {c.posture_score ?? "—"}</option>
             ))}
           </select>
         </div>
       </div>
 
       {/* Stats strip */}
-      <div className="flex items-center gap-4 text-xs font-mono border border-border bg-surface-0 px-3 py-2 xcor-shadow-subtle font-bold">
-        <span className="text-sev-critical tabular-nums bg-sev-critical-bg px-2 py-0.5 border border-border">{degradedCount} degraded</span>
-        <span className="text-sev-pass tabular-nums bg-sev-pass-bg px-2 py-0.5 border border-border">{improvedCount} improved</span>
+      <div className="flex items-center gap-3 text-[13px] border border-border bg-surface-0 px-3 py-2 rounded-[var(--radius-md)] xcor-shadow-subtle">
+        <span className="text-sev-critical tabular-nums bg-sev-critical-bg px-2 py-0.5 rounded-[var(--radius-xs)] font-medium">{degradedCount} degraded</span>
+        <span className="text-sev-pass tabular-nums bg-sev-pass-bg px-2 py-0.5 rounded-[var(--radius-xs)] font-medium">{improvedCount} improved</span>
         <span className="tabular-nums text-muted">{otherCount} other changes</span>
         {baselineCap && currentCap && baselineCap.posture_score !== null && currentCap.posture_score !== null && (
           <>
-            <span className="text-muted">│</span>
-            <span className={`tabular-nums px-2 py-0.5 border border-border ${
-              (currentCap.posture_score - baselineCap.posture_score) < 0 ? "bg-sev-critical text-white" : "bg-sev-pass text-foreground"
+            <span className="text-border">│</span>
+            <span className={`tabular-nums font-mono px-2 py-0.5 rounded-[var(--radius-xs)] font-medium ${
+              (currentCap.posture_score - baselineCap.posture_score) < 0 ? "bg-sev-critical text-white" : "bg-sev-pass text-white"
             }`}>
               Δ {currentCap.posture_score - baselineCap.posture_score} pts posture change
             </span>
@@ -168,30 +168,30 @@ function Content() {
       {loading ? (
         <Skeleton />
       ) : error ? (
-        <div className="text-xs font-mono font-bold text-sev-critical border border-border bg-sev-critical-bg px-3 py-2 xcor-shadow-subtle">{error}</div>
+        <div className="text-[13px] text-sev-critical border border-border bg-sev-critical-bg p-3 rounded-[var(--radius-md)]">{error}</div>
       ) : baselineId === currentId ? (
-        <div className="text-xs font-mono text-muted border border-border bg-surface-0 px-3 py-8 text-center xcor-shadow font-bold">identical captures — select different targets</div>
+        <div className="text-[13px] text-muted border border-border bg-surface-0 p-6 rounded-[var(--radius-md)] text-center xcor-shadow-subtle font-medium">Identical captures — select different targets</div>
       ) : filtered.length === 0 ? (
-        <div className="text-xs font-mono text-muted border border-border bg-surface-0 px-3 py-8 text-center xcor-shadow font-bold">no drift detected</div>
+        <div className="text-[13px] text-muted border border-border bg-surface-0 p-6 rounded-[var(--radius-md)] text-center xcor-shadow-subtle font-medium">No drift detected</div>
       ) : diffMode === "unified" ? (
-        <div className="border border-border bg-surface-0 font-mono text-xs divide-y-2 divide-border overflow-hidden max-h-[700px] overflow-y-auto xcor-shadow">
+        <div className="border border-border bg-surface-0 rounded-[var(--radius-md)] text-[13px] divide-y divide-border overflow-hidden max-h-[700px] overflow-y-auto xcor-shadow-subtle">
           {filtered.map((ch, idx) => {
             const isDeg = ch.direction === "degraded";
             const isImp = ch.direction === "improved";
             return (
               <div key={idx}>
-                <div className="bg-surface-1 px-3 py-1.5 flex items-center justify-between text-[11px] font-bold text-foreground border-b border-border">
-                  <span className="font-bold">@@ {ch.server} [{ch.kind}] @@</span>
+                <div className="bg-surface-1 px-3 py-1.5 flex items-center justify-between text-[12px] font-medium text-foreground border-b border-border">
+                  <span>{ch.server} [{ch.kind}]</span>
                   <div className="flex items-center gap-2">
                     <DirLabel dir={ch.direction} />
                     <SeverityBadge severity={ch.severity} />
                   </div>
                 </div>
-                <div className="px-3 py-1.5 bg-sev-critical-bg text-red-950 flex items-start gap-2 text-[11px] font-medium leading-tight">
+                <div className="px-3 py-1.5 bg-sev-critical-bg text-red-950 flex items-start gap-2 text-[12px] font-mono leading-tight">
                   <span className="text-sev-critical font-bold select-none shrink-0">-</span>
                   <span className="break-all">{ch.before}</span>
                 </div>
-                <div className={`px-3 py-1.5 flex items-start gap-2 text-[11px] font-medium leading-tight ${
+                <div className={`px-3 py-1.5 flex items-start gap-2 text-[12px] font-mono leading-tight ${
                   isDeg ? "bg-sev-high-bg text-orange-950" : isImp ? "bg-sev-pass-bg text-emerald-950" : "bg-neutral-100 text-neutral-900"
                 }`}>
                   <span className={`select-none shrink-0 font-bold ${isDeg ? "text-sev-high" : isImp ? "text-emerald-600" : "text-neutral-600"}`}>+</span>
@@ -202,31 +202,31 @@ function Content() {
           })}
         </div>
       ) : (
-        <div className="border border-border bg-surface-0 overflow-hidden max-h-[700px] overflow-y-auto xcor-shadow">
-          <table className="w-full text-xs font-mono text-left">
-            <thead className="sticky top-0 bg-surface-1 border-b border-border text-[11px] font-bold text-foreground uppercase z-10">
+        <div className="border border-border bg-surface-0 rounded-[var(--radius-md)] overflow-hidden max-h-[700px] overflow-y-auto xcor-shadow-subtle">
+          <table className="w-full text-[13px] text-left">
+            <thead className="sticky top-0 bg-surface-1 border-b border-border text-[12px] font-medium text-muted z-10 h-8">
               <tr>
-                <th className="py-2 px-3 w-36">server</th>
-                <th className="py-2 px-3 w-28">kind</th>
-                <th className="py-2 px-3 text-sev-critical border-r-2 border-border">- baseline</th>
-                <th className="py-2 px-3 text-sev-pass">+ current</th>
-                <th className="py-2 px-3 w-28 text-center">shift</th>
-                <th className="py-2 px-3 w-20 text-right">sev</th>
+                <th className="px-3 py-1 w-36">Server</th>
+                <th className="px-3 py-1 w-28">Kind</th>
+                <th className="px-3 py-1 text-sev-critical border-r border-border">Baseline</th>
+                <th className="px-3 py-1 text-sev-pass">Current</th>
+                <th className="px-3 py-1 w-28 text-center">Direction</th>
+                <th className="px-3 py-1 w-20 text-right">Severity</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {filtered.map((ch, idx) => (
-                <tr key={idx} className="hover:bg-accent-soft transition-colors">
-                  <td className="py-2 px-3 text-foreground font-bold">{ch.server}</td>
-                  <td className="py-2 px-3 text-muted text-[10px] uppercase font-bold">{ch.kind}</td>
-                  <td className="py-2 px-3 text-red-950 bg-red-50 border-r-2 border-border break-all font-medium">{ch.before}</td>
-                  <td className={`py-2 px-3 break-all font-medium ${
-                    ch.direction === "degraded" ? "text-orange-950 bg-orange-50" : ch.direction === "improved" ? "text-emerald-950 bg-emerald-50" : "text-foreground"
+                <tr key={idx} className="hover:bg-surface-1 transition-colors h-8">
+                  <td className="px-3 py-1 text-foreground font-mono text-[12px]">{ch.server}</td>
+                  <td className="px-3 py-1 text-muted text-[12px] capitalize">{ch.kind}</td>
+                  <td className="px-3 py-1 font-mono text-[12px] text-red-950 bg-red-50/50 border-r border-border break-all">{ch.before}</td>
+                  <td className={`px-3 py-1 font-mono text-[12px] break-all ${
+                    ch.direction === "degraded" ? "text-orange-950 bg-orange-50/50" : ch.direction === "improved" ? "text-emerald-950 bg-emerald-50/50" : "text-foreground"
                   }`}>
                     {ch.after}
                   </td>
-                  <td className="py-2 px-3 text-center"><DirLabel dir={ch.direction} /></td>
-                  <td className="py-2 px-3 text-right"><SeverityBadge severity={ch.severity} /></td>
+                  <td className="px-3 py-1 text-center"><DirLabel dir={ch.direction} /></td>
+                  <td className="px-3 py-1 text-right"><SeverityBadge severity={ch.severity} /></td>
                 </tr>
               ))}
             </tbody>
@@ -238,7 +238,7 @@ function Content() {
 }
 
 function DirLabel({ dir }: { dir: DriftDirection }) {
-  if (dir === "degraded") return <span className="text-[10px] font-mono font-bold bg-sev-critical text-white border border-border px-1.5 py-0.5 xcor-shadow-subtle">▼ degraded</span>;
-  if (dir === "improved") return <span className="text-[10px] font-mono font-bold bg-sev-pass text-foreground border border-border px-1.5 py-0.5 xcor-shadow-subtle">▲ improved</span>;
-  return <span className="text-[10px] font-mono font-bold bg-neutral-200 text-foreground border border-border px-1.5 py-0.5">{dir}</span>;
+  if (dir === "degraded") return <span className="text-[11px] font-medium text-sev-critical bg-sev-critical-bg px-1.5 py-0.5 rounded-[var(--radius-xs)]">▼ degraded</span>;
+  if (dir === "improved") return <span className="text-[11px] font-medium text-sev-pass bg-sev-pass-bg px-1.5 py-0.5 rounded-[var(--radius-xs)]">▲ improved</span>;
+  return <span className="text-[11px] font-medium text-muted bg-surface-2 px-1.5 py-0.5 rounded-[var(--radius-xs)]">{dir}</span>;
 }

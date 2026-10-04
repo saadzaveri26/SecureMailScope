@@ -1,22 +1,31 @@
 "use client";
 
-import { useState, useEffect, useCallback, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import type { Capture, Summary, Finding, CustodyEvent } from "@/types";
-import { getCaptures, getSummary, getFindings, getCustody } from "@/data";
+import {
+  getCaptures,
+  getSummary,
+  getFindings,
+  getCustody,
+  checkFactorArithmetic,
+  formatBytes,
+} from "@/data";
 import { SeverityBadge } from "@/components/severity";
+import { EvidenceTag } from "@/components/evidence-tag";
 import {
   Copy,
   Check,
-  ShieldWarning,
   WarningCircle,
+  CheckCircle,
   FileCode,
+  ShieldCheck,
+  ShieldWarning,
   LockKeyOpen,
   ArrowRight,
   Fingerprint,
-  Info,
 } from "@phosphor-icons/react";
-import Link from "next/link";
 
 export default function OverviewPage() {
   return (
@@ -28,12 +37,11 @@ export default function OverviewPage() {
 
 function OverviewSkeleton() {
   return (
-    <div className="max-w-[1600px] mx-auto px-4 py-4 space-y-4 animate-pulse select-none">
-      <div className="h-5 w-40 bg-surface-2 rounded-[var(--radius-sm)]" />
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-        <div className="lg:col-span-3 bg-surface-0 border border-border rounded-[var(--radius-md)] p-4 h-96 xcor-shadow" />
-        <div className="lg:col-span-5 bg-surface-0 border border-border rounded-[var(--radius-md)] p-4 h-96 xcor-shadow" />
-        <div className="lg:col-span-4 bg-surface-0 border border-border rounded-[var(--radius-md)] p-4 h-96 xcor-shadow" />
+    <div className="w-full px-4 2xl:px-6 py-3 space-y-3 animate-pulse select-none">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-3 h-[calc(100vh-112px)]">
+        <div className="bg-surface-0 border border-border rounded-[var(--radius-md)] p-3" />
+        <div className="bg-surface-0 border border-border rounded-[var(--radius-md)] p-3" />
+        <div className="bg-surface-0 border border-border rounded-[var(--radius-md)] p-3" />
       </div>
     </div>
   );
@@ -51,33 +59,12 @@ function OverviewContent() {
   const [error, setError] = useState<string | null>(null);
 
   const [copiedSha, setCopiedSha] = useState(false);
-  const [copiedConfig, setCopiedConfig] = useState(false);
-  const [configTab, setConfigTab] = useState<"postfix" | "dovecot">("postfix");
+  const [copiedFilterId, setCopiedFilterId] = useState<string | null>(null);
 
-  function copyText(txt: string, setFn: (v: boolean) => void) {
-    navigator.clipboard.writeText(txt);
-    setFn(true);
-    setTimeout(() => setFn(false), 2000);
+  function copy(text: string, cb: () => void) {
+    navigator.clipboard.writeText(text);
+    cb();
   }
-
-  const load = useCallback(async () => {
-    try {
-      const [c, s, f, cu] = await Promise.all([
-        getCaptures(),
-        getSummary(captureId),
-        getFindings(captureId),
-        getCustody(captureId),
-      ]);
-      setCaps(c);
-      setSummary(s);
-      setFindings(f);
-      setCustody(cu);
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "Failed to load overview");
-    } finally {
-      setLoading(false);
-    }
-  }, [captureId]);
 
   useEffect(() => {
     let active = true;
@@ -88,19 +75,17 @@ function OverviewContent() {
       getCustody(captureId),
     ])
       .then(([c, s, f, cu]) => {
-        if (active) {
-          setCaps(c);
-          setSummary(s);
-          setFindings(f);
-          setCustody(cu);
-          setLoading(false);
-        }
+        if (!active) return;
+        setCaps(c);
+        setSummary(s);
+        setFindings(f);
+        setCustody(cu);
+        setLoading(false);
       })
       .catch((e: unknown) => {
-        if (active) {
-          setError(e instanceof Error ? e.message : "Failed to load overview");
-          setLoading(false);
-        }
+        if (!active) return;
+        setError(e instanceof Error ? e.message : "Failed to load overview");
+        setLoading(false);
       });
     return () => {
       active = false;
@@ -109,550 +94,603 @@ function OverviewContent() {
 
   if (loading) return <OverviewSkeleton />;
 
-  if (error) {
+  if (error || !summary) {
     return (
-      <div className="max-w-[1600px] mx-auto px-4 py-6">
-        <div className="bg-sev-critical-bg border border-border rounded-[var(--radius-md)] p-4 space-y-2 xcor-shadow" role="alert">
-          <p className="text-[var(--font-size-md)] font-mono font-bold text-sev-critical">Unable to load posture overview</p>
-          <p className="text-[var(--font-size-md)] font-mono text-muted">{error}</p>
-          <button
-            onClick={() => { setLoading(true); setError(null); load(); }}
-            className="text-[var(--font-size-md)] font-mono font-bold text-text-tertiary underline cursor-pointer focus-ring rounded-[var(--radius-xs)]"
-          >
-            Retry analysis
-          </button>
+      <div className="w-full px-4 2xl:px-6 py-4">
+        <div className="bg-sev-critical-bg border border-border rounded-[var(--radius-md)] p-4 space-y-2">
+          <p className="text-[13px] font-semibold text-sev-critical">Unable to load posture overview</p>
+          <p className="text-[12px] text-muted">{error ?? "Capture data unavailable"}</p>
         </div>
       </div>
     );
   }
 
-  if (!summary) return null;
-
-  const currentCap = caps.find((c) => c.id === captureId) || caps[0];
+  const currentCap = caps.find((c) => c.id === captureId) ?? caps[0];
   const score = summary.posture.score;
   const grade = summary.posture.grade;
-  const hasNoTraffic = score == null || (summary.visibility?.sessions_total ?? 0) === 0;
-  const isHealthy = !hasNoTraffic && score >= 80;
-  const isCritical = !hasNoTraffic && score < 60;
-
-  const totalSev =
-    summary.severity_counts.critical +
-    summary.severity_counts.high +
-    summary.severity_counts.medium +
-    summary.severity_counts.low +
-    summary.severity_counts.info;
-
-  const totalProto =
+  const arithmetic = checkFactorArithmetic(summary);
+  const emailSessions =
     summary.protocol_counts.smtp +
     summary.protocol_counts.imap +
-    summary.protocol_counts.pop3 +
-    summary.protocol_counts.unknown;
+    summary.protocol_counts.pop3;
+  const hasNoTraffic = score == null || grade == null || emailSessions === 0;
+  const isHealthy = !hasNoTraffic && score >= 80;
+  const isCritical = !hasNoTraffic && score < 60;
+  const compliant = isHealthy;
+
+  const totalProto = emailSessions + summary.protocol_counts.unknown || 1;
 
   const totalTrans =
     summary.transport_counts.implicit_tls +
     summary.transport_counts.starttls +
-    summary.transport_counts.plaintext;
+    summary.transport_counts.plaintext || 1;
 
-  const cleartextCreds = findings
-    .filter((f) => f.rule_id === "TR-001" || f.title.toLowerCase().includes("cleartext") || f.description.toLowerCase().includes("cleartext"))
-    .reduce((acc, f) => acc + (f.context?.sessions_affected || 1), 0);
+  const cleartextCount = findings
+    .filter(
+      (f) =>
+        f.rule_id === "TR-001" ||
+        f.title.toLowerCase().includes("cleartext") ||
+        f.description.toLowerCase().includes("cleartext")
+    )
+    .reduce((acc, f) => acc + (f.context?.sessions_affected ?? 1), 0);
 
-  const downgradeAttempts = findings
-    .filter((f) => f.rule_id === "STARTTLS-001" || f.title.toLowerCase().includes("downgrade"))
-    .reduce((acc, f) => acc + (f.context?.sessions_affected || 1), 0);
+  const downgradeCount = findings
+    .filter(
+      (f) =>
+        f.rule_id === "STARTTLS-001" ||
+        f.title.toLowerCase().includes("downgrade") ||
+        f.title.toLowerCase().includes("strip")
+    )
+    .reduce((acc, f) => acc + (f.context?.sessions_affected ?? 1), 0);
 
-  const nonPfsCount = findings.filter(
-    (f) => f.rule_id === "CIPHER-001" || f.title.toLowerCase().includes("forward secrecy") || f.title.toLowerCase().includes("pfs")
-  ).length;
-  const nonPfsPercent = nonPfsCount > 0 ? `${Math.min(100, nonPfsCount * 20)}%` : "0%";
+  const noPfsCount = findings
+    .filter(
+      (f) =>
+        f.rule_id === "CIPHER-001" ||
+        f.title.toLowerCase().includes("forward secrecy") ||
+        f.title.toLowerCase().includes("pfs")
+    )
+    .reduce((acc, f) => acc + (f.context?.sessions_affected ?? 1), 0);
 
-  const postfixConfig = `# SecureMailScope Hardened Postfix Configuration (main.cf)
-# Generated for: ${currentCap?.filename || "mail_service"}
-# Enforces RFC 8314 mandatory transport encryption & PFS ciphers
+  const verdictSummary = hasNoTraffic
+    ? "No SMTP, IMAP, or POP3 email sessions were detected in this packet capture. SecureMailScope specifically evaluates email cryptographic protocols (ports 25, 465, 587, 110, 995, 143, and 993)."
+    : score < 60
+    ? "Critical posture degradation observed. Plaintext authentication was accepted before TLS negotiation, and legacy cipher suites lacking forward secrecy were negotiated across submission endpoints."
+    : score < 80
+    ? "Posture is degraded. Several email sessions rely on legacy transport parameters or unhardened STARTTLS configurations."
+    : "All evaluated sessions satisfied RFC 8314 standards. Encrypted transports and modern TLS 1.3 cipher suites were enforced without cleartext authentication or downgrade vulnerabilities.";
 
-# Mandatory TLS protocol constraints (Disallow SSLv2, SSLv3, TLS 1.0, TLS 1.1)
-smtpd_tls_mandatory_protocols = >=TLSv1.2
-smtpd_tls_protocols = >=TLSv1.2
-smtp_tls_protocols = >=TLSv1.2
-
-# Cipher suite configuration: AEAD & Perfect Forward Secrecy mandatory
-smtpd_tls_mandatory_ciphers = high
-smtpd_tls_exclude_ciphers = aNULL, eNULL, EXPORT, DES, RC4, MD5, 3DES, CBC
-tls_high_cipherlist = ECDHE+AESGCM:ECDHE+CHACHA20:DHE+AESGCM
-
-# Prevent Cleartext Authentication before TLS
-smtpd_tls_auth_only = yes
-smtpd_tls_security_level = encrypt
-tls_ffdhe_auto_groups = ffdhe2048:ffdhe3072`;
-
-  const dovecotConfig = `# SecureMailScope Hardened Dovecot Configuration (10-ssl.conf)
-# Generated for: ${currentCap?.filename || "mail_service"}
-# Enforces secure IMAP/POP3 authentication and TLS 1.2+
-
-# Disable all cleartext authentication
-disable_plaintext_auth = yes
-ssl = required
-
-# Disallow legacy TLS versions
-ssl_min_protocol = TLSv1.2
-
-# Enforce Perfect Forward Secrecy (PFS) and modern AEAD ciphers
-ssl_cipher_list = ECDHE+AESGCM:ECDHE+CHACHA20:DHE+AESGCM
-ssl_prefer_server_ciphers = yes
-
-# Diffie-Hellman parameters (3072-bit minimum)
-ssl_dh = </etc/dovecot/dh.pem`;
-
-  const activeSnippet = configTab === "postfix" ? postfixConfig : dovecotConfig;
+  const prioritizedFixes = [...findings]
+    .sort((a, b) => {
+      const order: Record<string, number> = { critical: 4, high: 3, medium: 2, low: 1, info: 0 };
+      return (order[b.severity] ?? 0) - (order[a.severity] ?? 0);
+    })
+    .slice(0, 6);
 
   return (
-    <div className="max-w-[1600px] mx-auto px-4 py-4 space-y-4 select-none font-mono">
-      {hasNoTraffic && (
-        <div className="bg-sev-medium-bg border border-border rounded-[var(--radius-md)] p-4 xcor-shadow" role="alert">
-          <div className="flex items-center gap-2 text-foreground font-bold text-[var(--font-size-xl)]">
-            <WarningCircle size={18} weight="bold" className="text-sev-medium" />
-            <span>NO EMAIL SESSIONS DETECTED IN THIS CAPTURE</span>
-          </div>
-          <p className="text-[var(--font-size-md)] text-muted mt-1">
-            This packet capture contains no SMTP, IMAP, or POP3 exchanges. Passive cryptographic posture assessment requires active email protocol traffic.
-          </p>
-        </div>
-      )}
-
-      {/* 3-Column Priority Operations Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-        {/* ================= COLUMN 1: SCORE & CUSTODY (3 cols) ================= */}
-        <div className="lg:col-span-3 space-y-4 flex flex-col justify-between">
-          {/* Posture Score Card */}
-          <div className="bg-surface-0 border border-border rounded-[var(--radius-md)] p-4 space-y-4 xcor-shadow">
-            <div className="flex items-center justify-between border-b border-border pb-2">
-              <span className="text-[var(--font-size-md)] font-bold uppercase tracking-wider text-foreground">
-                Posture Score
-              </span>
-              <span className="text-[var(--font-size-sm)] bg-accent/10 text-accent px-1.5 py-0.5 rounded-[var(--radius-sm)] font-bold">
-                PASSIVE
-              </span>
+    <div className="w-full px-4 2xl:px-6 py-3 select-none text-[13px] h-[calc(100vh-88px)] flex flex-col overflow-hidden">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-3 flex-1 min-h-0">
+        {/* ================= LANE 1: VERDICT ================= */}
+        <section
+          className="bg-surface-0 border border-border rounded-[var(--radius-md)] p-3 xcor-shadow flex flex-col min-h-0 overflow-hidden"
+          aria-label="Lane 1: Verdict"
+        >
+          <div className="flex items-center justify-between pb-2 border-b border-border shrink-0">
+            <div className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-accent" />
+              <h2 className="text-[14px] font-semibold text-foreground">Verdict</h2>
             </div>
+            <span className="text-[11px] text-muted font-medium">Capture posture score</span>
+          </div>
 
-            <div className="flex items-center gap-3">
-              <div
-                className={`w-16 h-16 flex flex-col items-center justify-center shrink-0 rounded-[var(--radius-md)] font-bold ${
-                  hasNoTraffic
-                    ? "bg-surface-2 text-muted"
-                    : isHealthy
-                    ? "bg-sev-pass text-white"
-                    : isCritical
-                    ? "bg-sev-critical text-white"
-                    : "bg-accent text-white"
-                }`}
-              >
-                <span className="text-3xl leading-none tabular-nums">{score ?? "—"}</span>
-                <span className="text-[var(--font-size-sm)] tracking-wider mt-0.5 opacity-80">/ 100</span>
-              </div>
-
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-base font-bold text-foreground">
-                    {hasNoTraffic ? "No Traffic" : `Grade ${grade}`}
+          <div className="flex-1 overflow-y-auto pr-1 pt-2 space-y-3">
+            {/* Score Block */}
+            <div className="bg-surface-1 rounded-[var(--radius-sm)] p-3 border border-border space-y-2">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-[44px] leading-none font-bold font-mono tabular-nums text-foreground">
+                    {hasNoTraffic ? "—" : score ?? "—"}
                   </span>
+                  <span className="text-muted text-[13px] font-mono">/ 100</span>
+                </div>
+
+                <div className="flex flex-col items-end gap-1">
                   <span
-                    className={`px-1.5 py-0.5 rounded-[var(--radius-sm)] text-[var(--font-size-sm)] font-bold uppercase ${
+                    className={`font-mono text-[12px] font-bold px-2 py-0.5 rounded-[var(--radius-xs)] ${
                       hasNoTraffic
                         ? "bg-surface-2 text-muted"
                         : isHealthy
-                        ? "bg-sev-pass-bg text-sev-pass"
+                        ? "bg-sev-pass text-white"
                         : isCritical
-                        ? "bg-sev-critical-bg text-sev-critical"
-                        : "bg-sev-medium-bg text-sev-medium"
+                        ? "bg-sev-critical text-white"
+                        : "bg-sev-medium text-white"
                     }`}
                   >
-                    {hasNoTraffic ? "N/A" : isHealthy ? "Secure" : isCritical ? "Critical" : "Degraded"}
+                    {hasNoTraffic ? "Grade N/A" : `Grade ${grade ?? "—"}`}
+                  </span>
+                  <span
+                    className={`text-[11px] font-semibold ${
+                      hasNoTraffic
+                        ? "text-muted"
+                        : compliant
+                        ? "text-sev-pass"
+                        : "text-sev-critical"
+                    }`}
+                  >
+                    {hasNoTraffic ? "No email traffic" : compliant ? "Compliant" : "Non-compliant"}
                   </span>
                 </div>
-                <span className="text-[var(--font-size-md)] text-muted block mt-0.5 font-medium">
-                  {hasNoTraffic
-                    ? "0 mail sessions observed"
-                    : summary.severity_counts.critical > 0
-                    ? `${summary.severity_counts.critical} critical flaws found`
-                    : "No critical flaws"}
+              </div>
+
+              <div className="pt-2 border-t border-border/80">
+                <p className="text-[12px] text-muted text-prose-cap leading-relaxed">
+                  {verdictSummary}
+                </p>
+              </div>
+            </div>
+
+            {/* Factor Deductions */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <h3 className="text-[12px] font-semibold text-foreground">Factor deductions</h3>
+                <span className="text-[11px] font-mono text-muted">{summary.posture.factors.length} factors</span>
+              </div>
+
+              {hasNoTraffic && summary.limitations && summary.limitations.length > 0 ? (
+                <div className="p-2.5 bg-surface-1 border border-border rounded-[var(--radius-xs)] text-[12px] text-muted space-y-1">
+                  {summary.limitations.map((lim, idx) => (
+                    <div key={idx} className="flex items-start gap-1.5">
+                      <WarningCircle size={14} className="text-sev-medium shrink-0 mt-0.5" />
+                      <span>{lim}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-1.5">
+                  {summary.posture.factors.map((f) => (
+                    <div
+                      key={f.name}
+                      className="p-2 bg-surface-1/60 border border-border rounded-[var(--radius-xs)] flex items-center justify-between gap-2"
+                    >
+                      <div className="min-w-0">
+                        <span className="text-[12px] font-medium text-foreground block truncate">
+                          {f.name}
+                        </span>
+                        <span className="text-[11px] text-muted block truncate">
+                          {f.detail}
+                        </span>
+                      </div>
+                      <span
+                        className={`font-mono text-[11px] font-bold px-1.5 py-0.5 rounded-[var(--radius-xs)] shrink-0 tabular-nums ${
+                          f.impact < 0
+                            ? "bg-sev-critical-bg text-sev-critical"
+                            : "bg-sev-pass-bg text-sev-pass"
+                        }`}
+                      >
+                        {f.impact > 0 ? "+" : ""}
+                        {f.impact} pts
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="p-2 bg-surface-1 border border-border rounded-[var(--radius-xs)] text-[11px] font-mono text-muted flex items-center justify-between">
+                <span>Arithmetic verification:</span>
+                <span className="text-foreground font-medium">
+                  {hasNoTraffic ? "N/A (0 email sessions evaluated)" : arithmetic.arithmeticString}
                 </span>
               </div>
             </div>
 
-            {/* Factor Deductions breakdown bars */}
-            <div className="space-y-2.5 pt-2 border-t border-border">
-              <span className="text-[var(--font-size-sm)] font-bold uppercase tracking-wider text-foreground block">
-                Factor Impact Breakdown
-              </span>
+            {/* Custody Verification */}
+            <div className="space-y-2 pt-2 border-t border-border">
+              <div className="flex items-center justify-between">
+                <h3 className="text-[12px] font-semibold text-foreground flex items-center gap-1.5">
+                  <Fingerprint size={14} weight="bold" className="text-muted" />
+                  <span>Custody verification</span>
+                </h3>
+              </div>
 
-              {summary.posture.factors.map((f) => (
-                <div key={f.name} className="space-y-1">
-                  <div className="flex items-center justify-between text-[var(--font-size-md)]">
-                    <span className="text-foreground font-bold text-[11px] truncate max-w-[160px]">{f.name}</span>
-                    <span
-                      className={`tabular-nums font-bold text-[11px] px-1 rounded-[var(--radius-xs)] ${
-                        f.impact < 0 ? "bg-sev-critical-bg text-sev-critical" : "bg-sev-pass-bg text-sev-pass"
-                      }`}
+              <div className="bg-surface-1/60 border border-border rounded-[var(--radius-xs)] p-2 space-y-2 text-[11px]">
+                <div>
+                  <span className="text-muted block text-[10px] font-medium">SHA-256 custody hash:</span>
+                  <div className="flex items-center justify-between gap-1 mt-0.5">
+                    <code className="text-[11px] text-foreground font-mono truncate select-all">
+                      {currentCap?.sha256}
+                    </code>
+                    <button
+                      onClick={() =>
+                        copy(currentCap?.sha256 ?? "", () => {
+                          setCopiedSha(true);
+                          setTimeout(() => setCopiedSha(false), 2000);
+                        })
+                      }
+                      className="p-1 text-muted hover:text-foreground shrink-0 cursor-pointer"
+                      title="Copy full SHA-256 hash"
                     >
-                      {f.impact > 0 ? "+" : ""}{f.impact} pts
+                      {copiedSha ? <Check size={12} weight="bold" className="text-sev-pass" /> : <Copy size={12} weight="bold" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2 pt-1 border-t border-border font-mono">
+                  <div>
+                    <span className="text-muted block text-[10px] font-sans">Raw file size:</span>
+                    <span className="text-foreground font-medium tabular-nums">
+                      {formatBytes(currentCap?.size_bytes)}
                     </span>
                   </div>
-                  <div className="h-2 w-full bg-surface-1 rounded-full overflow-hidden">
-                    <div
-                      className={`h-full rounded-full transition-all duration-[var(--motion-slower)] ${f.impact < 0 ? "bg-sev-critical" : "bg-sev-pass"}`}
-                      style={{ width: `${Math.min(100, Math.max(8, Math.abs(f.impact) * 3))}%` }}
-                    />
+                  <div>
+                    <span className="text-muted block text-[10px] font-sans">Packet count:</span>
+                    <span className="text-foreground font-medium tabular-nums">
+                      {currentCap?.packet_count?.toLocaleString()}
+                    </span>
                   </div>
-                  <p className="text-[var(--font-size-sm)] text-muted truncate">{f.detail}</p>
+                  <div>
+                    <span className="text-muted block text-[10px] font-sans">Trace duration:</span>
+                    <span className="text-foreground font-medium tabular-nums">
+                      {currentCap?.duration_s != null ? `${currentCap.duration_s}s` : "—"}
+                    </span>
+                  </div>
                 </div>
-              ))}
+              </div>
             </div>
           </div>
+        </section>
 
-          {/* PCAP Forensic Metadata */}
-          <div className="bg-surface-0 border border-border rounded-[var(--radius-md)] p-3.5 space-y-2 text-[var(--font-size-md)] xcor-shadow">
-            <div className="flex items-center justify-between border-b border-border pb-2">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-foreground">
-                Capture Custody Chain
-              </span>
-              <Fingerprint size={15} weight="bold" className="text-muted" />
+        {/* ================= LANE 2: EVIDENCE ================= */}
+        <section
+          className="bg-surface-0 border border-border rounded-[var(--radius-md)] p-3 xcor-shadow flex flex-col min-h-0 overflow-hidden"
+          aria-label="Lane 2: Evidence"
+        >
+          <div className="flex items-center justify-between pb-2 border-b border-border shrink-0">
+            <div className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-accent" />
+              <h2 className="text-[14px] font-semibold text-foreground">Evidence</h2>
             </div>
+            <span className="text-[11px] text-muted font-medium">Protocol & transport observation</span>
+          </div>
 
-            <div className="space-y-2 text-[11px]">
-              <div>
-                <span className="text-muted block text-[var(--font-size-sm)] font-bold uppercase">SHA-256 Custody Hash:</span>
-                <div className="flex items-center justify-between gap-1 bg-surface-1 px-1.5 py-1 rounded-[var(--radius-xs)] mt-0.5">
-                  <code className="text-[var(--font-size-sm)] text-foreground font-bold truncate select-all">{currentCap?.sha256}</code>
-                  <button
-                    onClick={() => copyText(currentCap?.sha256 || "", setCopiedSha)}
-                    className="p-0.5 text-muted hover:text-foreground shrink-0 cursor-pointer focus-ring rounded-[var(--radius-xs)]"
-                    aria-label="Copy full SHA-256 to clipboard"
+          <div className="flex-1 overflow-y-auto pr-1 pt-2 space-y-3">
+            {/* Dynamic Impact Counters (3 required) */}
+            <div className="space-y-1.5">
+              <h3 className="text-[12px] font-semibold text-foreground">Impact observations</h3>
+
+              <div className="space-y-1.5">
+                {/* Cleartext Auth */}
+                {cleartextCount > 0 ? (
+                  <Link
+                    href={`/sessions?capture=${captureId}&filter=cleartext`}
+                    className="p-2 bg-sev-critical-bg/50 border border-sev-critical/30 rounded-[var(--radius-xs)] flex items-center justify-between gap-2 hover:bg-sev-critical-bg transition-colors"
                   >
-                    {copiedSha ? <Check size={12} weight="bold" className="text-sev-pass" /> : <Copy size={12} weight="bold" />}
-                  </button>
-                </div>
-              </div>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <LockKeyOpen size={15} weight="bold" className="text-sev-critical shrink-0" />
+                      <span className="text-[12px] font-medium text-sev-critical">
+                        {cleartextCount} sessions exposed credentials in cleartext
+                      </span>
+                    </div>
+                    <ArrowRight size={12} weight="bold" className="text-sev-critical shrink-0" />
+                  </Link>
+                ) : (
+                  <div className="p-2 bg-surface-1 border border-border rounded-[var(--radius-xs)] flex items-center gap-2">
+                    <CheckCircle size={15} weight="bold" className="text-sev-pass shrink-0" />
+                    <span className="text-[12px] font-medium text-foreground">
+                      0 sessions exposed cleartext credentials
+                    </span>
+                  </div>
+                )}
 
-              <div className="grid grid-cols-2 gap-2 pt-1 border-t border-border">
-                <div>
-                  <span className="text-muted block text-[var(--font-size-sm)] font-bold uppercase">Total Packets:</span>
-                  <span className="text-foreground font-bold tabular-nums">{currentCap?.packet_count?.toLocaleString()}</span>
-                </div>
-                <div>
-                  <span className="text-muted block text-[var(--font-size-sm)] font-bold uppercase">Raw File Size:</span>
-                  <span className="text-foreground font-bold tabular-nums">
-                    {currentCap?.size_bytes ? `${(currentCap.size_bytes / 1024 / 1024).toFixed(2)} MB` : "1.2 MB"}
-                  </span>
-                </div>
-              </div>
+                {/* STARTTLS Downgrade */}
+                {downgradeCount > 0 ? (
+                  <Link
+                    href={`/sessions?capture=${captureId}&filter=starttls_downgrade`}
+                    className="p-2 bg-sev-high-bg/50 border border-sev-high/30 rounded-[var(--radius-xs)] flex items-center justify-between gap-2 hover:bg-sev-high-bg transition-colors"
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <WarningCircle size={15} weight="bold" className="text-sev-high shrink-0" />
+                      <span className="text-[12px] font-medium text-sev-high">
+                        {downgradeCount} sessions had STARTTLS stripped or failed
+                      </span>
+                    </div>
+                    <ArrowRight size={12} weight="bold" className="text-sev-high shrink-0" />
+                  </Link>
+                ) : (
+                  <div className="p-2 bg-surface-1 border border-border rounded-[var(--radius-xs)] flex items-center gap-2">
+                    <CheckCircle size={15} weight="bold" className="text-sev-pass shrink-0" />
+                    <span className="text-[12px] font-medium text-foreground">
+                      0 sessions had STARTTLS stripped or failed
+                    </span>
+                  </div>
+                )}
 
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <span className="text-muted block text-[var(--font-size-sm)] font-bold uppercase">Trace Duration:</span>
-                  <span className="text-foreground font-bold tabular-nums">{currentCap?.duration_s || 60}s</span>
-                </div>
-                <div>
-                  <span className="text-muted block text-[var(--font-size-sm)] font-bold uppercase">Ruleset Engine:</span>
-                  <span className="text-foreground font-bold">2025.03.1</span>
-                </div>
+                {/* Forward Secrecy Missing */}
+                {noPfsCount > 0 ? (
+                  <Link
+                    href={`/sessions?capture=${captureId}&filter=no_pfs`}
+                    className="p-2 bg-sev-medium-bg/50 border border-sev-medium/30 rounded-[var(--radius-xs)] flex items-center justify-between gap-2 hover:bg-sev-medium-bg transition-colors"
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <ShieldWarning size={15} weight="bold" className="text-sev-medium shrink-0" />
+                      <span className="text-[12px] font-medium text-sev-medium">
+                        {noPfsCount} sessions lack forward secrecy (RSA key exchange)
+                      </span>
+                    </div>
+                    <ArrowRight size={12} weight="bold" className="text-sev-medium shrink-0" />
+                  </Link>
+                ) : (
+                  <div className="p-2 bg-surface-1 border border-border rounded-[var(--radius-xs)] flex items-center gap-2">
+                    <CheckCircle size={15} weight="bold" className="text-sev-pass shrink-0" />
+                    <span className="text-[12px] font-medium text-foreground">
+                      0 sessions lack forward secrecy
+                    </span>
+                  </div>
+                )}
               </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ================= COLUMN 2: ACTIONABLE THREAT EVIDENCE (5 cols) ================= */}
-        <div className="lg:col-span-5 space-y-4">
-          {/* Threat Detection Tiles */}
-          <div className="grid grid-cols-3 gap-2.5">
-            <div className="bg-surface-0 border border-border rounded-[var(--radius-md)] p-3 space-y-1 xcor-shadow-subtle">
-              <div className="flex items-center gap-1.5 text-sev-critical text-[var(--font-size-md)] font-bold uppercase">
-                <LockKeyOpen size={14} weight="bold" />
-                <span>Plaintext</span>
-              </div>
-              <div className="text-2xl font-bold tabular-nums text-foreground">
-                {cleartextCreds}
-              </div>
-              <span className="text-[var(--font-size-sm)] text-muted block leading-tight font-medium">
-                {cleartextCreds > 0 ? "Exposed credentials detected" : "No plaintext auth"}
-              </span>
-            </div>
-
-            <div className="bg-surface-0 border border-border rounded-[var(--radius-md)] p-3 space-y-1 xcor-shadow-subtle">
-              <div className="flex items-center gap-1.5 text-sev-high text-[var(--font-size-md)] font-bold uppercase">
-                <WarningCircle size={14} weight="bold" />
-                <span>Downgrades</span>
-              </div>
-              <div className="text-2xl font-bold tabular-nums text-foreground">
-                {downgradeAttempts}
-              </div>
-              <span className="text-[var(--font-size-sm)] text-muted block leading-tight font-medium">
-                {downgradeAttempts > 0 ? "STARTTLS strip tampering" : "No forced fallbacks"}
-              </span>
-            </div>
-
-            <div className="bg-surface-0 border border-border rounded-[var(--radius-md)] p-3 space-y-1 xcor-shadow-subtle">
-              <div className="flex items-center gap-1.5 text-sev-medium text-[var(--font-size-md)] font-bold uppercase">
-                <ShieldWarning size={14} weight="bold" />
-                <span>Non-PFS</span>
-              </div>
-              <div className="text-2xl font-bold tabular-nums text-foreground">
-                {nonPfsPercent}
-              </div>
-              <span className="text-[var(--font-size-sm)] text-muted block leading-tight font-medium">
-                Legacy static RSA / CBC
-              </span>
-            </div>
-          </div>
-
-          {/* Traffic & Cryptography Distribution Panel */}
-          <div className="bg-surface-0 border border-border rounded-[var(--radius-md)] p-4 space-y-4 xcor-shadow">
-            <div className="flex items-center justify-between border-b border-border pb-2">
-              <span className="text-[var(--font-size-md)] font-bold uppercase tracking-wider text-foreground">
-                Traffic & Cryptographic Breakdown
-              </span>
-              <span className="text-[var(--font-size-md)] text-foreground font-bold tabular-nums bg-surface-1 px-1.5 py-0.5 rounded-[var(--radius-sm)]">
-                {totalProto} Observed Sessions
-              </span>
             </div>
 
             {/* Protocol Distribution */}
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between text-[var(--font-size-md)]">
-                <span className="text-foreground font-bold text-[11px] uppercase">Protocol Distribution</span>
-                <span className="text-[11px] text-muted font-bold tabular-nums">
-                  SMTP ({summary.protocol_counts.smtp}) · IMAP ({summary.protocol_counts.imap}) · POP3 ({summary.protocol_counts.pop3})
+            <div className="space-y-1.5 pt-2 border-t border-border">
+              <div className="flex items-center justify-between text-[12px]">
+                <h3 className="font-semibold text-foreground">Protocol distribution</h3>
+                <span className="font-mono text-muted text-[11px] tabular-nums">
+                  {totalProto} sessions
                 </span>
               </div>
-              <div className="h-3 w-full bg-surface-1 rounded-full flex overflow-hidden">
-                {summary.protocol_counts.smtp > 0 && (
-                  <div
-                    style={{ width: `${(summary.protocol_counts.smtp / totalProto) * 100}%` }}
-                    className="bg-sky-500 h-full"
-                    title={`SMTP: ${summary.protocol_counts.smtp}`}
-                  />
-                )}
-                {summary.protocol_counts.imap > 0 && (
-                  <div
-                    style={{ width: `${(summary.protocol_counts.imap / totalProto) * 100}%` }}
-                    className="bg-accent h-full"
-                    title={`IMAP: ${summary.protocol_counts.imap}`}
-                  />
-                )}
-                {summary.protocol_counts.pop3 > 0 && (
-                  <div
-                    style={{ width: `${(summary.protocol_counts.pop3 / totalProto) * 100}%` }}
-                    className="bg-purple-500 h-full"
-                    title={`POP3: ${summary.protocol_counts.pop3}`}
-                  />
-                )}
+
+              <div className="h-2.5 w-full bg-surface-1 rounded-full flex overflow-hidden">
+                <div
+                  style={{ width: `${(summary.protocol_counts.smtp / totalProto) * 100}%` }}
+                  className="bg-sky-500 h-full"
+                  title={`SMTP: ${summary.protocol_counts.smtp}`}
+                />
+                <div
+                  style={{ width: `${(summary.protocol_counts.imap / totalProto) * 100}%` }}
+                  className="bg-accent h-full"
+                  title={`IMAP: ${summary.protocol_counts.imap}`}
+                />
+                <div
+                  style={{ width: `${(summary.protocol_counts.pop3 / totalProto) * 100}%` }}
+                  className="bg-purple-500 h-full"
+                  title={`POP3: ${summary.protocol_counts.pop3}`}
+                />
+              </div>
+
+              <div className="grid grid-cols-3 gap-2 pt-1 font-mono text-[11px]">
+                <div className="p-1.5 bg-surface-1 rounded-[var(--radius-xs)] flex items-center justify-between">
+                  <span className="text-muted font-sans">SMTP</span>
+                  <span className="text-foreground font-semibold tabular-nums">{summary.protocol_counts.smtp}</span>
+                </div>
+                <div className="p-1.5 bg-surface-1 rounded-[var(--radius-xs)] flex items-center justify-between">
+                  <span className="text-muted font-sans">IMAP</span>
+                  <span className="text-foreground font-semibold tabular-nums">{summary.protocol_counts.imap}</span>
+                </div>
+                <div className="p-1.5 bg-surface-1 rounded-[var(--radius-xs)] flex items-center justify-between">
+                  <span className="text-muted font-sans">POP3</span>
+                  <span className="text-foreground font-semibold tabular-nums">{summary.protocol_counts.pop3}</span>
+                </div>
               </div>
             </div>
 
-            {/* Transport Distribution */}
+            {/* Transport Encapsulation */}
             <div className="space-y-1.5 pt-2 border-t border-border">
-              <div className="flex items-center justify-between text-[var(--font-size-md)]">
-                <span className="text-foreground font-bold text-[11px] uppercase">Transport Layer Encapsulation</span>
-                <span className="text-[11px] text-muted font-bold tabular-nums">
-                  Implicit ({summary.transport_counts.implicit_tls}) · STARTTLS ({summary.transport_counts.starttls}) · Cleartext ({summary.transport_counts.plaintext})
+              <div className="flex items-center justify-between text-[12px]">
+                <h3 className="font-semibold text-foreground">Transport encapsulation</h3>
+                <span className="font-mono text-muted text-[11px] tabular-nums">
+                  {totalTrans} evaluated
                 </span>
               </div>
-              <div className="h-3 w-full bg-surface-1 rounded-full flex overflow-hidden">
-                {summary.transport_counts.implicit_tls > 0 && (
-                  <div
-                    style={{ width: `${(summary.transport_counts.implicit_tls / totalTrans) * 100}%` }}
-                    className="bg-sev-pass h-full"
-                    title={`Implicit TLS: ${summary.transport_counts.implicit_tls}`}
-                  />
-                )}
-                {summary.transport_counts.starttls > 0 && (
-                  <div
-                    style={{ width: `${(summary.transport_counts.starttls / totalTrans) * 100}%` }}
-                    className="bg-accent h-full"
-                    title={`STARTTLS: ${summary.transport_counts.starttls}`}
-                  />
-                )}
-                {summary.transport_counts.plaintext > 0 && (
-                  <div
-                    style={{ width: `${(summary.transport_counts.plaintext / totalTrans) * 100}%` }}
-                    className="bg-sev-critical h-full"
-                    title={`Plaintext: ${summary.transport_counts.plaintext}`}
-                  />
-                )}
+
+              <div className="h-2.5 w-full bg-surface-1 rounded-full flex overflow-hidden">
+                <div
+                  style={{ width: `${(summary.transport_counts.implicit_tls / totalTrans) * 100}%` }}
+                  className="bg-sev-pass h-full"
+                  title={`Implicit TLS: ${summary.transport_counts.implicit_tls}`}
+                />
+                <div
+                  style={{ width: `${(summary.transport_counts.starttls / totalTrans) * 100}%` }}
+                  className="bg-accent h-full"
+                  title={`STARTTLS: ${summary.transport_counts.starttls}`}
+                />
+                <div
+                  style={{ width: `${(summary.transport_counts.plaintext / totalTrans) * 100}%` }}
+                  className="bg-sev-critical h-full"
+                  title={`Plaintext: ${summary.transport_counts.plaintext}`}
+                />
+              </div>
+
+              <div className="grid grid-cols-3 gap-2 pt-1 font-mono text-[11px]">
+                <div className="p-1.5 bg-surface-1 rounded-[var(--radius-xs)] flex items-center justify-between">
+                  <span className="text-muted font-sans">Implicit</span>
+                  <span className="text-foreground font-semibold tabular-nums">{summary.transport_counts.implicit_tls}</span>
+                </div>
+                <div className="p-1.5 bg-surface-1 rounded-[var(--radius-xs)] flex items-center justify-between">
+                  <span className="text-muted font-sans">STARTTLS</span>
+                  <span className="text-foreground font-semibold tabular-nums">{summary.transport_counts.starttls}</span>
+                </div>
+                <div className="p-1.5 bg-surface-1 rounded-[var(--radius-xs)] flex items-center justify-between">
+                  <span className="text-muted font-sans">Plaintext</span>
+                  <span className={`font-semibold tabular-nums ${summary.transport_counts.plaintext > 0 ? "text-sev-critical" : "text-foreground"}`}>
+                    {summary.transport_counts.plaintext}
+                  </span>
+                </div>
               </div>
             </div>
 
-            {/* Severity Distribution */}
+            {/* Visibility Checklist */}
             <div className="space-y-1.5 pt-2 border-t border-border">
-              <div className="flex items-center justify-between text-[var(--font-size-md)]">
-                <span className="text-foreground font-bold text-[11px] uppercase">Findings by Severity</span>
-                <span className="text-[11px] text-foreground font-bold tabular-nums">{totalSev} Total Findings</span>
-              </div>
-              <div className="h-3 w-full bg-surface-1 rounded-full flex overflow-hidden">
-                {summary.severity_counts.critical > 0 && (
-                  <div
-                    style={{ width: `${(summary.severity_counts.critical / totalSev) * 100}%` }}
-                    className="bg-sev-critical h-full"
-                  />
-                )}
-                {summary.severity_counts.high > 0 && (
-                  <div
-                    style={{ width: `${(summary.severity_counts.high / totalSev) * 100}%` }}
-                    className="bg-sev-high h-full"
-                  />
-                )}
-                {summary.severity_counts.medium > 0 && (
-                  <div
-                    style={{ width: `${(summary.severity_counts.medium / totalSev) * 100}%` }}
-                    className="bg-sev-medium h-full"
-                  />
-                )}
-                {summary.severity_counts.low > 0 && (
-                  <div
-                    style={{ width: `${(summary.severity_counts.low / totalSev) * 100}%` }}
-                    className="bg-surface-2 h-full"
-                  />
-                )}
-                {summary.severity_counts.info > 0 && (
-                  <div
-                    style={{ width: `${(summary.severity_counts.info / totalSev) * 100}%` }}
-                    className="bg-sky-200 h-full"
-                  />
-                )}
-              </div>
+              <h3 className="text-[12px] font-semibold text-foreground">Forensic visibility checklist</h3>
 
-              <div className="flex items-center justify-between text-[11px] pt-1 text-foreground font-bold">
-                <span className="bg-sev-critical-bg text-sev-critical px-1 rounded-[var(--radius-xs)]">Crit: {summary.severity_counts.critical}</span>
-                <span className="bg-sev-high-bg text-sev-high px-1 rounded-[var(--radius-xs)]">High: {summary.severity_counts.high}</span>
-                <span className="bg-sev-medium-bg text-sev-medium px-1 rounded-[var(--radius-xs)]">Med: {summary.severity_counts.medium}</span>
-                <span className="bg-surface-2 text-muted px-1 rounded-[var(--radius-xs)]">Low: {summary.severity_counts.low}</span>
-                <span className="bg-surface-1 text-muted px-1 rounded-[var(--radius-xs)]">Info: {summary.severity_counts.info}</span>
+              <div className="space-y-1.5 text-[12px]">
+                <div className="p-2 bg-surface-1 rounded-[var(--radius-xs)] flex items-center justify-between">
+                  <span className="text-muted">Handshake completion</span>
+                  <span className="font-mono text-foreground font-medium tabular-nums">
+                    {summary.visibility?.handshake_complete ?? 0} complete
+                  </span>
+                </div>
+
+                <div className="p-2 bg-surface-1 rounded-[var(--radius-xs)] flex items-center justify-between">
+                  <span className="text-muted">Certificate observation</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-mono text-foreground font-medium tabular-nums">
+                      {summary.visibility?.certificate_observable ?? 0} seen
+                    </span>
+                    {(summary.visibility?.certificate_hidden_tls13 ?? 0) > 0 && (
+                      <EvidenceTag variant="yellow">Not observable</EvidenceTag>
+                    )}
+                  </div>
+                </div>
+
+                <div className="p-2 bg-surface-1 rounded-[var(--radius-xs)] flex items-center justify-between">
+                  <span className="text-muted">Message layer payload</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-mono text-foreground font-medium tabular-nums">
+                      {summary.visibility?.message_layer_observable ?? 0} plaintext
+                    </span>
+                    {(summary.visibility?.message_layer_observable ?? 0) === 0 && (
+                      <EvidenceTag variant="yellow">Not observable</EvidenceTag>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+        </section>
 
-          {/* Active Observability Limitations */}
-          {summary.limitations.length > 0 && (
-            <div className="bg-surface-0 border border-border rounded-[var(--radius-md)] p-3 text-[var(--font-size-md)] space-y-1 xcor-shadow-subtle">
-              <div className="flex items-center gap-1.5 text-foreground text-[11px] font-bold uppercase">
-                <Info size={14} weight="bold" className="text-muted" />
-                <span>Forensic Limitations</span>
-              </div>
-              {summary.limitations.map((lim, idx) => (
-                <p key={idx} className="text-[11px] text-muted leading-relaxed font-medium">
-                  {lim}
+        {/* ================= LANE 3: FIX ================= */}
+        <section
+          className="bg-surface-0 border border-border rounded-[var(--radius-md)] p-3 xcor-shadow flex flex-col min-h-0 overflow-hidden"
+          aria-label="Lane 3: Fix"
+        >
+          <div className="flex items-center justify-between pb-2 border-b border-border shrink-0">
+            <div className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-accent" />
+              <h2 className="text-[14px] font-semibold text-foreground">Fix</h2>
+            </div>
+            <span className="text-[11px] text-muted font-medium">Prioritized mitigations</span>
+          </div>
+
+          <div className="flex-1 overflow-y-auto pr-1 pt-2 space-y-2.5">
+            {hasNoTraffic ? (
+              <div className="p-4 bg-surface-1 border border-border rounded-[var(--radius-sm)] text-center space-y-2">
+                <FileCode size={28} weight="bold" className="text-muted mx-auto" />
+                <h3 className="text-[13px] font-semibold text-foreground">No email sessions to remediate</h3>
+                <p className="text-[12px] text-muted text-prose-cap mx-auto">
+                  This packet capture contains no SMTP, IMAP, or POP3 sessions. Mitigations are only generated when email security vulnerabilities are detected.
                 </p>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* ================= COLUMN 3: INSTANT REMEDIATION DRAWER (4 cols) ================= */}
-        <div className="lg:col-span-4 space-y-4 flex flex-col justify-between">
-          <div className="bg-surface-0 border border-border rounded-[var(--radius-md)] p-4 space-y-3 flex-1 flex flex-col xcor-shadow">
-            <div className="flex items-center justify-between border-b border-border pb-2">
-              <div className="flex items-center gap-1.5">
-                <FileCode size={16} weight="bold" className="text-accent" />
-                <span className="text-[var(--font-size-md)] font-bold uppercase tracking-wider text-foreground">
-                  Instant MTA Remediation
-                </span>
+                <div className="inline-block px-2 py-0.5 bg-surface-2 text-muted font-mono text-[11px] font-bold rounded-[var(--radius-xs)]">
+                  Remediations N/A
+                </div>
               </div>
-
-              <div className="flex rounded-[var(--radius-sm)] bg-surface-1 overflow-hidden" role="tablist">
-                <button
-                  onClick={() => setConfigTab("postfix")}
-                  role="tab"
-                  aria-selected={configTab === "postfix"}
-                  className={`px-2.5 py-0.5 text-[var(--font-size-md)] font-bold cursor-pointer transition-colors duration-[var(--motion-fast)] focus-ring ${
-                    configTab === "postfix" ? "bg-accent text-white" : "text-muted hover:text-foreground"
-                  }`}
-                >
-                  Postfix
-                </button>
-                <button
-                  onClick={() => setConfigTab("dovecot")}
-                  role="tab"
-                  aria-selected={configTab === "dovecot"}
-                  className={`px-2.5 py-0.5 text-[var(--font-size-md)] font-bold cursor-pointer transition-colors duration-[var(--motion-fast)] border-l border-border focus-ring ${
-                    configTab === "dovecot" ? "bg-accent text-white" : "text-muted hover:text-foreground"
-                  }`}
-                >
-                  Dovecot
-                </button>
+            ) : prioritizedFixes.length === 0 ? (
+              <div className="p-4 bg-surface-1 border border-border rounded-[var(--radius-sm)] text-center space-y-2">
+                <ShieldCheck size={28} weight="bold" className="text-sev-pass mx-auto" />
+                <h3 className="text-[13px] font-semibold text-foreground">No active remediations needed</h3>
+                <p className="text-[12px] text-muted text-prose-cap mx-auto">
+                  All traffic complies with RFC 8314 standards. Encrypted transports and modern cipher suites are actively enforced.
+                </p>
+                <div className="inline-block px-2 py-0.5 bg-sev-pass text-white font-mono text-[11px] font-bold rounded-[var(--radius-xs)]">
+                  +0 pts posture recovery (100/100 A)
+                </div>
               </div>
+            ) : (
+              prioritizedFixes.map((f) => {
+                const recoveryPts =
+                  f.severity === "critical"
+                    ? 25
+                    : f.severity === "high"
+                    ? 15
+                    : f.severity === "medium"
+                    ? 10
+                    : 5;
+
+                return (
+                  <div
+                    key={f.id}
+                    className="p-2.5 bg-surface-1/70 border border-border hover:border-accent/40 rounded-[var(--radius-sm)] space-y-2 transition-colors"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="space-y-0.5 min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <SeverityBadge severity={f.severity} />
+                          <span className="font-mono text-[11px] text-muted">{f.rule_id}</span>
+                        </div>
+                        <h3 className="text-[12px] font-semibold text-foreground leading-snug">
+                          {f.title}
+                        </h3>
+                      </div>
+
+                      <span className="bg-sev-pass-bg text-sev-pass font-mono text-[10px] font-bold px-1.5 py-0.5 rounded-[var(--radius-xs)] shrink-0 whitespace-nowrap">
+                        +{recoveryPts} pts recovery
+                      </span>
+                    </div>
+
+                    <div className="text-[11px] text-muted font-sans leading-tight">
+                      <strong className="text-foreground">Implementation: </strong>
+                      {typeof f.remediation === "string"
+                        ? f.remediation
+                        : f.remediation?.summary ?? "Apply recommended RFC 8314 TLS hardening."}
+                    </div>
+
+                    <div className="space-y-1 pt-1.5 border-t border-border/70">
+                      <div className="flex items-center justify-between text-[10px] font-mono text-muted">
+                        <span>Wireshark filter</span>
+                        <button
+                          onClick={() =>
+                            copy(f.wireshark_filter, () => {
+                              setCopiedFilterId(f.id);
+                              setTimeout(() => setCopiedFilterId(null), 2000);
+                            })
+                          }
+                          className="hover:text-foreground inline-flex items-center gap-1 cursor-pointer font-sans"
+                        >
+                          {copiedFilterId === f.id ? (
+                            <>
+                              <Check size={10} weight="bold" className="text-sev-pass" />
+                              <span className="text-sev-pass">Copied</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy size={10} weight="bold" />
+                              <span>Copy filter</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+
+                      <code className="block bg-surface-0 border border-border px-2 py-1 rounded-[var(--radius-xs)] font-mono text-[11px] text-foreground truncate select-all">
+                        {f.wireshark_filter}
+                      </code>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-1 text-[11px]">
+                      <span className="text-muted font-mono">
+                        {f.context?.sessions_affected ?? 1} session(s) affected
+                      </span>
+                      <Link
+                        href={`/sessions?capture=${captureId}&finding=${f.rule_id}`}
+                        className="text-accent hover:underline inline-flex items-center gap-1 font-medium"
+                      >
+                        <span>View affected sessions</span>
+                        <ArrowRight size={10} weight="bold" />
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+
+            <div className="pt-2 border-t border-border">
+              <Link
+                href={`/findings?capture=${captureId}`}
+                className="w-full flex items-center justify-center gap-1.5 py-1.5 bg-surface-1 hover:bg-surface-2 border border-border rounded-[var(--radius-xs)] text-[12px] font-medium text-foreground transition-colors"
+              >
+                <span>View all findings</span>
+                <ArrowRight size={12} weight="bold" />
+              </Link>
             </div>
-
-            <p className="text-[11px] text-muted font-medium">
-              Drop-in configuration snippet generated to remediate active findings on this capture:
-            </p>
-
-            {/* Code Snippet Container */}
-            <div className="relative bg-surface-1 rounded-[var(--radius-sm)] p-3 flex-1 flex flex-col justify-between" role="tabpanel">
-              <pre className="text-[var(--font-size-sm)] leading-relaxed text-foreground font-bold overflow-x-auto max-h-[300px] select-all font-mono">
-                {activeSnippet}
-              </pre>
-
-              <div className="pt-2 border-t border-border flex items-center justify-between mt-2">
-                <span className="text-[var(--font-size-sm)] text-muted font-bold">{configTab === "postfix" ? "/etc/postfix/main.cf" : "/etc/dovecot/conf.d/10-ssl.conf"}</span>
-                <button
-                  onClick={() => copyText(activeSnippet, setCopiedConfig)}
-                  className={[
-                    "flex items-center gap-1 px-3 py-1 bg-accent hover:bg-accent-hover text-white",
-                    "text-[var(--font-size-md)] font-bold rounded-[var(--radius-sm)]",
-                    "transition-all duration-[var(--motion-fast)] cursor-pointer focus-ring",
-                  ].join(" ")}
-                  aria-label="Copy configuration to clipboard"
-                >
-                  {copiedConfig ? (
-                    <>
-                      <Check size={12} weight="bold" />
-                      <span>Copied!</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy size={12} weight="bold" />
-                      <span>Copy Fix</span>
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {/* Priority Remediation Checklist */}
-            <div className="space-y-1.5 pt-2 border-t border-border">
-              <span className="text-[var(--font-size-sm)] font-bold uppercase tracking-wider text-foreground block">
-                Priority Action Plan
-              </span>
-              <ul className="space-y-1 text-[11px] text-foreground font-medium">
-                <li className="flex items-start gap-1.5">
-                  <span className="bg-sev-critical text-white font-bold px-1 text-[var(--font-size-sm)] rounded-[var(--radius-xs)]">1</span>
-                  <span>Enforce mandatory TLS before authentication (<code className="bg-surface-2 px-1 rounded-[var(--radius-xs)] font-bold">smtpd_tls_auth_only = yes</code>).</span>
-                </li>
-                <li className="flex items-start gap-1.5">
-                  <span className="bg-sev-high text-white font-bold px-1 text-[var(--font-size-sm)] rounded-[var(--radius-xs)]">2</span>
-                  <span>Disable deprecated TLS versions 1.0 & 1.1 across all submission ports.</span>
-                </li>
-                <li className="flex items-start gap-1.5">
-                  <span className="bg-sev-medium text-white font-bold px-1 text-[var(--font-size-sm)] rounded-[var(--radius-xs)]">3</span>
-                  <span>Deprecate non-PFS and legacy 3DES/RC4 cipher suites.</span>
-                </li>
-              </ul>
-            </div>
-
-            <Link
-              href={`/findings?capture=${captureId}`}
-              className={[
-                "mt-2 flex items-center justify-center gap-2 w-full py-2",
-                "bg-surface-1 hover:bg-accent hover:text-white",
-                "border border-border rounded-[var(--radius-sm)]",
-                "text-[var(--font-size-md)] font-bold text-foreground",
-                "transition-all duration-[var(--motion-fast)] focus-ring",
-              ].join(" ")}
-            >
-              <span>View All Prioritized Findings</span>
-              <ArrowRight size={14} weight="bold" />
-            </Link>
           </div>
-        </div>
+        </section>
       </div>
     </div>
   );

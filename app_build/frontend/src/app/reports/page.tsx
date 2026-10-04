@@ -17,19 +17,15 @@ export default function ReportsPage() {
 
 function ReportsSkeleton() {
   return (
-    <div className="max-w-[1400px] mx-auto px-4 py-8 space-y-6 animate-pulse">
+    <div className="w-full px-4 2xl:px-6 py-4 space-y-4 animate-pulse">
       <div className="space-y-1">
-        <div className="h-6 w-48 bg-surface-2 rounded" />
-        <div className="h-4 w-80 bg-surface-2 rounded" />
+        <div className="h-5 w-44 bg-surface-2 rounded" />
+        <div className="h-4 w-72 bg-surface-2 rounded" />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div className="h-36 bg-surface-0 rounded-[var(--radius-sm)] border border-border p-5" />
-        <div className="h-36 bg-surface-0 rounded-[var(--radius-sm)] border border-border p-5" />
-        <div className="h-36 bg-surface-0 rounded-[var(--radius-sm)] border border-border p-5" />
-      </div>
-      <div className="bg-surface-0 rounded-[var(--radius-sm)] border border-border p-6 space-y-4">
-        <div className="h-6 w-44 bg-surface-2 rounded" />
-        <div className="h-40 bg-surface-1 rounded" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+        <div className="h-32 bg-surface-0 rounded-[var(--radius-md)] border border-border p-3" />
+        <div className="h-32 bg-surface-0 rounded-[var(--radius-md)] border border-border p-3" />
+        <div className="h-32 bg-surface-0 rounded-[var(--radius-md)] border border-border p-3" />
       </div>
     </div>
   );
@@ -113,20 +109,20 @@ function ReportsContent() {
   const ruleVer = selectedCap?.analysis?.ruleset_version ?? "2025.03.1";
 
   return (
-    <div className="max-w-[1400px] mx-auto px-4 py-8">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+    <div className="w-full px-4 2xl:px-6 py-4 space-y-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-serif font-bold text-foreground">Security posture reports</h1>
-          <p className="text-sm text-muted">
+          <h1 className="text-[20px] font-semibold text-foreground">Security posture reports</h1>
+          <p className="text-[13px] text-muted text-prose-cap">
             Export executive summaries and forensic audit records for compliance reporting
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <label className="text-xs text-muted font-medium">Capture:</label>
+          <label className="text-[13px] text-muted font-medium">Capture:</label>
           <select
             value={selectedCapId}
             onChange={(e) => handleCaptureChange(e.target.value)}
-            className="text-xs bg-surface-0 border border-border rounded-[var(--radius-sm)] px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-ink font-mono"
+            className="text-[13px] bg-surface-0 border border-border rounded-[var(--radius-xs)] px-2.5 py-1 focus-ring"
           >
             {completeCaps.map((c) => (
               <option key={c.id} value={c.id}>
@@ -137,18 +133,18 @@ function ReportsContent() {
         </div>
       </div>
 
-      <div className="bg-surface-0 border border-border rounded-[var(--radius-sm)] p-4 mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+      <div className="bg-surface-0 border border-border rounded-[var(--radius-md)] p-3 grid grid-cols-1 sm:grid-cols-3 gap-3 text-[13px] xcor-shadow-subtle">
         <div>
           <span className="text-muted block text-[11px]">Capture SHA-256</span>
-          <span className="font-mono text-foreground font-medium break-all">{shaVal}</span>
+          <span className="font-mono text-foreground font-medium text-[12px] break-all">{shaVal}</span>
         </div>
         <div>
           <span className="text-muted block text-[11px]">Tool version</span>
-          <span className="font-mono text-foreground font-medium">{toolVer}</span>
+          <span className="font-mono text-foreground font-medium text-[12px]">{toolVer}</span>
         </div>
         <div>
           <span className="text-muted block text-[11px]">Ruleset version</span>
-          <span className="font-mono text-foreground font-medium">{ruleVer}</span>
+          <span className="font-mono text-foreground font-medium text-[12px]">{ruleVer}</span>
         </div>
       </div>
 
@@ -156,7 +152,7 @@ function ReportsContent() {
         <div className="bg-surface-0 rounded-[var(--radius-sm)] border border-border p-5 flex flex-col justify-between">
           <div>
             <span className="text-xs font-medium text-muted font-mono">JSON export</span>
-            <h3 className="text-base font-semibold text-foreground mt-1">Structured telemetry</h3>
+            <h3 className="text-base font-semibold text-foreground mt-1">Structured export</h3>
             <p className="text-xs text-muted mt-1 leading-relaxed">
               Full programmatic schema payload including scores, evidence, findings, and Wireshark filters.
             </p>
@@ -232,7 +228,7 @@ function ReportsContent() {
         <div className="bg-surface-0 rounded-[var(--radius-sm)] border border-border overflow-hidden">
           <div className="px-6 py-4 border-b border-border bg-surface-1 flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-serif font-semibold text-foreground">Executive posture summary</h2>
+              <h2 className="text-[16px] font-sans font-semibold text-foreground">Executive posture summary</h2>
               <p className="text-xs font-mono text-muted">
                 Audit target: {selectedCap?.filename ?? selectedCapId}
               </p>

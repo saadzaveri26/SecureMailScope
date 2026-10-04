@@ -3,19 +3,19 @@
 import type { Severity } from "@/types";
 
 const cfg: Record<Severity | "pass", { bg: string; text: string; label: string }> = {
-  critical: { bg: "bg-sev-critical text-white", text: "text-sev-critical", label: "CRIT" },
-  high: { bg: "bg-sev-high text-white", text: "text-sev-high", label: "HIGH" },
-  medium: { bg: "bg-sev-medium-bg text-sev-medium border-sev-medium/30", text: "text-sev-medium", label: "MED" },
-  low: { bg: "bg-surface-2 text-text-secondary", text: "text-muted", label: "LOW" },
-  info: { bg: "bg-surface-1 text-muted", text: "text-muted", label: "INFO" },
-  pass: { bg: "bg-sev-pass text-white", text: "text-sev-pass", label: "PASS" },
+  critical: { bg: "bg-sev-critical text-white", text: "text-sev-critical", label: "Critical" },
+  high: { bg: "bg-sev-high text-white", text: "text-sev-high", label: "High" },
+  medium: { bg: "bg-sev-medium-bg text-sev-medium border-sev-medium/30", text: "text-sev-medium", label: "Medium" },
+  low: { bg: "bg-surface-2 text-text-secondary", text: "text-muted", label: "Low" },
+  info: { bg: "bg-surface-1 text-muted", text: "text-muted", label: "Info" },
+  pass: { bg: "bg-sev-pass text-white", text: "text-sev-pass", label: "Pass" },
 };
 
 export function SeverityBadge({ severity }: { severity: Severity | "pass" }) {
   const c = cfg[severity];
   return (
     <span
-      className={`inline-block px-1.5 py-0.5 text-[var(--font-size-sm)] font-mono font-bold rounded-[var(--radius-sm)] leading-none ${c.bg}`}
+      className={`inline-block px-1.5 py-0.5 text-[11px] font-semibold rounded-[var(--radius-sm)] leading-none ${c.bg}`}
       aria-label={`${severity} severity`}
     >
       {c.label}

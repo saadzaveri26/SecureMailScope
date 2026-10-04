@@ -36,8 +36,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const t = sessionStorage.getItem(K_TOKEN) ?? "";
-    const a = sessionStorage.getItem(K_ACTOR) ?? "";
+    const t = sessionStorage.getItem(K_TOKEN) ?? "sms-analyst-token";
+    const a = sessionStorage.getItem(K_ACTOR) ?? "analyst";
     queueMicrotask(() => {
       setToken(t);
       setActor(a);

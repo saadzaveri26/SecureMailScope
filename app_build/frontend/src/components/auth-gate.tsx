@@ -44,7 +44,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
         )}
         <div className="space-y-3">
           <div className="space-y-1">
-            <label htmlFor="auth-token" className="text-[var(--font-size-sm)] font-bold text-foreground block uppercase tracking-wider">Access Token</label>
+            <label htmlFor="auth-token" className="text-[12px] font-semibold text-foreground block">Access token</label>
             <input
               id="auth-token"
               type="password"
@@ -56,7 +56,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
             />
           </div>
           <div className="space-y-1">
-            <label htmlFor="auth-analyst" className="text-[var(--font-size-sm)] font-bold text-foreground block uppercase tracking-wider">Analyst Handle</label>
+            <label htmlFor="auth-analyst" className="text-[12px] font-semibold text-foreground block">Analyst handle</label>
             <input
               id="auth-analyst"
               type="text"

@@ -64,18 +64,18 @@ export function CaptureStrip() {
   const isHealthy = current.posture_score !== null && current.posture_score >= 80;
 
   return (
-    <div className="bg-surface-1 border-b border-border text-[var(--font-size-sm)] select-none">
-      <div className="max-w-[1600px] mx-auto px-4 h-7 flex items-center justify-between gap-3 font-mono">
-        <div className="flex items-center gap-[var(--space-6)] min-w-0">
-          <label htmlFor="capture-select" className="text-muted font-bold">capture:</label>
+    <div className="bg-surface-1 border-b border-border text-[13px] select-none">
+      <div className="w-full px-4 2xl:px-6 h-[40px] flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
+          <label htmlFor="capture-select" className="text-muted font-medium shrink-0">Capture:</label>
           <select
             id="capture-select"
             value={current.id}
             onChange={(e) => onSwitch(e.target.value)}
-            className="bg-surface-0 border border-border rounded-[var(--radius-xs)] px-1 font-mono text-[var(--font-size-sm)] text-foreground focus-ring cursor-pointer font-bold"
+            className="bg-surface-0 border border-border rounded-[var(--radius-xs)] px-2 py-0.5 text-[13px] text-foreground focus-ring cursor-pointer font-medium"
           >
             {caps.map((c) => (
-              <option key={c.id} value={c.id} className="bg-surface-0 text-foreground">
+              <option key={c.id} value={c.id} className="bg-surface-0 text-foreground font-sans">
                 {c.filename} [{c.id}]
               </option>
             ))}
@@ -83,43 +83,43 @@ export function CaptureStrip() {
 
           <span className="text-border">│</span>
 
-          <span className="text-muted">sha256:</span>
-          <span className="text-foreground font-bold select-all">{current.sha256.slice(0, 12)}…</span>
+          <span className="text-muted">SHA-256:</span>
+          <span className="text-foreground font-mono text-[12px] select-all">{current.sha256.slice(0, 12)}…</span>
           <button
             onClick={onCopy}
             className="p-0.5 text-muted hover:text-foreground transition-colors duration-[var(--motion-fast)] cursor-pointer focus-ring rounded-[var(--radius-xs)]"
             aria-label="Copy full SHA-256 to clipboard"
           >
-            {copied ? <Check size={11} weight="bold" className="text-sev-pass" /> : <Copy size={11} weight="bold" />}
+            {copied ? <Check size={12} weight="bold" className="text-sev-pass" /> : <Copy size={12} weight="bold" />}
           </button>
 
-          {/* Screen reader live region for copy announcement */}
+          {/* Screen reader announcement region */}
           <span className="sr-only" aria-live="polite">{copyAnnounce}</span>
 
           <span className="text-border">│</span>
 
-          <span className="text-foreground font-semibold">{current.packet_count.toLocaleString()} pkts</span>
+          <span className="text-foreground font-mono text-[12px] tabular-nums font-semibold">{current.packet_count.toLocaleString()} pkts</span>
 
           <span className="text-border">│</span>
 
-          <span className="text-muted uppercase font-bold">{current.status}</span>
+          <span className="text-muted capitalize">{current.status}</span>
         </div>
 
-        <div className="flex items-center gap-[var(--space-6)] shrink-0">
+        <div className="flex items-center gap-3 shrink-0">
           {current.posture_score !== null ? (
-            <div className={`px-2 py-0.5 rounded-[var(--radius-sm)] font-mono font-bold text-[var(--font-size-sm)] flex items-center gap-1.5 ${
+            <div className={`px-2 py-0.5 rounded-[var(--radius-sm)] font-bold text-[12px] flex items-center gap-1.5 ${
               isCritical ? "bg-sev-critical text-white" : isHealthy ? "bg-sev-pass text-white" : "bg-accent text-white"
             }`}>
-              <span className="tabular-nums">
+              <span className="font-mono tabular-nums">
                 {current.posture_score}/100
               </span>
-              <span className="text-[10px] opacity-80">
+              <span className="text-[11px] opacity-85 font-mono">
                 [{current.grade}]
               </span>
             </div>
           ) : (
-            <div className="px-2 py-0.5 rounded-[var(--radius-sm)] bg-surface-2 text-muted font-mono font-bold text-[var(--font-size-sm)]">
-              <span>NO TRAFFIC [N/A]</span>
+            <div className="px-2 py-0.5 rounded-[var(--radius-sm)] bg-surface-2 text-muted font-medium text-[12px]">
+              <span>No traffic [N/A]</span>
             </div>
           )}
         </div>

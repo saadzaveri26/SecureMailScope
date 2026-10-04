@@ -149,41 +149,38 @@ export default function CapturesPage() {
   }
 
   return (
-    <div className="max-w-[1400px] mx-auto px-4 py-8">
-      <h1 className="text-[var(--font-size-4xl)] font-bold mb-6 text-foreground">Captures</h1>
+    <div className="w-full px-4 2xl:px-6 py-4 space-y-4">
+      <h1 className="text-[20px] font-semibold text-foreground">Captures</h1>
 
       <div
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={onDrop}
         className={[
-          "border-2 border-dashed rounded-[var(--radius-md)] p-8 text-center mb-8",
+          "border border-dashed border-border rounded-[var(--radius-md)] p-4 text-center bg-surface-0 xcor-shadow-subtle",
           `transition-all duration-[var(--motion-normal)]`,
-          dragOver ? "border-accent bg-accent-soft" : "border-border bg-surface-1",
+          dragOver ? "border-accent bg-accent-soft" : "hover:bg-surface-1",
           uploading ? "opacity-60 pointer-events-none" : "",
         ].join(" ")}
         role="region"
         aria-label="PCAP file upload zone"
       >
         {uploading ? (
-          <div className="flex flex-col items-center gap-2">
-            <Spinner size={28} className="text-accent animate-spin" />
-            <p className="text-[var(--font-size-md)] text-muted">Uploading capture...</p>
+          <div className="flex items-center justify-center gap-2 py-2">
+            <Spinner size={18} className="text-accent animate-spin" />
+            <p className="text-[13px] text-muted">Uploading capture…</p>
           </div>
         ) : (
-          <label className="cursor-pointer flex flex-col items-center gap-2 focus-ring rounded-[var(--radius-md)]">
-            <UploadSimple size={24} className="text-muted" />
-            <p className="text-[var(--font-size-xl)] text-foreground font-medium">
-              Drop a PCAP file here or click to browse
-            </p>
-            <p className="text-[var(--font-size-md)] text-muted">
-              Accepts .pcap and .pcapng files
-            </p>
+          <label className="cursor-pointer flex items-center justify-center gap-2 py-2 focus-ring rounded-[var(--radius-md)]">
+            <UploadSimple size={18} className="text-accent" />
+            <span className="text-[13px] text-foreground font-medium">
+              Drop a .pcap or .pcapng file here, or <span className="text-accent underline">browse</span>
+            </span>
             <input type="file" accept=".pcap,.pcapng" className="hidden" onChange={onFileInput} />
           </label>
         )}
         {uploadErr && (
-          <p className="text-[var(--font-size-md)] text-sev-critical mt-3 font-medium" role="alert">{uploadErr}</p>
+          <p className="text-[13px] text-sev-critical mt-2 font-medium" role="alert">{uploadErr}</p>
         )}
       </div>
 
@@ -231,29 +228,29 @@ export default function CapturesPage() {
           </button>
         </div>
       ) : caps.length === 0 ? (
-        <div className="text-center py-16 bg-surface-0 rounded-[var(--radius-md)] border border-border text-muted xcor-shadow">
-          <p className="text-[var(--font-size-xl)] font-medium text-foreground">No captures yet</p>
-          <p className="text-[var(--font-size-md)] text-muted mt-1">Upload a PCAP or PCAPNG file to begin passive analysis.</p>
+        <div className="text-center py-12 bg-surface-0 rounded-[var(--radius-md)] border border-border text-muted xcor-shadow-subtle">
+          <p className="text-[14px] font-medium text-foreground">No captures yet</p>
+          <p className="text-[13px] text-muted mt-1">Upload a PCAP or PCAPNG file to begin passive analysis.</p>
         </div>
       ) : (
-        <div className="bg-surface-0 rounded-[var(--radius-md)] border border-border overflow-hidden xcor-shadow">
-          <table className="w-full text-[var(--font-size-md)]">
+        <div className="bg-surface-0 rounded-[var(--radius-md)] border border-border overflow-hidden xcor-shadow-subtle">
+          <table className="w-full text-[13px]">
             <thead>
-              <tr className="border-b border-border bg-surface-1 text-left text-muted h-9">
-                <th scope="col" className="px-4 py-2 font-medium">Status</th>
-                <th scope="col" className="px-4 py-2 font-medium">Filename</th>
-                <th scope="col" className="px-4 py-2 font-medium">Size</th>
-                <th scope="col" className="px-4 py-2 font-medium">Packets</th>
-                <th scope="col" className="px-4 py-2 font-medium text-right">Score</th>
-                <th scope="col" className="px-4 py-2 font-medium text-right">Grade</th>
-                <th scope="col" className="px-4 py-2 font-medium">Date</th>
+              <tr className="border-b border-border bg-surface-1 text-left text-muted h-8">
+                <th scope="col" className="px-3 py-1 font-medium">Status</th>
+                <th scope="col" className="px-3 py-1 font-medium">Filename</th>
+                <th scope="col" className="px-3 py-1 font-medium">Size</th>
+                <th scope="col" className="px-3 py-1 font-medium">Packets</th>
+                <th scope="col" className="px-3 py-1 font-medium text-right">Score</th>
+                <th scope="col" className="px-3 py-1 font-medium text-right">Grade</th>
+                <th scope="col" className="px-3 py-1 font-medium">Date</th>
               </tr>
             </thead>
             <tbody>
               {caps.map((c) => (
-                <tr key={c.id} className="border-b border-border last:border-0 hover:bg-accent-soft transition-colors duration-[var(--motion-fast)] h-10">
-                  <td className="px-4 py-2">{statusIcon(c.status)}</td>
-                  <td className="px-4 py-2">
+                <tr key={c.id} className="border-b border-border last:border-0 hover:bg-surface-1 transition-colors h-8">
+                  <td className="px-3 py-1">{statusIcon(c.status)}</td>
+                  <td className="px-3 py-1">
                     {c.status === "complete" ? (
                       <Link href={`/overview?capture=${c.id}`} className="text-text-tertiary hover:text-accent font-medium focus-ring rounded-[var(--radius-xs)]">
                         {c.filename}
@@ -262,22 +259,22 @@ export default function CapturesPage() {
                       <span className="font-medium text-foreground">{c.filename}</span>
                     )}
                     {c.status === "failed" && c.error && (
-                      <p className="text-[11px] text-sev-critical mt-0.5">{c.error}</p>
+                      <p className="text-[11px] text-sev-critical">{c.error}</p>
                     )}
                   </td>
-                  <td className="px-4 py-2 text-muted tabular-nums">{formatBytes(c.size_bytes)}</td>
-                  <td className="px-4 py-2 text-muted font-mono tabular-nums">
+                  <td className="px-3 py-1 text-muted tabular-nums">{formatBytes(c.size_bytes)}</td>
+                  <td className="px-3 py-1 text-muted font-mono tabular-nums">
                     {c.packet_count.toLocaleString()}
                   </td>
-                  <td className="px-4 py-2 text-right font-mono tabular-nums">
+                  <td className="px-3 py-1 text-right font-mono tabular-nums">
                     {c.posture_score !== null ? c.posture_score : (
                       <span className="text-not-observable">—</span>
                     )}
                   </td>
-                  <td className={`px-4 py-2 text-right font-mono font-bold ${gradeColor(c.grade)}`}>
+                  <td className={`px-3 py-1 text-right font-mono font-bold ${gradeColor(c.grade)}`}>
                     {c.grade ?? <span className="text-not-observable font-normal">—</span>}
                   </td>
-                  <td className="px-4 py-2 text-muted tabular-nums">{formatDate(c.created_at)}</td>
+                  <td className="px-3 py-1 text-muted tabular-nums">{formatDate(c.created_at)}</td>
                 </tr>
               ))}
             </tbody>

@@ -31,6 +31,34 @@ import evaluationSnapshot from "../demo-data/evaluation.json";
 const USE_FIXTURES = process.env.NEXT_PUBLIC_USE_FIXTURES === "1";
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
+export interface FactorArithmeticResult {
+  valid: boolean;
+  score: number;
+  expectedDeduction: number;
+  actualDeduction: number;
+  arithmeticString: string;
+}
+
+export function checkFactorArithmetic(summary: Summary): FactorArithmeticResult {
+  const score = summary.posture?.score ?? 0;
+  const factors = summary.posture?.factors ?? [];
+  const expectedDeduction = 100 - score;
+  const actualDeduction = Math.abs(factors.reduce((sum, f) => sum + f.impact, 0));
+  const valid = expectedDeduction === actualDeduction;
+  const arithmeticString = `Start 100, minus ${actualDeduction}, equals ${100 - actualDeduction}`;
+  if (!valid && factors.length > 0) {
+    console.warn(`[Data Invariant Warning] Factor deduction mismatch for score ${score}: factors sum to -${actualDeduction} (expected -${expectedDeduction})`);
+  }
+  return { valid, score, expectedDeduction, actualDeduction, arithmeticString };
+}
+
+export function formatBytes(b?: number | null): string {
+  if (b == null || isNaN(b) || b <= 0) return "—";
+  if (b < 1024) return `${b} B`;
+  if (b < 1048576) return `${(b / 1024).toFixed(1)} KB`;
+  return `${(b / 1048576).toFixed(2)} MB`;
+}
+
 function authHeaders(): Record<string, string> {
   const h: Record<string, string> = {
     "X-Access-Token": "sms-analyst-token",

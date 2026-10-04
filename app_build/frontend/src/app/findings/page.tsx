@@ -1,95 +1,67 @@
 "use client";
 
 import { useState, useEffect, useMemo, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
-import type { Finding, Severity, FindingCategory, Incident, Evidence } from "@/types";
-import { getFindings, getIncidents, getEvidence } from "@/data";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
+import type { Finding, Severity, FindingCategory, Incident } from "@/types";
+import { getFindings, getIncidents } from "@/data";
 import { SeverityBadge } from "@/components/severity";
-import { ConfidenceBadge } from "@/components/confidence-badge";
 import {
-  X,
   Copy,
   Check,
-  CaretDown,
-  CaretRight,
-  ArrowSquareOut,
+  ArrowRight,
+  ShieldWarning,
+  SlidersHorizontal,
 } from "@phosphor-icons/react";
-
-const sevWeight: Record<Severity, number> = {
-  critical: 5, high: 4, medium: 3, low: 2, info: 1,
-};
 
 export default function FindingsPage() {
   return (
-    <Suspense fallback={<Skeleton />}>
-      <Content />
+    <Suspense fallback={<FindingsSkeleton />}>
+      <FindingsContent />
     </Suspense>
   );
 }
 
-function Skeleton() {
+function FindingsSkeleton() {
   return (
-    <div className="max-w-[1600px] mx-auto px-4 py-4 space-y-4 animate-pulse">
-      <div className="h-4 w-32 bg-surface-2" />
-      <div className="border border-border bg-surface-0 xcor-shadow">
-        <div className="h-8 bg-surface-1 border-b border-border" />
-        {[...Array(8)].map((_, i) => (
-          <div key={i} className="h-9 border-b border-border flex items-center px-3 gap-4">
-            <div className="h-3 w-10 bg-surface-2" />
-            <div className="h-3 w-16 bg-surface-2" />
-            <div className="h-3 w-48 bg-surface-2" />
-          </div>
-        ))}
+    <div className="w-full px-4 2xl:px-6 py-3 space-y-3 animate-pulse select-none">
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-3 h-[calc(100vh-112px)]">
+        <div className="xl:col-span-7 bg-surface-0 border border-border rounded-[var(--radius-md)] p-3" />
+        <div className="xl:col-span-5 bg-surface-0 border border-border rounded-[var(--radius-md)] p-3" />
       </div>
     </div>
   );
 }
 
-function Content() {
-  const params = useSearchParams();
-  const capId = params.get("capture") ?? "cap-001";
-  const initFindingId = params.get("finding");
+function FindingsContent() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const [view, setView] = useState<"findings" | "incident">("findings");
+  const capId = searchParams.get("capture") ?? "cap-001";
+  const urlSelectedId = searchParams.get("selected") ?? searchParams.get("finding");
+
   const [findings, setFindings] = useState<Finding[]>([]);
   const [incidents, setIncidents] = useState<Incident[]>([]);
-  const [evidenceList, setEvidenceList] = useState<Evidence[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const [query, setQuery] = useState("");
   const [sev, setSev] = useState<string>("");
   const [cat, setCat] = useState<string>("");
-  const [sortField, setSortField] = useState<"rank" | "severity" | "impact">("rank");
-  const [sortAsc, setSortAsc] = useState(true);
-
-  const [sel, setSel] = useState<Finding | null>(null);
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [copiedKey, setCopiedKey] = useState<string | null>(null);
-  const [openIncidentIds, setOpenIncidentIds] = useState<Set<string>>(new Set());
+  const [selId, setSelId] = useState<string | null>(urlSelectedId);
+  const [copiedFilter, setCopiedFilter] = useState(false);
 
   useEffect(() => {
     let active = true;
     setLoading(true);
     setError(null);
-    Promise.all([
-      getFindings(capId),
-      getIncidents(capId),
-      getEvidence(capId),
-    ])
-      .then(([f, inc, ev]) => {
+    Promise.all([getFindings(capId), getIncidents(capId)])
+      .then(([fList, incList]) => {
         if (!active) return;
-        setFindings(f);
-        setIncidents(inc);
-        setEvidenceList(ev);
+        setFindings(fList);
+        setIncidents(incList);
         setLoading(false);
-        if (initFindingId) {
-          const match = f.find((x) => x.id === initFindingId);
-          if (match) {
-            setSel(match);
-            setDrawerOpen(true);
-          }
-        }
       })
       .catch((e: unknown) => {
         if (!active) return;
@@ -99,348 +71,346 @@ function Content() {
     return () => {
       active = false;
     };
-  }, [capId, initFindingId]);
+  }, [capId]);
 
-  const filtered = useMemo(() => {
-    return findings
-      .filter((f) => {
-        if (sev && f.severity !== sev) return false;
-        if (cat && f.category !== cat) return false;
-        if (query) {
-          const q = query.toLowerCase();
-          const match =
-            f.title.toLowerCase().includes(q) ||
-            f.rule_id.toLowerCase().includes(q) ||
-            f.description.toLowerCase().includes(q) ||
-            (f.evidence.server && f.evidence.server.toLowerCase().includes(q));
-          if (!match) return false;
-        }
-        return true;
-      })
-      .sort((a, b) => {
-        if (sortField === "rank") {
-          return sortAsc ? a.priority_rank - b.priority_rank : b.priority_rank - a.priority_rank;
-        }
-        if (sortField === "severity") {
-          const diff = sevWeight[b.severity] - sevWeight[a.severity];
-          return sortAsc ? diff : -diff;
-        }
-        if (sortField === "impact") {
-          return sortAsc ? a.score_impact - b.score_impact : b.score_impact - a.score_impact;
-        }
-        return 0;
-      });
-  }, [findings, sev, cat, query, sortField, sortAsc]);
-
-  function toggleSort(field: "rank" | "severity" | "impact") {
-    if (sortField === field) {
-      setSortAsc(!sortAsc);
-    } else {
-      setSortField(field);
-      setSortAsc(true);
-    }
-  }
-
-  function openDrawer(f: Finding) {
-    setSel(f);
-    setDrawerOpen(true);
-  }
-
-  function toggleIncident(id: string) {
-    setOpenIncidentIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
+  const filteredFindings = useMemo(() => {
+    return findings.filter((f) => {
+      if (sev && f.severity !== sev) return false;
+      if (cat && f.category !== cat) return false;
+      if (!query) return true;
+      const q = query.toLowerCase();
+      return (
+        f.id.toLowerCase().includes(q) ||
+        f.rule_id.toLowerCase().includes(q) ||
+        f.title.toLowerCase().includes(q) ||
+        f.description.toLowerCase().includes(q) ||
+        f.evidence?.server?.toLowerCase().includes(q)
+      );
     });
+  }, [findings, sev, cat, query]);
+
+  const activeId = selId ?? filteredFindings[0]?.id ?? null;
+  const selFinding = filteredFindings.find((f) => f.id === activeId) ?? filteredFindings[0] ?? null;
+
+  function selectFinding(id: string) {
+    setSelId(id);
+    const next = new URLSearchParams(searchParams.toString());
+    next.set("selected", id);
+    router.replace(`${pathname}?${next.toString()}`, { scroll: false });
   }
 
-  function copyText(val: string, key: string) {
-    navigator.clipboard.writeText(val);
-    setCopiedKey(key);
-    setTimeout(() => setCopiedKey(null), 1500);
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement) return;
+      if (filteredFindings.length === 0) return;
+
+      const currentIndex = filteredFindings.findIndex((f) => f.id === activeId);
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        const nextIndex = currentIndex < filteredFindings.length - 1 ? currentIndex + 1 : 0;
+        selectFinding(filteredFindings[nextIndex].id);
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        const prevIndex = currentIndex > 0 ? currentIndex - 1 : filteredFindings.length - 1;
+        selectFinding(filteredFindings[prevIndex].id);
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        setSelId(null);
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [filteredFindings, activeId]);
+
+  function copyText(txt: string, cb: () => void) {
+    navigator.clipboard.writeText(txt);
+    cb();
   }
+
+  const endpointText = selFinding?.evidence
+    ? `${selFinding.evidence.client || "192.168.1.50"} → ${selFinding.evidence.server || "mail.company.com"}:${selFinding.evidence.server_port || 587}`
+    : "—";
 
   return (
-    <div className="max-w-[1600px] mx-auto px-4 py-4 space-y-3 font-mono text-xs select-none">
-      {/* Header strip */}
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2 text-foreground font-bold">
-          <span className="uppercase tracking-wider text-foreground">findings</span>
-          <span className="text-muted">·</span>
-          <span className="bg-surface-2 px-1.5 py-0.5 border border-border">{capId}</span>
-          <span className="text-muted">·</span>
-          <span className="text-muted font-semibold">{filtered.length} results</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="flex border border-border bg-surface-0 xcor-shadow-subtle">
-            <button
-              onClick={() => setView("findings")}
-              className={`px-3 py-1 text-xs font-mono font-bold cursor-pointer transition-colors ${view === "findings" ? "bg-accent text-foreground" : "text-muted hover:text-foreground"}`}
-            >
-              table
-            </button>
-            <button
-              onClick={() => setView("incident")}
-              className={`px-3 py-1 text-xs font-mono font-bold cursor-pointer transition-colors border-l border-border ${view === "incident" ? "bg-accent text-foreground" : "text-muted hover:text-foreground"}`}
-            >
-              by incident
-            </button>
+    <div className="w-full px-4 2xl:px-6 py-3 select-none text-[13px] h-[calc(100vh-88px)] flex flex-col overflow-hidden">
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-3 flex-1 min-h-0">
+        {/* ================= LEFT 60%: FINDINGS TABLE ================= */}
+        <section
+          className="col-span-12 xl:col-span-7 flex flex-col bg-surface-0 border border-border rounded-[var(--radius-md)] p-3 xcor-shadow min-h-0 overflow-hidden"
+          aria-label="Findings master table"
+        >
+          {/* Filter Bar */}
+          <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-border shrink-0 flex-wrap">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-[14px] font-semibold text-foreground">Findings</span>
+              <span className="text-[11px] font-mono px-1.5 py-0.5 bg-surface-1 border border-border rounded-[var(--radius-xs)] text-muted">
+                {filteredFindings.length}
+              </span>
+
+              <select
+                value={sev}
+                onChange={(e) => setSev(e.target.value)}
+                className="bg-surface-1 border border-border rounded-[var(--radius-xs)] px-2 py-1 text-[12px] font-medium text-foreground cursor-pointer focus-ring"
+              >
+                <option value="">All severities</option>
+                <option value="critical">Critical</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+                <option value="info">Info</option>
+              </select>
+
+              <select
+                value={cat}
+                onChange={(e) => setCat(e.target.value)}
+                className="bg-surface-1 border border-border rounded-[var(--radius-xs)] px-2 py-1 text-[12px] font-medium text-foreground cursor-pointer focus-ring"
+              >
+                <option value="">All categories</option>
+                <option value="transport">Transport</option>
+                <option value="certificate">Certificate</option>
+                <option value="protocol">Protocol</option>
+                <option value="message">Message</option>
+                <option value="anomaly">Anomaly</option>
+                <option value="drift">Drift</option>
+              </select>
+
+              <input
+                type="text"
+                placeholder="Search rule, title, host…"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="bg-surface-1 border border-border rounded-[var(--radius-xs)] px-2.5 py-1 text-[12px] text-foreground placeholder:text-muted focus-ring w-44 font-mono"
+              />
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* Filter row */}
-      <div className="flex items-center gap-2">
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="filter…"
-          className="w-52 px-2.5 py-1.5 bg-surface-0 border border-border text-foreground placeholder:text-muted focus:outline-none focus:bg-accent-soft text-xs font-mono font-bold xcor-shadow-subtle"
-        />
-        <select value={sev} onChange={(e) => setSev(e.target.value)} className="px-2.5 py-1.5 bg-surface-0 border border-border text-xs font-mono font-bold text-foreground focus:outline-none cursor-pointer xcor-shadow-subtle">
-          <option value="">all severities</option>
-          <option value="critical">critical</option>
-          <option value="high">high</option>
-          <option value="medium">medium</option>
-          <option value="low">low</option>
-          <option value="info">info</option>
-        </select>
-        <select value={cat} onChange={(e) => setCat(e.target.value)} className="px-2.5 py-1.5 bg-surface-0 border border-border text-xs font-mono font-bold text-foreground focus:outline-none cursor-pointer xcor-shadow-subtle">
-          <option value="">all categories</option>
-          <option value="transport">transport</option>
-          <option value="certificate">certificate</option>
-          <option value="protocol">protocol</option>
-          <option value="message">message</option>
-          <option value="drift">drift</option>
-          <option value="anomaly">anomaly</option>
-        </select>
-      </div>
-
-      {/* Table */}
-      {loading ? (
-        <Skeleton />
-      ) : error ? (
-        <div className="text-xs font-mono font-bold text-sev-critical border border-border bg-sev-critical-bg px-3 py-2 xcor-shadow-subtle">{error}</div>
-      ) : view === "findings" ? (
-        filtered.length === 0 ? (
-          <div className="text-xs font-mono text-muted border border-border bg-surface-0 px-3 py-8 text-center xcor-shadow">no findings match</div>
-        ) : (
-          <div className="border border-border bg-surface-0 overflow-hidden xcor-shadow">
-            <div className="overflow-x-auto max-h-[700px] overflow-y-auto">
-              <table className="w-full text-xs font-mono text-left">
-                <thead className="sticky top-0 bg-surface-1 border-b border-border text-[11px] font-bold text-foreground uppercase z-10">
+          {/* Master Table */}
+          <div className="flex-1 overflow-y-auto min-h-0 pt-1">
+            <table className="w-full text-left text-[12px]">
+              <thead className="sticky top-0 bg-surface-1 border-b border-border text-muted font-medium h-8 z-10">
+                <tr>
+                  <th className="px-2.5 py-1 w-24">Severity</th>
+                  <th className="px-2 py-1 w-24">Rule ID</th>
+                  <th className="px-2 py-1">Title</th>
+                  <th className="px-2 py-1 w-24">Category</th>
+                  <th className="px-2.5 py-1 w-16 text-right">Deduction</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {loading ? (
                   <tr>
-                    <th onClick={() => toggleSort("rank")} className="py-2 px-3 cursor-pointer hover:bg-accent-soft w-12">
-                      # {sortField === "rank" ? (sortAsc ? "↑" : "↓") : ""}
-                    </th>
-                    <th onClick={() => toggleSort("severity")} className="py-2 px-3 cursor-pointer hover:bg-accent-soft w-18">
-                      sev {sortField === "severity" ? (sortAsc ? "↑" : "↓") : ""}
-                    </th>
-                    <th className="py-2 px-3 w-32">rule</th>
-                    <th className="py-2 px-3">finding</th>
-                    <th className="py-2 px-3 w-24">category</th>
-                    <th className="py-2 px-3 w-36">target</th>
-                    <th className="py-2 px-3 w-52">wireshark filter</th>
-                    <th onClick={() => toggleSort("impact")} className="py-2 px-3 text-right cursor-pointer hover:bg-accent-soft w-16">
-                      pts {sortField === "impact" ? (sortAsc ? "↑" : "↓") : ""}
-                    </th>
-                    <th className="py-2 px-3 text-right w-20">action</th>
+                    <td colSpan={5} className="p-4 text-center text-muted">
+                      Loading findings…
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {filtered.map((f) => (
-                    <tr
-                      key={f.id}
-                      onClick={() => openDrawer(f)}
-                      className={`hover:bg-accent-soft cursor-pointer transition-colors ${sel?.id === f.id ? "bg-accent-soft" : ""}`}
-                    >
-                      <td className="py-2 px-3 text-muted font-bold tabular-nums">{f.priority_rank}</td>
-                      <td className="py-2 px-3"><SeverityBadge severity={f.severity} /></td>
-                      <td className="py-2 px-3 text-foreground font-bold">{f.rule_id}</td>
-                      <td className="py-2 px-3 max-w-sm">
-                        <span className="text-foreground font-bold block leading-tight truncate">{f.title}</span>
-                        <span className="text-muted text-[11px] block truncate leading-tight mt-0.5">{f.description}</span>
-                      </td>
-                      <td className="py-2 px-3 text-foreground font-semibold text-[10px] uppercase">{f.category}</td>
-                      <td className="py-2 px-3 text-muted text-[11px]">
-                        {f.evidence.server ? `${f.evidence.server}:${f.evidence.server_port}` : "capture-wide"}
-                      </td>
-                      <td className="py-2 px-3">
-                        <code className="text-[10px] text-foreground bg-surface-1 px-1.5 py-0.5 border border-border truncate block max-w-[180px]">{f.wireshark_filter}</code>
-                      </td>
-                      <td className="py-2 px-3 text-right tabular-nums font-bold text-sev-critical">
-                        -{f.score_impact}
-                      </td>
-                      <td className="py-2 px-3 text-right">
-                        <button
-                          onClick={(e) => { e.stopPropagation(); openDrawer(f); }}
-                          className="px-2 py-0.5 bg-accent hover:bg-accent-hover text-foreground border border-border text-[11px] font-bold xcor-shadow-subtle"
-                        >
-                          view
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )
-      ) : (
-        /* Incident view */
-        <div className="space-y-3">
-          {incidents.map((inc) => {
-            const open = openIncidentIds.has(inc.id);
-            const incFindings = findings.filter((f) => inc.finding_ids.includes(f.id));
-            return (
-              <div key={inc.id} className="border border-border bg-surface-0 xcor-shadow">
-                <div
-                  onClick={() => toggleIncident(inc.id)}
-                  className="px-3 py-2 bg-surface-1 border-b border-border flex items-center justify-between cursor-pointer hover:bg-accent-soft transition-colors"
-                >
-                  <div className="flex items-center gap-2">
-                    {open ? <CaretDown size={14} weight="bold" /> : <CaretRight size={14} weight="bold" />}
-                    <SeverityBadge severity={inc.severity} />
-                    <span className="text-foreground font-bold text-xs">{inc.title}</span>
-                    <span className="text-muted text-[11px]">({incFindings.length} findings)</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-xs">
-                    <span className="text-muted font-bold">confidence:</span>
-                    <ConfidenceBadge level={inc.confidence} />
-                    <span className="text-sev-critical font-bold tabular-nums">-{incFindings.reduce((sum, f) => sum + f.score_impact, 0)} pts</span>
-                  </div>
-                </div>
-                {open && (
-                  <div className="border-t border-border/20 divide-y divide-border">
-                    {incFindings.map((f) => (
-                      <div
+                ) : filteredFindings.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="p-6 text-center text-muted">
+                      No findings matching current filters.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredFindings.map((f) => {
+                    const isSel = f.id === activeId;
+                    const deduction = f.score_impact ?? 0;
+
+                    return (
+                      <tr
                         key={f.id}
-                        onClick={() => openDrawer(f)}
-                        className="px-3 py-2 flex items-center justify-between hover:bg-accent-soft cursor-pointer"
+                        onClick={() => selectFinding(f.id)}
+                        className={`h-8 cursor-pointer transition-colors ${
+                          isSel
+                            ? "bg-accent-soft border-l-2 border-l-accent font-medium"
+                            : "hover:bg-surface-1"
+                        }`}
                       >
-                        <div className="flex items-center gap-2 min-w-0">
+                        <td className="px-2.5 py-1">
                           <SeverityBadge severity={f.severity} />
-                          <span className="font-bold text-foreground">{f.rule_id}</span>
-                          <span className="text-foreground truncate">{f.title}</span>
-                        </div>
-                        <div className="flex items-center gap-3 text-muted text-[11px] shrink-0">
-                          <span>{f.evidence.server || "capture-wide"}</span>
-                          <span className="text-sev-critical font-bold">-{f.score_impact}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                        </td>
+                        <td className="px-2 py-1 font-mono text-[11px] text-muted font-medium">
+                          {f.rule_id}
+                        </td>
+                        <td className="px-2 py-1 text-foreground font-medium truncate max-w-[220px]">
+                          {f.title}
+                        </td>
+                        <td className="px-2 py-1 text-muted text-[11px] capitalize">
+                          {f.category}
+                        </td>
+                        <td className="px-2.5 py-1 font-mono text-right font-semibold tabular-nums text-sev-critical">
+                          {deduction < 0 ? deduction : deduction > 0 ? `-${deduction}` : "0"}
+                        </td>
+                      </tr>
+                    );
+                  })
                 )}
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Drawer */}
-      {drawerOpen && sel && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex justify-end">
-          <div className="w-full max-w-xl bg-surface-0 h-full border-l-3 border-border flex flex-col overflow-hidden xcor-shadow">
-            <div className="px-4 py-3 bg-surface-1 border-b border-border flex items-center justify-between shrink-0">
-              <div className="min-w-0 pr-3">
-                <div className="flex items-center gap-2 text-xs font-mono">
-                  <SeverityBadge severity={sel.severity} />
-                  <span className="text-foreground font-bold text-sm">{sel.rule_id}</span>
-                  <span className="text-muted font-bold">rank {sel.priority_rank}</span>
-                  <span className="bg-sev-critical text-white font-bold px-1.5 py-0.5 border border-border tabular-nums">-{sel.score_impact} pts</span>
-                </div>
-                <div className="text-xs text-foreground font-bold mt-1 truncate">{sel.title}</div>
-              </div>
-              <button onClick={() => setDrawerOpen(false)} className="p-1 bg-surface-0 border border-border text-foreground hover:bg-accent shrink-0 cursor-pointer">
-                <X size={16} weight="bold" />
-              </button>
-            </div>
-
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 text-xs font-mono">
-              <div className="border border-border bg-surface-1 p-3 space-y-1.5 xcor-shadow-subtle">
-                <div className="text-[10px] text-foreground font-bold uppercase tracking-wider">description</div>
-                <p className="text-foreground leading-relaxed font-sans text-xs font-medium">{sel.description}</p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2.5 text-[11px]">
-                <div className="border border-border p-2 bg-surface-0 xcor-shadow-subtle">
-                  <span className="text-muted block text-[10px] font-bold uppercase">target</span>
-                  <span className="text-foreground font-bold">{sel.evidence.server || "capture-wide"}{sel.evidence.server_port ? `:${sel.evidence.server_port}` : ""}</span>
-                </div>
-                <div className="border border-border p-2 bg-surface-0 xcor-shadow-subtle">
-                  <span className="text-muted block text-[10px] font-bold uppercase">client</span>
-                  <span className="text-foreground font-bold">{sel.evidence.client || "all"}</span>
-                </div>
-                <div className="border border-border p-2 bg-surface-0 xcor-shadow-subtle">
-                  <span className="text-muted block text-[10px] font-bold uppercase">frames</span>
-                  <span className="text-foreground font-bold tabular-nums">{sel.evidence.frames.length}</span>
-                </div>
-                <div className="border border-border p-2 bg-surface-0 xcor-shadow-subtle">
-                  <span className="text-muted block text-[10px] font-bold uppercase">session</span>
-                  <span className="text-foreground font-bold">{sel.session_id || "none"}</span>
-                </div>
-              </div>
-
-              <div className="border border-border p-3 space-y-2 bg-surface-0 xcor-shadow-subtle">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] text-foreground font-bold uppercase tracking-wider">wireshark filter</span>
-                  <button
-                    onClick={() => copyText(sel.wireshark_filter, "filter")}
-                    className="flex items-center gap-1 text-[11px] font-bold text-foreground bg-accent px-2 py-0.5 border border-border cursor-pointer hover:bg-accent-hover"
-                  >
-                    {copiedKey === "filter" ? <><Check size={11} weight="bold" /> copied</> : <><Copy size={11} weight="bold" /> copy</>}
-                  </button>
-                </div>
-                <div className="p-2 bg-surface-1 border border-border text-[11px] text-foreground font-bold break-all select-all">
-                  {sel.wireshark_filter}
-                </div>
-              </div>
-
-              <div className="border border-border p-3 space-y-2.5 bg-surface-0 xcor-shadow-subtle">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] text-foreground font-bold uppercase tracking-wider">remediation</span>
-                  <button
-                    onClick={() => copyText(`${sel.remediation.summary}\n${sel.remediation.steps.join("\n")}`, "fix")}
-                    className="flex items-center gap-1 text-[11px] font-bold text-foreground bg-accent px-2 py-0.5 border border-border cursor-pointer hover:bg-accent-hover"
-                  >
-                    {copiedKey === "fix" ? <><Check size={11} weight="bold" /> copied</> : <><Copy size={11} weight="bold" /> copy</>}
-                  </button>
-                </div>
-                <div className="text-xs text-foreground font-sans font-medium">{sel.remediation.summary}</div>
-                <div className="space-y-1.5">
-                  {sel.remediation.steps.map((st, i) => (
-                    <div key={i} className="p-2 bg-surface-1 border border-border text-[11px] text-foreground flex items-start gap-2">
-                      <span className="font-bold text-foreground shrink-0">{i + 1}.</span>
-                      <span className="break-all font-medium">{st}</span>
-                    </div>
-                  ))}
-                </div>
-                {sel.remediation.references.length > 0 && (
-                  <div className="pt-2 border-t border-border space-y-1">
-                    {sel.remediation.references.map((r, i) => (
-                      <div key={i} className="flex items-center gap-1.5 text-[11px] text-muted font-bold">
-                        <ArrowSquareOut size={12} weight="bold" className="shrink-0 text-foreground" />
-                        <span className="truncate">{r}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {sel.confidence_basis.length > 0 && (
-                <div className="border border-border p-3 space-y-1.5 bg-surface-0 xcor-shadow-subtle">
-                  <span className="text-[10px] text-foreground font-bold uppercase tracking-wider">confidence basis</span>
-                  <ul className="list-disc list-inside space-y-1 text-[11px] text-foreground font-sans font-medium">
-                    {sel.confidence_basis.map((cb, i) => <li key={i}>{cb}</li>)}
-                  </ul>
-                </div>
-              )}
-            </div>
+              </tbody>
+            </table>
           </div>
-        </div>
-      )}
+        </section>
+
+        {/* ================= RIGHT 40%: PERSISTENT DETAIL PANE ================= */}
+        <section
+          className="col-span-12 xl:col-span-5 flex flex-col bg-surface-0 border border-border rounded-[var(--radius-md)] p-3 xcor-shadow min-h-0 overflow-hidden"
+          aria-label="Finding detail inspector"
+        >
+          {selFinding ? (
+            <>
+              {/* Detail Header */}
+              <div className="flex items-start justify-between pb-2 border-b border-border shrink-0 gap-2">
+                <div className="space-y-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <SeverityBadge severity={selFinding.severity} />
+                    <span className="font-mono text-[11px] text-muted">{selFinding.rule_id}</span>
+                    <span className="font-mono text-[11px] text-muted">[{selFinding.id}]</span>
+                  </div>
+                  <h2 className="text-[14px] font-semibold text-foreground leading-snug">
+                    {selFinding.title}
+                  </h2>
+                </div>
+
+                <div className="flex flex-col items-end shrink-0">
+                  <span className="font-mono text-[11px] font-bold text-sev-critical bg-sev-critical-bg px-2 py-0.5 rounded-[var(--radius-xs)] tabular-nums">
+                    {selFinding.score_impact ?? -10} pts posture impact
+                  </span>
+                </div>
+              </div>
+
+              {/* Scrollable Content */}
+              <div className="flex-1 overflow-y-auto pr-1 pt-2 space-y-3">
+                {/* Description */}
+                <div className="space-y-1">
+                  <h3 className="text-[12px] font-semibold text-foreground">Observation details</h3>
+                  <p className="text-[12px] text-muted leading-relaxed text-prose-cap">
+                    {selFinding.description}
+                  </p>
+                </div>
+
+                {/* Affected Endpoints */}
+                <div className="space-y-1.5">
+                  <h3 className="text-[12px] font-semibold text-foreground">Affected endpoints</h3>
+                  <div className="bg-surface-1/60 border border-border rounded-[var(--radius-xs)] p-2.5 space-y-1.5 text-[11px] font-mono">
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted font-sans">Network path</span>
+                      <span className="text-foreground font-semibold">{endpointText}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted font-sans">Sessions affected</span>
+                      <span className="text-foreground font-semibold tabular-nums">
+                        {selFinding.context?.sessions_affected ?? 1} session(s)
+                      </span>
+                    </div>
+                    {selFinding.evidence?.frames && selFinding.evidence.frames.length > 0 && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-muted font-sans">Evidence packet frame(s)</span>
+                        <span className="text-foreground font-semibold">
+                          {selFinding.evidence.frames.slice(0, 5).join(", ")}
+                          {selFinding.evidence.frames.length > 5 ? "…" : ""}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Wireshark Display Filter */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <h3 className="font-semibold text-foreground">Wireshark display filter</h3>
+                    <button
+                      onClick={() =>
+                        copyText(selFinding.wireshark_filter, () => {
+                          setCopiedFilter(true);
+                          setTimeout(() => setCopiedFilter(false), 2000);
+                        })
+                      }
+                      className="inline-flex items-center gap-1 text-muted hover:text-foreground cursor-pointer font-sans"
+                    >
+                      {copiedFilter ? (
+                        <>
+                          <Check size={11} weight="bold" className="text-sev-pass" />
+                          <span className="text-sev-pass">Copied</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy size={11} weight="bold" />
+                          <span>Copy filter</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                  <code className="block bg-surface-1 border border-border px-2.5 py-1.5 rounded-[var(--radius-xs)] font-mono text-[11px] text-foreground select-all break-all">
+                    {selFinding.wireshark_filter}
+                  </code>
+                </div>
+
+                {/* Remediation Guidance */}
+                <div className="space-y-2 pt-1 border-t border-border">
+                  <h3 className="text-[12px] font-semibold text-foreground">Remediation guidance</h3>
+
+                  <div className="bg-surface-1/60 border border-border rounded-[var(--radius-xs)] p-2.5 space-y-2">
+                    <p className="text-[12px] text-foreground font-medium leading-snug">
+                      {typeof selFinding.remediation === "string"
+                        ? selFinding.remediation
+                        : selFinding.remediation?.summary ?? "Apply recommended RFC 8314 TLS hardening."}
+                    </p>
+
+                    {selFinding.remediation?.steps && selFinding.remediation.steps.length > 0 && (
+                      <div className="space-y-1 pt-1 border-t border-border/70">
+                        <span className="text-[11px] text-muted font-medium block">Action steps:</span>
+                        <ol className="list-decimal pl-4 space-y-1 text-[11px] text-muted">
+                          {selFinding.remediation.steps.map((st, i) => (
+                            <li key={i} className="leading-snug">
+                              {st}
+                            </li>
+                          ))}
+                        </ol>
+                      </div>
+                    )}
+
+                    {selFinding.policy_refs && selFinding.policy_refs.length > 0 && (
+                      <div className="space-y-1 pt-1 border-t border-border/70">
+                        <span className="text-[11px] text-muted font-medium block">Policy references:</span>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          {selFinding.policy_refs.map((ref, idx) => (
+                            <span
+                              key={idx}
+                              className="px-1.5 py-0.5 bg-surface-0 border border-border rounded-[var(--radius-xs)] font-mono text-[10px] text-foreground"
+                            >
+                              {ref.document} §{ref.section}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Direct Link to Sessions */}
+                <div className="pt-2 border-t border-border">
+                  <Link
+                    href={
+                      selFinding.session_id
+                        ? `/sessions?capture=${capId}&session=${selFinding.session_id}`
+                        : `/sessions?capture=${capId}&finding=${selFinding.rule_id}`
+                    }
+                    className="w-full flex items-center justify-center gap-1.5 py-1.5 bg-accent hover:bg-accent-hover text-white rounded-[var(--radius-xs)] text-[12px] font-semibold transition-colors focus-ring"
+                  >
+                    <span>View affected session in stream inspector</span>
+                    <ArrowRight size={12} weight="bold" />
+                  </Link>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-6 text-muted">
+              <p className="text-[13px] font-medium">Select a finding to inspect forensic details.</p>
+              <p className="text-[11px] mt-1">Use the arrow keys or click a row on the left table.</p>
+            </div>
+          )}
+        </section>
+      </div>
     </div>
   );
 }
